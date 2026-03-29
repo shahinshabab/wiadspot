@@ -1,0 +1,41 @@
+{% extends "shared/base_portal.html" %}
+
+{% block title %}Client Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Client Dashboard</h1>
+        <p class="page-subtitle">View your services, requests, and account activity.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Active Services</div>
+        <div class="stat-value">4</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Open Requests</div>
+        <div class="stat-value">2</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Invoices</div>
+        <div class="stat-value">6</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Notifications</div>
+        <div class="stat-value">3</div>
+    </div>
+</div>
+
+<div class="dashboard-card content-card">
+    <h3 class="section-heading">Recent Activity</h3>
+    <p class="section-text">
+        This section can later show requests, support updates, and account activity.
+    </p>
+</div>
+{% endblock %}

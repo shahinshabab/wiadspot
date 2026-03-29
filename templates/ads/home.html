@@ -1,0 +1,45 @@
+{% extends "shared/base_portal.html" %}
+
+{% block title %}Ads Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Ads Dashboard</h1>
+        <p class="page-subtitle">Manage campaigns, ads, and performance insights.</p>
+    </div>
+
+    <button class="primary-btn">
+        <i class="bi bi-plus-circle me-2"></i>Create Campaign
+    </button>
+</div>
+
+<div class="stats-grid">
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Active Campaigns</div>
+        <div class="stat-value">18</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Clicks Today</div>
+        <div class="stat-value">2,450</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Conversions</div>
+        <div class="stat-value">132</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Spend</div>
+        <div class="stat-value">$1,240</div>
+    </div>
+</div>
+
+<div class="dashboard-card content-card">
+    <h3 class="section-heading">Recent Campaign Activity</h3>
+    <p class="section-text">
+        This area can later show campaign tables, analytics charts, and recent ad updates.
+    </p>
+</div>
+{% endblock %}

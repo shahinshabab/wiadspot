@@ -1,0 +1,104 @@
+<aside class="portal-sidebar">
+    <div class="sidebar-scroll">
+
+        <div class="sidebar-section-title">Main</div>
+
+        {% if "admin." in request.get_host %}
+            <a href="#" class="sidebar-link active">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-people"></i>
+                <span>Users</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-shield-lock"></i>
+                <span>Roles</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-bar-chart-line"></i>
+                <span>Reports</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Logs</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-gear"></i>
+                <span>Settings</span>
+            </a>
+
+        {% elif "ads." in request.get_host %}
+            <a href="#" class="sidebar-link active">
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-badge-ad"></i>
+                <span>Campaigns</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-megaphone"></i>
+                <span>Advertisements</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-graph-up-arrow"></i>
+                <span>Performance</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-credit-card"></i>
+                <span>Billing</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-sliders"></i>
+                <span>Settings</span>
+            </a>
+
+        {% elif "clients." in request.get_host %}
+            <a href="#" class="sidebar-link active">
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-folder2-open"></i>
+                <span>Services</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Requests</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-receipt"></i>
+                <span>Invoices</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-person"></i>
+                <span>Profile</span>
+            </a>
+
+        {% elif "partner." in request.get_host %}
+            <a href="#" class="sidebar-link active">
+                <i class="bi bi-grid-1x2"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-diagram-3"></i>
+                <span>Collaborations</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-briefcase"></i>
+                <span>Deals</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-cash-coin"></i>
+                <span>Commissions</span>
+            </a>
+            <a href="#" class="sidebar-link">
+                <i class="bi bi-person"></i>
+                <span>Profile</span>
+            </a>
+        {% endif %}
+
+    </div>
+</aside>

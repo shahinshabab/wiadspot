@@ -1,0 +1,30 @@
+{% load static %}
+<nav class="portal-navbar">
+    <div class="navbar-left">
+        <a href="#" class="brand-wrap">
+            <img src="{% static 'images/logo.png' %}" alt="WIADSPOT Logo" class="brand-logo">
+        </a>
+    </div>
+
+    <div class="navbar-right">
+        {% include "shared/components/notifications.html" %}
+
+        <div class="dropdown">
+            <button class="profile-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="bi bi-person-circle"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end profile-dropdown">
+                <li>
+                    <a class="dropdown-item" href="#">
+                        <i class="bi bi-person me-2"></i>Profile
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                        <i class="bi bi-box-arrow-right me-2"></i>Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,45 @@
+{% extends "shared/base_portal.html" %}
+
+{% block title %}Admin Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Admin Dashboard</h1>
+        <p class="page-subtitle">Monitor users, reports, and platform controls.</p>
+    </div>
+
+    <button class="primary-btn">
+        <i class="bi bi-gear me-2"></i>Manage System
+    </button>
+</div>
+
+<div class="stats-grid">
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Total Users</div>
+        <div class="stat-value">1,284</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Active Sessions</div>
+        <div class="stat-value">86</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Pending Approvals</div>
+        <div class="stat-value">14</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">System Alerts</div>
+        <div class="stat-value">5</div>
+    </div>
+</div>
+
+<div class="dashboard-card content-card">
+    <h3 class="section-heading">Platform Overview</h3>
+    <p class="section-text">
+        This area can later include audit logs, system analytics, role control, and operational widgets.
+    </p>
+</div>
+{% endblock %}

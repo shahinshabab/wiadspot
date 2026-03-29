@@ -1,0 +1,41 @@
+{% extends "shared/base_portal.html" %}
+
+{% block title %}Partner Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Partner Dashboard</h1>
+        <p class="page-subtitle">Manage collaborations, partner activity, and shared opportunities.</p>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Active Deals</div>
+        <div class="stat-value">8</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Leads Shared</div>
+        <div class="stat-value">21</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Pending Approvals</div>
+        <div class="stat-value">5</div>
+    </div>
+
+    <div class="dashboard-card stat-card">
+        <div class="stat-label">Messages</div>
+        <div class="stat-value">9</div>
+    </div>
+</div>
+
+<div class="dashboard-card content-card">
+    <h3 class="section-heading">Partner Overview</h3>
+    <p class="section-text">
+        This section can later show commissions, referrals, and collaboration updates.
+    </p>
+</div>
+{% endblock %}
