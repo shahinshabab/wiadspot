@@ -12,134 +12,208 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 import os
+import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# --------------------------------------------------
+# Base directory
+# --------------------------------------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# --------------------------------------------------
+# Environment variables
+# --------------------------------------------------
+env = environ.Env(
+    DEBUG=(bool, True),
+)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
+# Optional: load .env file if present
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c1yn2a+i+k26bsp)r__=4f_4)c3m))$=_ur_f=@m6^%i0!e6i!'
+# --------------------------------------------------
+# Core settings
+# --------------------------------------------------
+SECRET_KEY = env(
+    "SECRET_KEY",
+    default="django-insecure-change-this-in-production"
+)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env.bool("DEBUG", default=True)
 
 ALLOWED_HOSTS = [
-    'wiadspot.com',
-    'www.wiadspot.com',
     "127.0.0.1",
     "localhost",
-    ".wiadspot.local",
+    ".wiadspot.local",   # allows partner.wiadspot.local, admin.wiadspot.local, etc.
+    "wiadspot.com",
+    "www.wiadspot.com",
+    "partner.wiadspot.com",
+    "clients.wiadspot.com",
+    "ads.wiadspot.com",
+    "admin.wiadspot.com",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+    "http://*.wiadspot.local:8000",
+    "https://wiadspot.com",
+    "https://*.wiadspot.com",
+]
 
+# --------------------------------------------------
+# MSG91 settings
+# --------------------------------------------------
+MSG91_AUTHKEY = env("MSG91_AUTHKEY", default="")
+MSG91_TEMPLATE_ID = env("MSG91_TEMPLATE_ID", default="")
+MSG91_TIMEOUT = env.int("MSG91_TIMEOUT", default=15)
+MSG91_OTP_EXPIRY = env.int("MSG91_OTP_EXPIRY", default=10)
+
+MSG91_SEND_OTP_URL = env(
+    "MSG91_SEND_OTP_URL",
+    default="https://control.msg91.com/api/v5/otp"
+)
+MSG91_RETRY_OTP_URL = env(
+    "MSG91_RETRY_OTP_URL",
+    default="https://control.msg91.com/api/v5/otp/retry/{request_id}"
+)
+MSG91_VERIFY_OTP_URL = env(
+    "MSG91_VERIFY_OTP_URL",
+    default="https://control.msg91.com/api/v5/otp/verify/{request_id}/{otp}"
+)
+
+# --------------------------------------------------
 # Application definition
-
+# --------------------------------------------------
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'core',
-    'partner',
-    'clients',
-    'ads',
-    'dashboard_admin',
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+
+    "partner",
+    "clients",
+    "ads",
+    "dashboard_admin",
+    # "website",   # add this if you create an app for www.wiadspot.com
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'config.middleware.SubdomainURLRoutingMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+
+    "config.middleware.SubdomainURLRoutingMiddleware",
 ]
 
-ROOT_URLCONF = 'config.urls'
+ROOT_URLCONF = "config.urls"
 
+# Map each host to its own URLConf
 HOST_URLCONF_MAP = {
-    'partner.wiadspot.com': 'partner.urls',
-    'clients.wiadspot.com': 'clients.urls',
-    'ads.wiadspot.com': 'ads.urls',
-    'admin.wiadspot.com': 'dashboard_admin.urls',
+    "partner.wiadspot.com": "partner.urls",
+    "clients.wiadspot.com": "clients.urls",
+    "ads.wiadspot.com": "ads.urls",
+    "admin.wiadspot.com": "dashboard_admin.urls",
+    "www.wiadspot.com": "config.urls",          # or "website.urls" if you create that app
+
+    # local development
+    "partner.wiadspot.local": "partner.urls",
+    "clients.wiadspot.local": "clients.urls",
+    "ads.wiadspot.local": "ads.urls",
+    "admin.wiadspot.local": "dashboard_admin.urls",
+    "www.wiadspot.local": "config.urls",        # or "website.urls"
 }
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = "config.wsgi.application"
 
-
+# --------------------------------------------------
 # Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+# --------------------------------------------------
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": env.db(
+        "DATABASE_URL",
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+    )
 }
 
-
+# --------------------------------------------------
 # Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
+# --------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
-
+# --------------------------------------------------
 # Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+# --------------------------------------------------
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "Asia/Dubai"
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
-STATIC_URL = "static/"
-
+# --------------------------------------------------
+# Static files
+# --------------------------------------------------
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# --------------------------------------------------
+# Media files
+# --------------------------------------------------
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# --------------------------------------------------
+# Authentication redirects
+# --------------------------------------------------
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/login/"
+
+# --------------------------------------------------
+# Default primary key type
+# --------------------------------------------------
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# --------------------------------------------------
+# Security settings for production
+# --------------------------------------------------
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"

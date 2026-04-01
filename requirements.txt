@@ -1,0 +1,4 @@
+django-environ
+Pillow
+requests
+cryptography

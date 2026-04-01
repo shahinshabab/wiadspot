@@ -5,3 +5,4 @@ urlpatterns = [
     path("", home, name="clients_home"),
     path("", include("config.auth_urls")),
 ]
+

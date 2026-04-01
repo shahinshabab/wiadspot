@@ -1,0 +1,351 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Verify OTP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root { --card-w:min(92vw,420px); }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    background:#0b0c10;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:#111;
+    padding:16px;
+  }
+  .stack{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+    width:100%;
+  }
+  .ad-card,
+  .card{
+    width:var(--card-w);
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .ad-wrap{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#111;
+  }
+  .ad-wrap img,
+  .ad-wrap video{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    background:#000;
+  }
+  .ad-meta{
+    padding:12px 14px;
+  }
+  .ad-title{
+    font-size:1rem;
+    font-weight:700;
+    margin:0 0 6px;
+  }
+  .ad-desc{
+    margin:0;
+    color:#555;
+    font-size:.92rem;
+    line-height:1.4;
+  }
+  .ad-cta{
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 14px;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+    background:#0f62fe;
+    color:#fff;
+  }
+  .card-body{
+    padding:22px 20px 18px;
+  }
+  h1{ margin:0 0 10px; font-size:1.25rem; }
+  p.sub{ margin:0 0 16px; color:#555; }
+  .otp-row{ display:flex; gap:10px; }
+  input[type="text"]{
+    width:100%;
+    padding:12px 14px;
+    font-size:1.2rem;
+    letter-spacing:.25em;
+    border:1px solid #d0d5dd;
+    border-radius:10px;
+    text-align:center;
+  }
+  .btn{
+    width:100%;
+    margin-top:12px;
+    padding:12px 14px;
+    border:0;
+    border-radius:10px;
+    font-weight:600;
+    font-size:1rem;
+    background:#a9b9ff;
+    color:#fff;
+    cursor:not-allowed;
+  }
+  .btn.enabled{
+    background:#0f62fe;
+    cursor:pointer;
+  }
+  .btn.secondary{
+    background:#f3f4f6;
+    color:#111;
+    border:1px solid #e5e7eb;
+  }
+  .btn.secondary.enabled{
+    background:#fff;
+  }
+  .error{
+    color:#b00020;
+    margin-top:8px;
+    font-size:.95rem;
+    min-height:1.1em;
+    text-align:center;
+  }
+  .hint{
+    text-align:center;
+    font-size:.9rem;
+    color:#777;
+    margin-top:6px;
+    min-height:1.2em;
+  }
+  .row{ display:flex; gap:10px; }
+  .success{
+    color:#0a7a28;
+    text-align:center;
+    margin-top:10px;
+    font-weight:600;
+  }
+</style>
+<script>
+(function(){
+  window.addEventListener('DOMContentLoaded', function(){
+    const video = document.querySelector('.js-ad-video');
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.controls = true;
+      video.play().catch(function(){});
+    }
+
+    const form = document.getElementById('otp-form');
+    const verifyBtn = document.getElementById('verify-btn');
+    const resendBtn = document.getElementById('resend-btn');
+    const hint = document.getElementById('gate-hint');
+    const waitSpan = document.getElementById('wait-secs');
+
+    if (!form) return;
+
+    const INITIAL_GATE = parseInt(form.dataset.initialGate || '30', 10);
+    const VERIFY_COOLDOWN = parseInt(form.dataset.verifyCooldown || '15', 10);
+    const RESEND_COOLDOWN = parseInt(form.dataset.resendCooldown || '30', 10);
+
+    let gate = INITIAL_GATE;
+
+    function enableVerify(){
+      verifyBtn.disabled = false;
+      verifyBtn.classList.add('enabled');
+      verifyBtn.textContent = 'Verify & Connect';
+    }
+
+    function disableVerify(){
+      verifyBtn.disabled = true;
+      verifyBtn.classList.remove('enabled');
+    }
+
+    function enableResend(){
+      resendBtn.disabled = false;
+      resendBtn.classList.add('enabled');
+      resendBtn.textContent = 'Resend OTP';
+    }
+
+    function disableResend(){
+      resendBtn.disabled = true;
+      resendBtn.classList.remove('enabled');
+    }
+
+    if (gate > 0) {
+      const gateTimer = setInterval(() => {
+        gate -= 1;
+        if (waitSpan) waitSpan.textContent = gate;
+        if (gate <= 0) {
+          clearInterval(gateTimer);
+          enableVerify();
+          enableResend();
+          if (hint) hint.textContent = '';
+        }
+      }, 1000);
+    } else {
+      enableVerify();
+      enableResend();
+      if (hint) hint.textContent = '';
+    }
+
+    function verifyCooldown(){
+      let remain = VERIFY_COOLDOWN;
+      disableVerify();
+      const timer = setInterval(() => {
+        verifyBtn.textContent = `Verifying… (${remain}s)`;
+        remain -= 1;
+        if (remain < 0) {
+          clearInterval(timer);
+          enableVerify();
+        }
+      }, 1000);
+    }
+
+    function resendCooldown(){
+      let remain = RESEND_COOLDOWN;
+      disableResend();
+      const timer = setInterval(() => {
+        resendBtn.textContent = remain >= 0 ? `Resend OTP (${remain}s)` : 'Resend OTP';
+        remain -= 1;
+        if (remain < 0) {
+          clearInterval(timer);
+          enableResend();
+        }
+      }, 1000);
+    }
+
+    form.addEventListener('submit', function(e){
+      const submitter = e.submitter || null;
+
+      if (!submitter && verifyBtn.disabled) {
+        e.preventDefault();
+        return;
+      }
+
+      if (submitter === verifyBtn) {
+        if (verifyBtn.disabled) {
+          e.preventDefault();
+          return;
+        }
+        verifyCooldown();
+      }
+
+      if (submitter === resendBtn) {
+        if (resendBtn.disabled) {
+          e.preventDefault();
+          return;
+        }
+        resendCooldown();
+      }
+    });
+  });
+})();
+</script>
+</head>
+<body>
+
+<div class="stack">
+
+  {% if ad_payload and ad_payload.media_url %}
+    <div class="ad-card">
+      <div class="ad-wrap">
+        {% if ad_payload.ad_type == "VIDEO" %}
+          <video class="js-ad-video">
+            <source src="{{ ad_payload.media_url }}" type="video/mp4">
+            Your browser does not support video playback.
+          </video>
+        {% else %}
+          <img src="{{ ad_payload.media_url }}" alt="{{ ad_payload.title|default:'Advertisement' }}">
+        {% endif %}
+      </div>
+      <div class="ad-meta">
+        <p class="ad-title">{{ ad_payload.title }}</p>
+        {% if ad_payload.description %}
+          <p class="ad-desc">{{ ad_payload.description }}</p>
+        {% endif %}
+        {% if ad_payload.target_url and ad_payload.serve_session_id %}
+          <a
+            class="ad-cta"
+            href="{% url 'fas_ad_click' ad_payload.serve_session_id %}"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ ad_payload.call_to_action|default:"Learn More" }}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <form
+    id="otp-form"
+    class="card"
+    method="POST"
+    novalidate
+    data-initial-gate="{{ initial_gate|default:30 }}"
+    data-verify-cooldown="{{ verify_cooldown|default:15 }}"
+    data-resend-cooldown="{{ resend_cooldown|default:30 }}"
+  >
+    <div class="card-body">
+      {% csrf_token %}
+      <h1>Enter OTP</h1>
+      <p class="sub">We sent an OTP to {{ phone_masked }}.</p>
+
+      <input type="hidden" name="fas" value="{{ fas }}">
+      <input type="hidden" name="gatewayaddress" value="{{ gatewayaddress }}">
+      <input type="hidden" name="tok" value="{{ tok }}">
+      <input type="hidden" name="redir" value="{{ redir }}">
+      <input type="hidden" name="phone" value="{{ phone }}">
+      <input type="hidden" name="iv" value="{{ iv }}">
+      <input type="hidden" name="audience_session_id" value="{{ audience_session_id }}">
+      <input type="hidden" name="req_id" value="{{ req_id }}">
+
+      <div class="otp-row">
+        <input
+          name="otp"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          pattern="[0-9]*"
+          maxlength="6"
+          required
+          autofocus
+          aria-label="One time password"
+        >
+      </div>
+
+      <div class="row">
+        <button id="verify-btn" class="btn" type="submit" name="action" value="verify_otp" disabled>
+          Verify &amp; Connect
+        </button>
+        <button id="resend-btn" class="btn secondary" type="submit" name="action" value="resend_otp" disabled>
+          Resend OTP
+        </button>
+      </div>
+
+      <div id="gate-hint" class="hint">
+        Please wait <span id="wait-secs">{{ initial_gate|default:30 }}</span>s to continue…
+      </div>
+
+      <div class="error">{{ error }}</div>
+
+      {% if verified_ok %}
+        <div class="success">OTP verified. Connecting…</div>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+</body>
+</html>

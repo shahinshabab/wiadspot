@@ -1,0 +1,381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>WiadSpot WiFi Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  :root{
+    --card-w: min(92vw, 420px);
+    --ad-w: min(92vw, 420px);
+    --bg: #0b0c10;
+    --card: #ffffff;
+    --text: #111111;
+    --muted: #555555;
+    --brand: #0f62fe;
+    --brand-dark: #0b4ed2;
+    --danger: #b00020;
+    --border: #d0d5dd;
+    --ring: rgba(15,98,254,.35);
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; min-height:100%; }
+  body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px 16px;
+    background:#0b0c10;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--text);
+  }
+  .stack{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+  }
+  .ad-card,
+  .card{
+    width:var(--card-w);
+    background:var(--card);
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,.25);
+  }
+  .ad-wrap{
+    width:100%;
+    aspect-ratio:16/9;
+    background:#111;
+    position:relative;
+    overflow:hidden;
+  }
+  .ad-wrap img,
+  .ad-wrap video{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    background:#000;
+  }
+  .ad-meta{
+    padding:12px 14px;
+  }
+  .ad-title{
+    font-size:1rem;
+    font-weight:700;
+    margin:0 0 6px;
+  }
+  .ad-desc{
+    margin:0;
+    font-size:.92rem;
+    color:var(--muted);
+    line-height:1.4;
+  }
+  .card-body{
+    padding:22px 20px 18px;
+  }
+  h1{ margin:0 0 10px; font-size:1.35rem; }
+  p.sub{ margin:0 0 18px; color:#111; font-size:.95rem; }
+  label{ font-size:.95rem; display:block; margin-bottom:8px; }
+  input[type="tel"]{
+    width:100%;
+    padding:12px 14px;
+    font-size:1rem;
+    border:1px solid var(--border);
+    border-radius:10px;
+    outline:none;
+    background:#fff;
+    transition:border-color .15s, box-shadow .15s;
+  }
+  input[type="tel"]:focus{
+    border-color:var(--brand);
+    box-shadow:0 0 0 3px var(--ring);
+  }
+  .help{
+    font-size:.82rem;
+    color:var(--muted);
+    margin-top:6px;
+  }
+  .consent{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:14px 0 8px;
+  }
+  .consent input[type="checkbox"]{
+    width:18px;
+    height:18px;
+    margin-top:2px;
+  }
+  .consent label{
+    margin:0;
+    line-height:1.35;
+  }
+  .tnc-link{
+    color:var(--brand);
+    text-decoration:underline;
+    cursor:pointer;
+    font-weight:600;
+  }
+  .btn{
+    width:100%;
+    margin-top:12px;
+    padding:12px 14px;
+    border:0;
+    border-radius:10px;
+    font-weight:600;
+    font-size:1rem;
+    background:var(--brand);
+    color:#fff;
+    cursor:pointer;
+  }
+  .btn:hover{ background:var(--brand-dark); }
+  .error{
+    color:var(--danger);
+    margin-top:8px;
+    font-size:.9rem;
+    min-height:1.1em;
+  }
+  .legal{
+    font-size:.85rem;
+    color:var(--muted);
+    margin-top:8px;
+    text-align:center;
+  }
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:16px;
+    z-index:999;
+  }
+  .modal-backdrop.active{ display:flex; }
+  .modal{
+    width:min(92vw,560px);
+    max-height:80vh;
+    background:#fff;
+    border-radius:14px;
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+  .modal-header,.modal-footer{ padding:14px 16px; }
+  .modal-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    border-bottom:1px solid #eee;
+  }
+  .modal-title{
+    font-size:1.05rem;
+    font-weight:700;
+    margin:0;
+  }
+  .modal-close{
+    background:transparent;
+    border:0;
+    font-size:1.3rem;
+    line-height:1;
+    cursor:pointer;
+    padding:6px 8px;
+  }
+  .modal-body{
+    padding:12px 16px;
+    overflow:auto;
+    line-height:1.5;
+    font-size:.95rem;
+    white-space:pre-wrap;
+  }
+  .modal-footer{
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    border-top:1px solid #eee;
+  }
+  .btn-secondary{
+    background:#f3f4f6;
+    color:#111;
+    border:1px solid #e5e7eb;
+  }
+</style>
+<script>
+(function(){
+  function $(sel, ctx=document){ return ctx.querySelector(sel); }
+  function onlyDigits(str){ return (str || "").replace(/\D+/g, ""); }
+
+  window.validateForm = function(){
+    const phoneEl = $('#phone');
+    const tncEl = $('#tnc');
+    const errEl = $('#err');
+    errEl.textContent = "";
+
+    const phone = onlyDigits(phoneEl.value.trim());
+    phoneEl.value = phone;
+
+    const phoneOk = /^[0-9]{8,12}$/.test(phone);
+    if(!phoneOk){
+      errEl.textContent = "Enter a valid mobile number (digits only).";
+      phoneEl.focus();
+      return false;
+    }
+    if(!tncEl.checked){
+      errEl.textContent = "You must accept the Terms & Conditions.";
+      $('#openTnc').focus();
+      return false;
+    }
+    return true;
+  };
+
+  window.addEventListener('DOMContentLoaded', function(){
+    const phoneEl = $('#phone');
+    if (phoneEl) {
+      phoneEl.addEventListener('input', () => {
+        const digits = onlyDigits(phoneEl.value).slice(0, 12);
+        if(phoneEl.value !== digits) phoneEl.value = digits;
+      });
+    }
+
+    const openBtn = $('#openTnc');
+    const closeBtn = $('#tncCloseBtn');
+    const closeBtn2 = $('#tncCloseBtn2');
+    const acceptBtn = $('#acceptTncBtn');
+    const backdrop = $('#tncBackdrop');
+    const tnc = $('#tnc');
+
+    function openModal(e){
+      if (e) e.preventDefault();
+      backdrop.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal(){
+      backdrop.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (closeBtn2) closeBtn2.addEventListener('click', closeModal);
+    if (acceptBtn) {
+      acceptBtn.addEventListener('click', function(){
+        if (tnc) tnc.checked = true;
+        closeModal();
+      });
+    }
+    if (backdrop) {
+      backdrop.addEventListener('click', function(e){
+        if (e.target === backdrop) closeModal();
+      });
+    }
+    document.addEventListener('keydown', function(e){
+      if(e.key === 'Escape' && backdrop.classList.contains('active')) closeModal();
+    });
+
+    const video = document.querySelector('.js-ad-video');
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      video.autoplay = true;
+      video.loop = true;
+      video.controls = false;
+      video.play().catch(function(){});
+    }
+  });
+})();
+</script>
+</head>
+<body>
+
+<div class="stack">
+
+  {% if ad_payload and ad_payload.media_url %}
+    <div class="ad-card">
+      <div class="ad-wrap">
+        {% if ad_payload.ad_type == "VIDEO" %}
+          <video class="js-ad-video">
+            <source src="{{ ad_payload.media_url }}" type="video/mp4">
+            Your browser does not support video playback.
+          </video>
+        {% else %}
+          <img src="{{ ad_payload.media_url }}" alt="{{ ad_payload.title|default:'Advertisement' }}">
+        {% endif %}
+      </div>
+      <div class="ad-meta">
+        <p class="ad-title">{{ ad_payload.title }}</p>
+        {% if ad_payload.description %}
+          <p class="ad-desc">{{ ad_payload.description }}</p>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+
+  <form class="card" method="POST" onsubmit="return validateForm()">
+    <div class="card-body">
+      {% csrf_token %}
+
+      <h1>WiadSpot WiFi Login</h1>
+      <p class="sub">Secure OTP login to access Wi-Fi.</p>
+
+      <input type="hidden" name="action" value="send_otp">
+      <input type="hidden" name="fas" value="{{ fas }}">
+      <input type="hidden" name="gatewayaddress" value="{{ gatewayaddress }}">
+      <input type="hidden" name="tok" value="{{ tok }}">
+      <input type="hidden" name="redir" value="{{ redir }}">
+      <input type="hidden" name="iv" value="{{ iv }}">
+
+      <label for="phone">Mobile Number</label>
+      <input
+        id="phone"
+        name="phone"
+        type="tel"
+        inputmode="numeric"
+        autocomplete="tel"
+        placeholder="e.g. 9876543210"
+        required
+      >
+      <div class="help">Enter your mobile number without country code.</div>
+
+      <div class="consent">
+        <input id="tnc" name="tnc" type="checkbox" value="yes">
+        <label for="tnc">
+          I agree to the
+          <a id="openTnc" href="#" class="tnc-link">Terms &amp; Conditions</a>
+        </label>
+      </div>
+
+      <button class="btn" type="submit">Submit</button>
+      <div id="err" class="error">{{ error }}</div>
+      <div class="legal">Your number is used only for OTP login.</div>
+    </div>
+  </form>
+</div>
+
+<div id="tncBackdrop" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 class="modal-title">Terms &amp; Conditions</h2>
+      <button type="button" id="tncCloseBtn" class="modal-close">×</button>
+    </div>
+    <div class="modal-body">
+        1) You agree to use the Wi-Fi in compliance with applicable laws.
+        2) No abusive or illegal content or activities.
+        3) Network usage may be monitored for security and lawful compliance.
+        4) Data rates and speeds may vary by load and coverage.
+        5) By proceeding, you consent to receive a one-time OTP for login.
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" id="tncCloseBtn2">Close</button>
+      <button type="button" class="btn" id="acceptTncBtn">Accept &amp; Close</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
