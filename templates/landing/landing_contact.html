@@ -1,0 +1,61 @@
+{% extends "landing/landing_base.html" %}
+{% block title %}Contact | WiadSpot{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <h1 class="text-center mb-4">Contact Us</h1>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-xl-6">
+        <form class="contact-form" method="post" action="">
+          {% csrf_token %}
+
+          {% if messages %}
+            {% for m in messages %}
+              <div class="alert alert-{{ m.tags|default:'info' }} mt-2">{{ m }}</div>
+            {% endfor %}
+          {% endif %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+          {% endif %}
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Name</label>
+              <input name="{{ form.name.name }}" type="text" value="{{ form.name.value|default:'' }}"
+                     class="form-control {% if form.name.errors %}is-invalid{% endif %}" 
+                     placeholder="Your name" required>
+              {% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input name="{{ form.email.name }}" type="email" value="{{ form.email.value|default:'' }}"
+                     class="form-control {% if form.email.errors %}is-invalid{% endif %}" 
+                     placeholder="your@email.com" required>
+              {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+            </div>
+
+            <div class="col-12">
+              <label class="form-label">Message</label>
+              <textarea name="{{ form.message.name }}" rows="5"
+                        class="form-control {% if form.message.errors %}is-invalid{% endif %}"
+                        placeholder="How can we help?" required>{{ form.message.value|default:'' }}</textarea>
+              {% for e in form.message.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+            </div>
+          </div>
+
+          <!-- Honeypot (hidden). Keep it rendered so bots see it -->
+          {{ form.website }}
+
+          <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary px-4">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

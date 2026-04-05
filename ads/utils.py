@@ -494,24 +494,73 @@ def asset_auth_defaults(asset, *, redir: str = "") -> dict:
 # =========================================================
 def resolve_asset_from_request(request, assetid=None, username=None):
     try:
+        # -------------------------------------------------
+        # 1) Direct lookup from URL argument: /fas/<assetid>/
+        # -------------------------------------------------
         if assetid not in (None, ""):
-            a = Asset.objects.filter(pk=assetid, is_active=True).first()
-            if a:
-                return a
-            a = Asset.objects.filter(name=str(assetid), is_active=True).first()
+            a = (
+                Asset.objects
+                .select_related("partner", "admin", "device_config")
+                .filter(
+                    pk=assetid,
+                    is_available_for_booking=True,
+                    status="ACTIVE",
+                )
+                .first()
+            )
             if a:
                 return a
 
+            a = (
+                Asset.objects
+                .select_related("partner", "admin", "device_config")
+                .filter(
+                    name=str(assetid),
+                    is_available_for_booking=True,
+                    status="ACTIVE",
+                )
+                .first()
+            )
+            if a:
+                return a
+
+        # -------------------------------------------------
+        # 2) Optional username + asset name/code lookup
+        #    Replace old actual_owner logic with admin/partner
+        # -------------------------------------------------
         if username and assetid:
             owner = User.objects.filter(username=username).first()
             if owner:
                 a = (
-                    Asset.objects.filter(actual_owner=owner, name=str(assetid), is_active=True).first()
-                    or Asset.objects.filter(is_active=True).first()
+                    Asset.objects
+                    .select_related("partner", "admin", "device_config")
+                    .filter(
+                        Q(admin=owner) | Q(partner=owner),
+                        name=str(assetid),
+                        is_available_for_booking=True,
+                        status="ACTIVE",
+                    )
+                    .first()
                 )
                 if a:
                     return a
 
+                a = (
+                    Asset.objects
+                    .select_related("partner", "admin", "device_config")
+                    .filter(
+                        Q(admin=owner) | Q(partner=owner),
+                        is_available_for_booking=True,
+                        status="ACTIVE",
+                    )
+                    .first()
+                )
+                if a:
+                    return a
+
+        # -------------------------------------------------
+        # 3) Read params from request / decoded FAS
+        # -------------------------------------------------
         params = request.GET.copy() or request.POST.copy()
         fas_b64 = params.get("fas")
         iv_b64 = params.get("iv")
@@ -522,21 +571,45 @@ def resolve_asset_from_request(request, assetid=None, username=None):
                 for k, v in decoded.items():
                     params.setdefault(k, v)
             except Exception as exc:
-                logger.warning("resolve_asset_from_request: decode failed: %s", str(exc)[:200])
+                logger.warning(
+                    "resolve_asset_from_request: decode failed: %s",
+                    str(exc)[:200]
+                )
 
         gateway = (
-            params.get("gateway")
+            params.get("gatewayname")
+            or params.get("gateway")
             or params.get("gw_address")
             or params.get("gatewayaddress")
             or params.get("gw")
             or ""
-        )
+        ).strip()
 
-        q = Q(is_active=True)
+        # -------------------------------------------------
+        # 4) Final fallback
+        #    Old code used ip_address__iexact=gateway, but your
+        #    Asset model does not have ip_address.
+        #    Use code first, because your runtime ad service
+        #    resolves assets by code.
+        # -------------------------------------------------
+        q = Q(is_available_for_booking=True, status="ACTIVE")
+
         if gateway:
-            q &= Q(ip_address__iexact=gateway)
+            a = (
+                Asset.objects
+                .select_related("partner", "admin", "device_config")
+                .filter(q & Q(code__iexact=gateway))
+                .first()
+            )
+            if a:
+                return a
 
-        return Asset.objects.filter(q).first()
+        return (
+            Asset.objects
+            .select_related("partner", "admin", "device_config")
+            .filter(q)
+            .first()
+        )
 
     except Exception:
         logger.exception("resolve_asset_from_request: unexpected error")

@@ -1,0 +1,178 @@
+
+{# =============================== #}
+{# landing/home.html               #}
+{# =============================== #}
+{% extends "landing/landing_base.html" %}
+{% load static %}
+
+{% block title %}WiadSpot | Public WiFi & Advertising{% endblock %}
+{% block body_class %}home-page{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero" aria-label="Hero">
+  <div class="container text-lg-end text-center">
+    <div class="hero-content">
+      <h1 class="h2">Connecting People, Powering Businesses</h1>
+      <p>WiadSpot provides free WiFi in public spaces and enables smart advertising through our captive portal technology.</p>
+      <a href="{% url 'landing_about' %}" class="btn btn-primary btn-lg mt-3">Discover More</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- Features -->
+<section class="features-wrap" aria-label="Features">
+  <div class="container">
+    <div class="text-center mb-4">
+      <span class="badge rounded-pill px-4 py-2 feature-badge-title">What we offer</span>
+      <h2 class="mt-3 mb-2">Fast WiFi, Smart Ads, Better Insights</h2>
+      <p class="text-muted mb-0">Built for public spaces and high-footfall venues.</p>
+    </div>
+
+    <div class="row g-4">
+      <!-- Card 1 -->
+      <div class="col-12 col-md-4">
+        <div class="feature-card reveal d1 h-100">
+          <div class="feature-icon"><i class="bi bi-wifi" aria-hidden="true"></i></div>
+          <h3 class="h5 mb-2">Public WiFi</h3>
+          <p class="text-muted mb-3">Secure, fast, and reliable hotspots with captive portal onboarding.</p>
+          <div class="d-flex flex-wrap gap-2 feature-badges">
+            <span class="badge">Free Access</span>
+            <span class="badge">Content Filter</span>
+            <span class="badge">Auto Login</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="col-12 col-md-4">
+        <div class="feature-card reveal d2 h-100">
+          <div class="feature-icon"><i class="bi bi-bullseye" aria-hidden="true"></i></div>
+          <h3 class="h5 mb-2">Captive Portal Ads</h3>
+          <p class="text-muted mb-3">Reach high-intent audiences at the moment of WiFi login.</p>
+          <div class="d-flex flex-wrap gap-2 feature-badges">
+            <span class="badge">Geo Targeting</span>
+            <span class="badge">A/B Testing</span>
+            <span class="badge">Brand Safety</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="col-12 col-md-4">
+        <div class="feature-card reveal d3 h-100">
+          <div class="feature-icon"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></div>
+          <h3 class="h5 mb-2">Smart Analytics</h3>
+          <p class="text-muted mb-3">Track impressions, clicks, dwell time, and optimize in real-time.</p>
+          <div class="d-flex flex-wrap gap-2 feature-badges">
+            <span class="badge">Realtime</span>
+            <span class="badge">Privacy-First</span>
+            <span class="badge">Export</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Latest Articles -->
+<section class="articles-wrap" aria-label="Latest Articles">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Latest from the blog</span>
+      <h2 class="mt-3 mb-1">Insights on WiFi, Captive Portals & Monetization</h2>
+      <p class="text-muted mb-0">Guides and playbooks to help venues, brands, and operators get more from public WiFi.</p>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div></div>
+      <a href="{% url 'landing_articles' %}" class="btn btn-sm btn-outline-secondary">View all</a>
+    </div>
+
+    <div class="row g-4">
+      {% for a in articles %}
+      <div class="col-12 col-md-6 col-lg-4">
+        <article class="article-card h-100">
+          <div class="article-media">
+            <img src="{% static a.thumb %}" alt="{{ a.title }}" loading="lazy">
+            {% if a.category %}
+              <span class="article-chip">{{ a.category }}</span>
+            {% endif %}
+          </div>
+
+          <div class="article-body">
+            <h3 class="article-title">
+              <a class="stretched-link text-decoration-none text-dark" href="{% url 'landing_article_read' a.slug %}">
+                {{ a.title }}
+              </a>
+            </h3>
+            <p class="article-summary">{{ a.summary }}</p>
+
+            <div class="article-meta">
+              <div class="left">
+                <span><i class="bi bi-calendar2" aria-hidden="true"></i> {{ a.published_at }}</span>
+                <span class="sep"></span>
+                <span><i class="bi bi-clock" aria-hidden="true"></i> {{ a.minutes }} min</span>
+              </div>
+              <a class="article-read" href="{% url 'landing_article_read' a.slug %}">
+                Read <i class="bi bi-arrow-right-short" aria-hidden="true"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- About Us (on home) -->
+<section id="about" class="about-wrap" aria-label="About WiadSpot">
+  <div class="container">
+    <div class="about-card">
+      <!-- Left: Text -->
+      <div>
+        <span class="about-eyebrow">About WiadSpot</span>
+        <h2 class="about-title">Connecting People. Empowering Businesses.</h2>
+        <p class="about-lead">
+          We deliver free, fast, and secure public WiFi—and turn login moments into
+          consented, brand-safe advertising opportunities. Built for parks, transit hubs,
+          high-street venues, campuses, and events.
+        </p>
+
+        <ul class="about-list">
+          <li><i class="bi bi-shield-check" aria-hidden="true"></i> Privacy-first analytics and GDPR-aligned consent flows.</li>
+          <li><i class="bi bi-router" aria-hidden="true"></i> Resilient networks for outdoor &amp; high-footfall environments.</li>
+          <li><i class="bi bi-bar-chart-line" aria-hidden="true"></i> Real-time dashboards, A/B testing, and exportable reports.</li>
+        </ul>
+
+        <!-- Compact KPIs: responsive grid -->
+        <div class="about-stats">
+          <div class="stat-chip">
+            <i class="bi bi-geo-alt" aria-hidden="true"></i>
+            <div><strong>50+ hotspots</strong><br><small>Live &amp; expanding</small></div>
+          </div>
+          <div class="stat-chip">
+            <i class="bi bi-people" aria-hidden="true"></i>
+            <div><strong>1M+ sessions</strong><br><small>served reliably</small></div>
+          </div>
+          <div class="stat-chip">
+            <i class="bi bi-speedometer2" aria-hidden="true"></i>
+            <div><strong>Less than 2s</strong><br><small>avg. portal load</small></div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <a href="{% url 'landing_about' %}" class="btn btn-primary btn-sm">Read the full story</a>
+        </div>
+      </div>
+
+      <!-- Right: Image (inside the same card) -->
+      <div class="about-media">
+        <img src="{% static 'portal/img/about-illustration.png' %}" class="about-img img-fluid" alt="About WiadSpot Illustration" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

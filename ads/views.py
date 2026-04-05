@@ -68,8 +68,8 @@ def _safe_msisdn(phone: str) -> str:
 
 def _build_common_context(
     *,
-    portal,
-    portal_owner,
+    asset=None,
+    asset_owner=None,
     fas_b64="",
     iv_b64="",
     gatewayaddress="",
@@ -81,21 +81,21 @@ def _build_common_context(
     extra=None,
 ):
     ctx = {
+        "asset": asset,
+        "asset_owner": asset_owner,
         "fas": fas_b64,
         "iv": iv_b64,
         "gatewayaddress": gatewayaddress,
         "tok": tok,
         "redir": redir,
-        "error": error,
-        "portal": portal,
-        "owner": portal_owner,
-        "username": getattr(portal_owner, "username", ""),
-        "portalid": getattr(portal, "name", portal.pk),
         "ad_payload": ad_payload,
         "ad_error": ad_error,
+        "error": error,
     }
-    if extra:
+
+    if extra and isinstance(extra, dict):
         ctx.update(extra)
+
     return ctx
 
 
@@ -128,14 +128,17 @@ def fas(request: HttpRequest, assetid=None, username=None):
             return handle_authmon_inline(request, assetid)
 
         asset = resolve_asset_from_request(request, assetid=assetid, username=username)
-        if not asset or not asset.is_active:
+        if not asset or asset.status != "ACTIVE" or not asset.is_available_for_booking:
             logger.warning(
                 "fas: asset not found or inactive",
                 extra={"assetid": assetid, "username": username},
             )
             return HttpResponseBadRequest("Asset not found or inactive.")
 
-        asset_owner = getattr(asset, "owner", None) or getattr(asset, "actual_owner", None)
+        asset_owner = asset.admin if asset.owner_type == "ADMIN" else asset.partner
+        if not asset_owner:
+            asset_owner = asset.admin or asset.partner
+
         if not asset_owner:
             logger.warning("fas: asset owner missing", extra={"asset_id": asset.id})
             return HttpResponseBadRequest("Asset owner not configured.")

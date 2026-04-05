@@ -80,6 +80,10 @@ MSG91_VERIFY_OTP_URL = env(
     default="https://control.msg91.com/api/v5/otp/verify/{request_id}/{otp}"
 )
 
+FAS_KEY = env(
+    "FAS_KEY",default=""
+)
+
 # --------------------------------------------------
 # Application definition
 # --------------------------------------------------
@@ -91,6 +95,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
+    "core",
+    "website",
     "partner",
     "clients",
     "ads",
@@ -110,7 +116,7 @@ MIDDLEWARE = [
     "config.middleware.SubdomainURLRoutingMiddleware",
 ]
 
-ROOT_URLCONF = "config.urls"
+ROOT_URLCONF = "core.urls"
 
 # Map each host to its own URLConf
 HOST_URLCONF_MAP = {

@@ -1,0 +1,118 @@
+{% extends "landing/landing_base.html" %}
+{% block title %}Careers | WiadSpot{% endblock %}
+{% load static %}
+
+{% block content %}
+
+<!-- Coming Soon / Update Soon -->
+<section class="section bg-light">
+  <div class="container">
+    <div class="text-center py-5">
+      <h1 class="mb-3">Careers</h1>
+      <div class="alert alert-info d-inline-flex align-items-center gap-2 px-3 py-2" role="alert">
+        <i class="bi bi-tools"></i>
+        <strong>We’ll update this page soon.</strong> New roles are being prepared.
+      </div>
+      <p class="text-muted mt-3 mb-4">
+        If you’re passionate about public Wi-Fi, privacy-first analytics, and ad tech, we’d still love to hear from you.
+      </p>
+      <div class="d-flex justify-content-center gap-2 flex-wrap">
+        <a class="btn btn-primary" href="mailto:careers@wiadspot.com">
+          <i class="bi bi-envelope"></i> Email your resume
+        </a>
+        <a class="btn btn-outline-secondary" href="mailto:shahin@wiadspot.com">
+          <i class="bi bi-person-lines-fill"></i> Contact Shahin
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recent Posts -->
+<section class="section">
+  <div class="container">
+    <div class="d-flex align-items-end justify-content-between mb-3">
+      <h2 class="h4 mb-0">Recent Posts</h2>
+      <a class="text-decoration-none small" href="{% url 'landing' %}#articles">
+        View all
+        <i class="bi bi-arrow-right-short"></i>
+      </a>
+    </div>
+
+    {# If you already have articles in context, render them #}
+    {% if articles %}
+      <div class="list-group">
+        {% for a in articles %}
+          <a href="/articles/read/{{ a.slug }}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ a.title }}</h5>
+              <small class="text-muted">{{ a.published_at|date:"M d, Y" }}</small>
+            </div>
+            <p class="mb-1 text-muted">{{ a.excerpt }}</p>
+            <small class="text-primary">Read more</small>
+          </a>
+        {% endfor %}
+      </div>
+
+    {% else %}
+      {# Fallback: show a few known posts similar to your existing ones #}
+      <div class="list-group">
+        <a href="/articles/read/captive-portal-101" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Captive Portal 101</h5>
+            <small class="text-muted">Updated recently</small>
+          </div>
+          <p class="mb-1 text-muted">A quick primer on how captive portals work, onboarding flows, and best practices.</p>
+          <small class="text-primary">Read more</small>
+        </a>
+
+        <a href="/articles/read/public-wifi-pros-cons" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Public Wi-Fi: Pros & Cons</h5>
+            <small class="text-muted">Updated recently</small>
+          </div>
+          <p class="mb-1 text-muted">The value of free Wi-Fi for venues and users — and what to watch out for.</p>
+          <small class="text-primary">Read more</small>
+        </a>
+
+        <a href="/articles/read/wifi-marketing-playbook" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Wi-Fi Marketing Playbook</h5>
+            <small class="text-muted">Updated recently</small>
+          </div>
+          <p class="mb-1 text-muted">Consent-first tactics to engage visitors without being intrusive.</p>
+          <small class="text-primary">Read more</small>
+        </a>
+
+        <a href="/articles/read/network-analytics-privacy" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Network Analytics & Privacy</h5>
+            <small class="text-muted">Updated recently</small>
+          </div>
+          <p class="mb-1 text-muted">Measuring footfall and sessions while keeping user identities protected.</p>
+          <small class="text-primary">Read more</small>
+        </a>
+
+        <a href="/articles/read/monetizing-wifi-venues" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">Monetizing Wi-Fi for Venues</h5>
+            <small class="text-muted">Updated recently</small>
+          </div>
+          <p class="mb-1 text-muted">Sustainable models: sponsored access, CPM/CPC, and local campaigns.</p>
+          <small class="text-primary">Read more</small>
+        </a>
+
+        <a href="/articles/read/otp-vs-social-login" class="list-group-item list-group-item-action">
+          <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">OTP vs Social Login</h5>
+            <small class="text-muted">Updated recently</small>
+          </div>
+          <p class="mb-1 text-muted">Choosing the right onboarding flow for your audience and compliance.</p>
+          <small class="text-primary">Read more</small>
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+{% endblock %}
