@@ -1,31 +1,42 @@
 <div class="dropdown">
-    <button class="icon-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="bi bi-bell"></i>
-        <span class="notif-badge">3</span>
+    <button class="btn btn-outline-secondary position-relative rounded-circle d-flex align-items-center justify-content-center"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            style="width: 42px; height: 42px;">
+        <i class="bi bi-bell fs-5"></i>
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            3
+            <span class="visually-hidden">unread notifications</span>
+        </span>
     </button>
 
-    <ul class="dropdown-menu dropdown-menu-end notification-dropdown">
-        <li class="dropdown-header">Notifications</li>
-        <li><hr class="dropdown-divider"></li>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-2" style="min-width: 320px;">
+        <li class="px-2 py-1">
+            <div class="fw-bold">Notifications</div>
+            <small class="text-body-secondary">Latest updates</small>
+        </li>
+
+        <li><hr class="dropdown-divider my-2"></li>
 
         <li>
-            <a class="dropdown-item" href="#">
-                <div class="notif-title">New campaign created</div>
-                <div class="notif-time">2 minutes ago</div>
+            <a class="dropdown-item rounded-3 py-2" href="#">
+                <div class="fw-semibold small">New campaign created</div>
+                <small class="text-body-secondary">2 minutes ago</small>
             </a>
         </li>
 
         <li>
-            <a class="dropdown-item" href="#">
-                <div class="notif-title">User profile updated</div>
-                <div class="notif-time">15 minutes ago</div>
+            <a class="dropdown-item rounded-3 py-2" href="#">
+                <div class="fw-semibold small">User profile updated</div>
+                <small class="text-body-secondary">15 minutes ago</small>
             </a>
         </li>
 
         <li>
-            <a class="dropdown-item" href="#">
-                <div class="notif-title">Performance report ready</div>
-                <div class="notif-time">1 hour ago</div>
+            <a class="dropdown-item rounded-3 py-2" href="#">
+                <div class="fw-semibold small">Performance report ready</div>
+                <small class="text-body-secondary">1 hour ago</small>
             </a>
         </li>
     </ul>

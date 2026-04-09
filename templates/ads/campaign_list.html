@@ -1,0 +1,94 @@
+{% extends "shared/base_portal.html" %}
+
+{% block title %}Campaigns{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Campaign Management</h1>
+    <p class="text-body-secondary mb-0">Track campaign approval and runtime status.</p>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Owner</th>
+                        <th>Review Status</th>
+                        <th>Runtime Status</th>
+                        <th>Spend</th>
+                        <th>Created</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for campaign in page_obj %}
+                        <tr>
+                            <td>{{ campaign.name }}</td>
+                            <td>{{ campaign.owner.username }}</td>
+                            <td>
+                                {% if campaign.review_status == 'APPROVED' %}
+                                    <span class="badge text-bg-success">{{ campaign.review_status }}</span>
+                                {% elif campaign.review_status == 'REJECTED' %}
+                                    <span class="badge text-bg-danger">{{ campaign.review_status }}</span>
+                                {% else %}
+                                    <span class="badge text-bg-warning">{{ campaign.review_status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if campaign.status == 'ACTIVE' %}
+                                    <span class="badge text-bg-success">{{ campaign.status }}</span>
+                                {% elif campaign.status == 'PAUSED' %}
+                                    <span class="badge text-bg-secondary">{{ campaign.status }}</span>
+                                {% elif campaign.status == 'STOPPED' or campaign.status == 'COMPLETED' %}
+                                    <span class="badge text-bg-danger">{{ campaign.status }}</span>
+                                {% else %}
+                                    <span class="badge text-bg-warning">{{ campaign.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ campaign.total_spend }}</td>
+                            <td>{{ campaign.created_at|date:"d M Y" }}</td>
+                            <td class="text-end">
+                                {% if campaign.review_status == "PENDING" %}
+                                    <a href="{% url 'ads:campaign_review' campaign.id 'approve' %}" class="btn btn-sm btn-success rounded-3">Approve</a>
+                                    <a href="{% url 'ads:campaign_review' campaign.id 'reject' %}" class="btn btn-sm btn-danger rounded-3">Reject</a>
+                                {% elif campaign.status == "ACTIVE" %}
+                                    <a href="{% url 'ads:campaign_review' campaign.id 'pause' %}" class="btn btn-sm btn-secondary rounded-3">Pause</a>
+                                {% elif campaign.status == "PAUSED" and campaign.review_status == "APPROVED" %}
+                                    <a href="{% url 'ads:campaign_review' campaign.id 'resume' %}" class="btn btn-sm btn-primary rounded-3">Resume</a>
+                                {% else %}
+                                    <span class="text-muted small">No action</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center text-muted py-4">No campaigns available.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2 mt-4">
+                <div class="text-body-secondary small">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </div>
+
+                <div class="d-flex gap-2">
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-secondary btn-sm rounded-3">Previous</a>
+                    {% endif %}
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-secondary btn-sm rounded-3">Next</a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

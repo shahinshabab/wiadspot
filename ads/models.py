@@ -257,6 +257,26 @@ class Asset(models.Model):
         related_name="owned_admin_assets"
     )
 
+    supported_ad_types = models.CharField(
+        max_length=50,
+        blank=True,
+        default="IMAGE,VIDEO",
+        help_text="Comma separated values like IMAGE,VIDEO"
+    )
+    supported_ratio = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True,
+        help_text="Example: 16:9, 9:16, 1:1"
+    )
+
+    default_sessionlength = models.PositiveIntegerField(default=60)
+    default_uploadrate = models.PositiveIntegerField(default=0)
+    default_downloadrate = models.PositiveIntegerField(default=0)
+    default_uploadquota = models.PositiveIntegerField(default=0)
+    default_downloadquota = models.PositiveIntegerField(default=0)
+    default_redirurl = models.URLField(blank=True, null=True)
+
     asset_type = models.CharField(max_length=30, choices=ASSET_TYPE_CHOICES, default="ROUTER")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="ACTIVE")
 
@@ -389,6 +409,30 @@ class Campaign(models.Model):
         ("LOWEST_COST", "Lowest Cost"),
     )
 
+    REVIEW_STATUS_CHOICES = (
+        ("DRAFT", "Draft"),
+        ("PENDING", "Pending Review"),
+        ("APPROVED", "Approved"),
+        ("REJECTED", "Rejected"),
+    )
+
+    review_status = models.CharField(
+        max_length=20,
+        choices=REVIEW_STATUS_CHOICES,
+        default="DRAFT"
+    )
+    submitted_at = models.DateTimeField(null=True, blank=True)
+
+    reviewed_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="campaigns_reviewed"
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    rejection_reason = models.TextField(blank=True, null=True)
+
     bid_strategy = models.CharField(max_length=20, choices=BID_STRATEGY_CHOICES, default="FIXED")
     max_bid_per_impression = models.DecimalField(max_digits=10, decimal_places=4, default=0.0000)
     max_bid_per_click = models.DecimalField(max_digits=10, decimal_places=4, default=0.0000)
@@ -431,6 +475,9 @@ class Campaign(models.Model):
         if self.start_date and self.end_date and self.end_date < self.start_date:
             raise ValidationError("Campaign end date cannot be earlier than start date.")
 
+    @property
+    def is_manager_approved(self):
+        return self.review_status == "APPROVED"
 
 # =========================================================
 # AD
@@ -1082,3 +1129,62 @@ class AuthGrant(models.Model):
 
     def __str__(self):
         return f"{self.asset_id}:{self.rhid[:12]} created={self.created_at:%Y-%m-%d %H:%M:%S}"
+    
+
+
+class ManagerAuditLog(models.Model):
+    ACTION_CHOICES = (
+        ("CAMPAIGN_APPROVED", "Campaign Approved"),
+        ("CAMPAIGN_REJECTED", "Campaign Rejected"),
+        ("CAMPAIGN_PAUSED", "Campaign Paused"),
+        ("CAMPAIGN_RESUMED", "Campaign Resumed"),
+        ("AD_APPROVED", "Ad Approved"),
+        ("AD_REJECTED", "Ad Rejected"),
+        ("AD_PAUSED", "Ad Paused"),
+        ("AD_RESUMED", "Ad Resumed"),
+        ("PLACEMENT_APPROVED", "Placement Approved"),
+        ("PLACEMENT_REJECTED", "Placement Rejected"),
+        ("PLACEMENT_PAUSED", "Placement Paused"),
+        ("PLACEMENT_RESUMED", "Placement Resumed"),
+    )
+
+    manager = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="ads_manager_actions"
+    )
+    action = models.CharField(max_length=50, choices=ACTION_CHOICES)
+
+    campaign = models.ForeignKey(
+        "Campaign",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="audit_logs"
+    )
+    ad = models.ForeignKey(
+        "Ad",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="audit_logs"
+    )
+    placement = models.ForeignKey(
+        "Placement",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="audit_logs"
+    )
+
+    remarks = models.TextField(blank=True, null=True)
+    metadata = models.JSONField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.action} by {self.manager}"

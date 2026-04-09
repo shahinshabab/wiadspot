@@ -1,4 +1,3 @@
-from django.shortcuts import redirect, render
 from config.decorators import manager_required
 import logging
 
@@ -6,7 +5,6 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError, transaction
 from django.http import HttpRequest, HttpResponseBadRequest, HttpResponseServerError, HttpResponse 
-from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 
 from ads.services.runtime_service import (
@@ -14,7 +12,6 @@ from ads.services.runtime_service import (
     serve_ad_for_asset,
     log_click_for_session,
 )
-from ads.models import AuthGrant, Audience, AudienceSession
 from ads.utils import (
     Msg91Error,
     _normalize_indian_msisdn,
@@ -34,10 +31,25 @@ from ads.utils import (
 logger = logging.getLogger(__name__)
 
 
-@manager_required
-def home(request):
-    return render(request, "ads/home.html")
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models import Sum
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
+from ads.forms import ReviewReasonForm, ReportFilterForm
+from ads.models import Campaign, Ad, Placement, AdMetrics, ManagerAuditLog, AuthGrant, Audience, AudienceSession
+from ads.services.manager_service import (
+    manager_dashboard_stats,
+    approve_campaign,
+    reject_campaign,
+    approve_ad,
+    reject_ad,
+    approve_placement,
+    reject_placement,
+    pause_campaign,
+    resume_campaign,
+)
 
 def _k_reqid(portal_id, msisdn):
     return f"fas:reqid:{portal_id}:{msisdn}"
@@ -807,3 +819,175 @@ def ad_click_redirect(request, session_id):
     except Exception:
         logger.exception("ad_click_redirect failed", extra={"session_id": str(session_id)})
         return redirect("/")
+
+
+@manager_required
+def home(request):
+    stats = manager_dashboard_stats()
+    recent_logs = ManagerAuditLog.objects.select_related(
+        "manager", "campaign", "ad", "placement"
+    )[:20]
+
+    context = {
+        "stats": stats,
+        "recent_logs": recent_logs,
+    }
+    return render(request, "ads/home.html", context)
+
+
+@manager_required
+def review_queue(request):
+    campaign_qs = Campaign.objects.filter(review_status="PENDING").select_related("owner")
+    ad_qs = Ad.objects.filter(status="PENDING").select_related("owner", "campaign")
+    placement_qs = Placement.objects.filter(status="PENDING").select_related(
+        "asset", "ad", "ad__campaign", "requested_by"
+    )
+
+    context = {
+        "pending_campaigns": campaign_qs,
+        "pending_ads": ad_qs,
+        "pending_placements": placement_qs,
+    }
+    return render(request, "ads/review_queue.html", context)
+
+
+@manager_required
+def campaign_list(request):
+    qs = Campaign.objects.select_related("owner", "reviewed_by").order_by("-created_at")
+    status = request.GET.get("status")
+    review_status = request.GET.get("review_status")
+
+    if status:
+        qs = qs.filter(status=status)
+    if review_status:
+        qs = qs.filter(review_status=review_status)
+
+    paginator = Paginator(qs, 20)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    return render(request, "ads/campaign_list.html", {"page_obj": page_obj})
+
+
+@manager_required
+def campaign_review(request, pk, action):
+    campaign = get_object_or_404(Campaign, pk=pk)
+
+    if request.method == "POST":
+        form = ReviewReasonForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data["reason"]
+
+            if action == "approve":
+                approve_campaign(campaign, request.user, reason)
+                messages.success(request, "Campaign approved successfully.")
+            elif action == "reject":
+                reject_campaign(campaign, request.user, reason)
+                messages.warning(request, "Campaign rejected.")
+            elif action == "pause":
+                pause_campaign(campaign, request.user, reason)
+                messages.warning(request, "Campaign paused.")
+            elif action == "resume":
+                resume_campaign(campaign, request.user, reason)
+                messages.success(request, "Campaign resumed.")
+
+            return redirect("ads:campaign_list")
+    else:
+        form = ReviewReasonForm()
+
+    return render(request, "ads/campaign_review.html", {
+        "object": campaign,
+        "object_type": "campaign",
+        "action": action,
+        "form": form,
+    })
+
+
+@manager_required
+def ad_review(request, pk, action):
+    ad = get_object_or_404(Ad, pk=pk)
+
+    if request.method == "POST":
+        form = ReviewReasonForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data["reason"]
+
+            if action == "approve":
+                approve_ad(ad, request.user, reason)
+                messages.success(request, "Ad approved successfully.")
+            elif action == "reject":
+                reject_ad(ad, request.user, reason)
+                messages.warning(request, "Ad rejected.")
+
+            return redirect("ads:review_queue")
+    else:
+        form = ReviewReasonForm()
+
+    return render(request, "ads/campaign_review.html", {
+        "object": ad,
+        "object_type": "ad",
+        "action": action,
+        "form": form,
+    })
+
+
+@manager_required
+def placement_review(request, pk, action):
+    placement = get_object_or_404(Placement, pk=pk)
+
+    if request.method == "POST":
+        form = ReviewReasonForm(request.POST)
+        if form.is_valid():
+            reason = form.cleaned_data["reason"]
+
+            if action == "approve":
+                approve_placement(placement, request.user, reason)
+                messages.success(request, "Placement approved successfully.")
+            elif action == "reject":
+                reject_placement(placement, request.user, reason)
+                messages.warning(request, "Placement rejected.")
+
+            return redirect("ads:review_queue")
+    else:
+        form = ReviewReasonForm()
+
+    return render(request, "ads/campaign_review.html", {
+        "object": placement,
+        "object_type": "placement",
+        "action": action,
+        "form": form,
+    })
+
+
+@manager_required
+def performance_report(request):
+    form = ReportFilterForm(request.GET or None)
+    metrics = AdMetrics.objects.select_related("ad", "placement", "placement__asset").order_by("-date")
+
+    if form.is_valid():
+        start_date = form.cleaned_data.get("start_date")
+        end_date = form.cleaned_data.get("end_date")
+        owner_id = form.cleaned_data.get("owner_id")
+        asset_id = form.cleaned_data.get("asset_id")
+
+        if start_date:
+            metrics = metrics.filter(date__gte=start_date)
+        if end_date:
+            metrics = metrics.filter(date__lte=end_date)
+        if owner_id:
+            metrics = metrics.filter(ad__owner_id=owner_id)
+        if asset_id:
+            metrics = metrics.filter(placement__asset_id=asset_id)
+
+    totals = metrics.aggregate(
+        impressions=Sum("impressions"),
+        clicks=Sum("clicks"),
+        views=Sum("views"),
+        engagement=Sum("engagement"),
+        spend=Sum("spend"),
+    )
+
+    return render(request, "ads/performance_report.html", {
+        "form": form,
+        "metrics": metrics[:200],
+        "totals": totals,
+    })

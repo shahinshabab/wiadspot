@@ -1,0 +1,130 @@
+{% extends "shared/base_portal.html" %}
+
+{% block title %}Review Queue{% endblock %}
+
+{% block content %}
+<div class="mb-4">
+    <h1 class="h3 fw-bold mb-1">Review Queue</h1>
+    <p class="text-body-secondary mb-0">Approve or reject campaigns, ads, and placements.</p>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 fw-semibold mb-0">Pending Campaigns</h2>
+        </div>
+
+        {% if pending_campaigns %}
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Owner</th>
+                            <th>Status</th>
+                            <th>Submitted</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for campaign in pending_campaigns %}
+                            <tr>
+                                <td>{{ campaign.name }}</td>
+                                <td>{{ campaign.owner.username }}</td>
+                                <td><span class="badge text-bg-warning">{{ campaign.review_status }}</span></td>
+                                <td>{{ campaign.submitted_at|date:"d M Y, h:i A"|default:"-" }}</td>
+                                <td class="text-end">
+                                    <a href="{% url 'ads:campaign_review' campaign.id 'approve' %}" class="btn btn-sm btn-success rounded-3">Approve</a>
+                                    <a href="{% url 'ads:campaign_review' campaign.id 'reject' %}" class="btn btn-sm btn-danger rounded-3">Reject</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-body-secondary mb-0">No pending campaigns.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 fw-semibold mb-0">Pending Ads</h2>
+        </div>
+
+        {% if pending_ads %}
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Title</th>
+                            <th>Campaign</th>
+                            <th>Owner</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ad in pending_ads %}
+                            <tr>
+                                <td>{{ ad.title }}</td>
+                                <td>{{ ad.campaign.name }}</td>
+                                <td>{{ ad.owner.username }}</td>
+                                <td><span class="badge text-bg-warning">{{ ad.status }}</span></td>
+                                <td class="text-end">
+                                    <a href="{% url 'ads:ad_review' ad.id 'approve' %}" class="btn btn-sm btn-success rounded-3">Approve</a>
+                                    <a href="{% url 'ads:ad_review' ad.id 'reject' %}" class="btn btn-sm btn-danger rounded-3">Reject</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-body-secondary mb-0">No pending ads.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 fw-semibold mb-0">Pending Placements</h2>
+        </div>
+
+        {% if pending_placements %}
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ad</th>
+                            <th>Asset</th>
+                            <th>Requested By</th>
+                            <th>Status</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for placement in pending_placements %}
+                            <tr>
+                                <td>{{ placement.ad.title }}</td>
+                                <td>{{ placement.asset.name }}</td>
+                                <td>{{ placement.requested_by.username|default:"-" }}</td>
+                                <td><span class="badge text-bg-warning">{{ placement.status }}</span></td>
+                                <td class="text-end">
+                                    <a href="{% url 'ads:placement_review' placement.id 'approve' %}" class="btn btn-sm btn-success rounded-3">Approve</a>
+                                    <a href="{% url 'ads:placement_review' placement.id 'reject' %}" class="btn btn-sm btn-danger rounded-3">Reject</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-body-secondary mb-0">No pending placements.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

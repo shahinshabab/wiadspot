@@ -1,3 +1,4 @@
+#ads/services/runtime_service.py
 from decimal import Decimal
 from django.db.models import Q
 from django.utils import timezone
@@ -77,6 +78,8 @@ def is_campaign_live(campaign):
     if not campaign.is_active:
         return False
     if campaign.status not in ["ACTIVE"]:
+        return False
+    if getattr(campaign, "review_status", "APPROVED") != "APPROVED":
         return False
     if campaign.start_date and campaign.start_date > today:
         return False

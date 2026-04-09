@@ -1,104 +1,106 @@
-<aside class="portal-sidebar">
-    <div class="sidebar-scroll">
+<div class="p-3">
+    <div class="px-2 mb-3">
+        <div class="text-uppercase small fw-bold text-body-secondary">Main Menu</div>
+    </div>
 
-        <div class="sidebar-section-title">Main</div>
+    <div class="nav nav-pills flex-column gap-1">
 
         {% if "admin." in request.get_host %}
-            <a href="#" class="sidebar-link active">
+            <a href="#" class="nav-link active rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-speedometer2"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-people"></i>
                 <span>Users</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-shield-lock"></i>
                 <span>Roles</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-bar-chart-line"></i>
                 <span>Reports</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Logs</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-gear"></i>
                 <span>Settings</span>
             </a>
 
         {% elif "ads." in request.get_host %}
-            <a href="#" class="sidebar-link active">
+            <a href="{% url 'home' %}" class="nav-link rounded-3 d-flex align-items-center gap-2 py-2 px-3 {% if request.resolver_match.url_name == 'home' %}active{% else %}text-body{% endif %}">
                 <i class="bi bi-grid-1x2"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+
+            <a href="{% url 'review_queue' %}" class="nav-link rounded-3 d-flex align-items-center gap-2 py-2 px-3 {% if request.resolver_match.url_name == 'review_queue' %}active{% else %}text-body{% endif %}">
+                <i class="bi bi-check2-square"></i>
+                <span>Review Queue</span>
+            </a>
+
+            <a href="{% url 'campaign_list' %}" class="nav-link rounded-3 d-flex align-items-center gap-2 py-2 px-3 {% if request.resolver_match.url_name == 'campaign_list' %}active{% else %}text-body{% endif %}">
                 <i class="bi bi-badge-ad"></i>
                 <span>Campaigns</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <i class="bi bi-megaphone"></i>
-                <span>Advertisements</span>
-            </a>
-            <a href="#" class="sidebar-link">
+
+            <a href="{% url 'performance_report' %}" class="nav-link rounded-3 d-flex align-items-center gap-2 py-2 px-3 {% if request.resolver_match.url_name == 'performance_report' %}active{% else %}text-body{% endif %}">
                 <i class="bi bi-graph-up-arrow"></i>
                 <span>Performance</span>
             </a>
-            <a href="#" class="sidebar-link">
-                <i class="bi bi-credit-card"></i>
-                <span>Billing</span>
-            </a>
-            <a href="#" class="sidebar-link">
-                <i class="bi bi-sliders"></i>
-                <span>Settings</span>
+
+            <a href="{% url 'performance_report' %}" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
+                <i class="bi bi-receipt"></i>
+                <span>Billing Reports</span>
             </a>
 
         {% elif "clients." in request.get_host %}
-            <a href="#" class="sidebar-link active">
+            <a href="#" class="nav-link active rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-grid-1x2"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-folder2-open"></i>
                 <span>Services</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-file-earmark-text"></i>
                 <span>Requests</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-receipt"></i>
                 <span>Invoices</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-person"></i>
                 <span>Profile</span>
             </a>
 
         {% elif "partner." in request.get_host %}
-            <a href="#" class="sidebar-link active">
+            <a href="#" class="nav-link active rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-grid-1x2"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-diagram-3"></i>
                 <span>Collaborations</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-briefcase"></i>
                 <span>Deals</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-cash-coin"></i>
                 <span>Commissions</span>
             </a>
-            <a href="#" class="sidebar-link">
+            <a href="#" class="nav-link text-body rounded-3 d-flex align-items-center gap-2 py-2 px-3">
                 <i class="bi bi-person"></i>
                 <span>Profile</span>
             </a>
         {% endif %}
 
     </div>
-</aside>
+</div>

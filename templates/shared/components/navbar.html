@@ -1,30 +1,60 @@
 {% load static %}
-<nav class="portal-navbar">
-    <div class="navbar-left">
-        <a href="#" class="brand-wrap">
-            <img src="{% static 'images/logo.png' %}" alt="WIADSPOT Logo" class="brand-logo">
-        </a>
-    </div>
+<nav class="navbar navbar-expand-lg bg-body border-bottom shadow-sm fixed-top">
+    <div class="container-fluid px-3 px-lg-4">
 
-    <div class="navbar-right">
-        {% include "shared/components/notifications.html" %}
-
-        <div class="dropdown">
-            <button class="profile-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="bi bi-person-circle"></i>
+        <div class="d-flex align-items-center gap-2">
+            <!-- Mobile Menu Button -->
+            <button class="btn btn-outline-secondary d-md-none"
+                    type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#mobileSidebar"
+                    aria-controls="mobileSidebar">
+                <i class="bi bi-list fs-5"></i>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end profile-dropdown">
-                <li>
-                    <a class="dropdown-item" href="#">
-                        <i class="bi bi-person me-2"></i>Profile
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">
-                        <i class="bi bi-box-arrow-right me-2"></i>Logout
-                    </a>
-                </li>
-            </ul>
+
+            <!-- Brand -->
+            <a href="#" class="navbar-brand d-flex align-items-center mb-0">
+                <img src="{% static 'images/logo.png' %}" alt="WIADSPOT Logo" height="38" class="me-2">
+                <span class="fw-bold d-none d-sm-inline">WIADSPOT</span>
+            </a>
         </div>
+
+        <div class="d-flex align-items-center gap-2 gap-md-3 ms-auto">
+            {% include "shared/components/notifications.html" %}
+
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        style="width: 42px; height: 42px;">
+                    <i class="bi bi-person-circle fs-5"></i>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-4 p-2" style="min-width: 220px;">
+                    <li>
+                        <a class="dropdown-item rounded-3 py-2" href="#">
+                            <i class="bi bi-person me-2"></i>Profile
+                        </a>
+                    </li>
+
+                    <li>
+                        <a class="dropdown-item rounded-3 py-2" href="#" id="themeToggleBtn">
+                            <i class="bi bi-moon-stars me-2" id="themeToggleIcon"></i>
+                            <span id="themeToggleText">Dark Mode</span>
+                        </a>
+                    </li>
+
+                    <li><hr class="dropdown-divider my-2"></li>
+
+                    <li>
+                        <a class="dropdown-item rounded-3 py-2 text-danger" href="{% url 'logout' %}">
+                            <i class="bi bi-box-arrow-right me-2"></i>Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
     </div>
 </nav>

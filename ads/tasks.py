@@ -1,3 +1,4 @@
+#ads/tasks.py
 from decimal import Decimal
 from django.db import models, transaction
 from django.db.models import Sum, Count
@@ -31,10 +32,11 @@ def sync_campaign_statuses():
     # Stop expired campaigns
     Campaign.objects.filter(
         is_active=True,
-        status__in=["ACTIVE", "PAUSED"],
-        end_date__isnull=False,
-        end_date__lt=today
-    ).update(status="COMPLETED")
+        status="DRAFT",
+        review_status="APPROVED",
+        start_date__isnull=False,
+        start_date__lte=today
+    ).update(status="ACTIVE")
 
     # Stop campaigns that exceeded budget
     over_budget_campaigns = Campaign.objects.filter(
