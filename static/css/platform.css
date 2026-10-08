@@ -1,11 +1,14 @@
 :root {
-  --ink: #213b31;
-  --muted: #77817a;
-  --green: #244b3b;
-  --mint: #d9ebdc;
-  --lime: #d7edb3;
-  --paper: #f7f8f4;
-  --line: #e8ece6;
+  --ink: #163b53;
+  --muted: #617782;
+  --brand-primary: #002f4f;
+  --brand-soft: #d7f1f4;
+  --brand-accent-soft: #a7e9ed;
+  --paper: #f6fafb;
+  --line: #e1ebef;
+  --brand-accent: #09b6c2;
+  --bs-primary: #002f4f;
+  --bs-primary-rgb: 0, 47, 79;
 }
 * {
   box-sizing: border-box;
@@ -22,7 +25,7 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 a {
-  color: var(--green);
+  color: var(--brand-primary);
   text-decoration: none;
 }
 a:hover {
@@ -39,34 +42,34 @@ a:hover {
   gap: 10px;
 }
 .btn-brand {
-  background: var(--green);
-  border: 1px solid var(--green);
-  color: white;
+  background: var(--brand-accent);
+  border: 1px solid var(--brand-accent);
+  color: var(--brand-primary);
 }
 .btn-brand:hover,
 .btn-brand:focus {
-  background: #183529;
+  background: #00243d;
   color: white;
 }
 .btn-outline-brand {
-  border: 1px solid #cad5ca;
-  color: var(--green);
+  border: 1px solid #c8d4d7;
+  color: var(--brand-primary);
   background: white;
 }
 .btn-outline-brand:hover {
-  background: var(--mint);
+  background: var(--brand-soft);
 }
 .form-control,
 .form-select {
-  border-color: #d9e1d7;
+  border-color: #d7e0e1;
   border-radius: 9px;
   min-height: 45px;
   font-size: 14px;
 }
 .form-control:focus,
 .form-select:focus {
-  border-color: #7aa38b;
-  box-shadow: 0 0 0 0.2rem #244b3b15;
+  border-color: #7a9da3;
+  box-shadow: 0 0 0 0.2rem #002f4f15;
 }
 .form-label {
   font-size: 13px;
@@ -90,14 +93,26 @@ a:hover {
   color: var(--ink);
   text-decoration: none !important;
 }
+.brand-logo {
+  height: 56px;
+  width: 85px;
+  object-fit: contain;
+}
+.brand.light .brand-logo {
+  width: 102px;
+  height: 66px;
+  background: #fff;
+  padding: 6px 9px;
+  border-radius: 8px;
+}
 .brand-mark {
   display: grid;
   place-items: center;
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: var(--green);
-  color: var(--lime);
+  background: var(--brand-primary);
+  color: var(--brand-accent-soft);
   font-size: 23px;
 }
 .brand-word {
@@ -116,7 +131,7 @@ a:hover {
   font-size: 10px;
   letter-spacing: 1.8px;
   font-weight: 700;
-  color: #70806e;
+  color: #658389;
 }
 .workspace-sidebar {
   width: 235px !important;
@@ -138,7 +153,7 @@ a:hover {
 .workspace-label {
   font-size: 9px;
   letter-spacing: 1.8px;
-  color: #929c94;
+  color: #87a2a7;
   margin: 42px 13px 16px;
   font-weight: 600;
 }
@@ -159,25 +174,25 @@ a:hover {
   font-size: 17px;
 }
 .workspace-nav a:hover {
-  background: #f4f7f0;
+  background: #f0f6f7;
   text-decoration: none;
 }
 .workspace-nav .selected {
-  background: #eaf2e6;
-  color: var(--green);
+  background: #e6f0f2;
+  color: var(--brand-primary);
   font-weight: 650;
 }
 .nav-dot {
   width: 6px;
   height: 6px;
   border-radius: 100%;
-  background: var(--green);
+  background: var(--brand-primary);
   margin-left: auto;
 }
 .sidebar-guide {
   margin-top: auto;
-  background: #f4f7ee;
-  border: 1px solid #e9eddf;
+  background: #eef6f7;
+  border: 1px solid #dfebed;
   border-radius: 12px;
   padding: 18px 16px;
   margin-bottom: 25px;
@@ -185,7 +200,7 @@ a:hover {
 .guide-icon {
   font-size: 21px;
   margin-bottom: 13px;
-  color: #6e8851;
+  color: #518088;
 }
 .sidebar-guide strong {
   font-size: 13px;
@@ -195,7 +210,7 @@ a:hover {
 .sidebar-guide p {
   font-size: 11px;
   line-height: 1.7;
-  color: #85917d;
+  color: #759499;
   margin: 8px 0 15px;
 }
 .sidebar-guide a {
@@ -240,13 +255,13 @@ a:hover {
 .icon-button {
   background: none;
   border: 0;
-  color: #758274;
+  color: #69888d;
   padding: 7px;
   font-size: 17px;
   border-radius: 6px;
 }
 .icon-button:hover {
-  background: #eaf2e6;
+  background: #e6f0f2;
 }
 .workspace-main {
   margin-left: 235px;
@@ -263,7 +278,7 @@ a:hover {
 }
 .breadcrumb-label {
   font-size: 11px;
-  color: #8c968c;
+  color: #809da2;
 }
 .breadcrumb-label i {
   margin: 0 13px;
@@ -271,22 +286,22 @@ a:hover {
 }
 .breadcrumb-label strong {
   font-weight: 500;
-  color: #4c5e50;
+  color: #485e62;
 }
 .topbar-help {
   font-size: 12px;
-  color: #7c877c;
+  color: #6f8f94;
 }
 .topbar-help i {
   margin-right: 6px;
 }
 .account-pill {
-  border: 1px solid #e1e9dd;
-  background: #f8fbf5;
+  border: 1px solid #dde7e9;
+  background: #f5fafb;
   border-radius: 6px;
   padding: 6px 9px;
   font-size: 10px;
-  color: #617654;
+  color: #547176;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -294,7 +309,7 @@ a:hover {
 .account-pill span {
   height: 5px;
   width: 5px;
-  background: #86a868;
+  background: #689ea8;
   border-radius: 100%;
 }
 .workspace-content {
@@ -343,7 +358,7 @@ a:hover {
   border-radius: 7px;
   padding: 11px 12px;
   font-size: 11px;
-  color: #6e7a6c;
+  color: #627f84;
   white-space: nowrap;
 }
 .date-chip i {
@@ -366,11 +381,11 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   font-size: 11px;
-  color: #7c887a;
+  color: #6e8e94;
 }
 .metric-top i {
-  background: #f0f4ec;
-  color: #6e855e;
+  background: #ecf3f4;
+  color: #5e7f85;
   border-radius: 7px;
   padding: 6px 8px;
   font-size: 14px;
@@ -384,7 +399,7 @@ a:hover {
 }
 .metric-hint {
   font-size: 10px;
-  color: #83907e;
+  color: #759499;
 }
 .overview-grid {
   display: grid;
@@ -395,14 +410,14 @@ a:hover {
 .connection-card {
   min-height: 232px;
   border-radius: 13px;
-  background: var(--green);
+  background: var(--brand-primary);
   color: white;
   position: relative;
   overflow: hidden;
   padding: 27px 28px;
 }
 .light-eyebrow {
-  color: #b5cbad;
+  color: #adc6cb;
   font-size: 9px;
   letter-spacing: 1.5px;
 }
@@ -424,13 +439,13 @@ a:hover {
 .connection-text p {
   font-size: 10px;
   line-height: 1.8;
-  color: #b7cebd;
+  color: #b7cbce;
   max-width: 280px;
   margin-bottom: 16px;
 }
 .connection-text a {
   font-size: 10px;
-  color: #e2efbe;
+  color: #bee8ef;
   font-weight: 600;
 }
 .connection-text a i {
@@ -459,17 +474,17 @@ a:hover {
   border-radius: 17px;
   display: grid;
   place-items: center;
-  background: #d2e6ad;
-  color: var(--green);
+  background: #addde6;
+  color: var(--brand-primary);
   font-size: 33px;
 }
 .orbit-node {
   position: absolute;
   display: grid;
   place-items: center;
-  background: #42634e;
-  border: 1px solid #708465;
-  color: #ddedc8;
+  background: #425e63;
+  border: 1px solid #638186;
+  color: #c8e7ed;
   border-radius: 11px;
   width: 39px;
   height: 39px;
@@ -482,8 +497,8 @@ a:hover {
 .n2 {
   bottom: 22px;
   left: 28px;
-  background: #a2b88b;
-  color: #254b3b;
+  background: #8bb1b8;
+  color: #25454b;
 }
 .n3 {
   top: 79px;
@@ -511,14 +526,14 @@ a:hover {
 }
 .panel-heading p {
   font-size: 10px;
-  color: #8b9587;
+  color: #7d9a9f;
   margin: 6px 0 0;
 }
 .soft-label {
   font-size: 8px;
   letter-spacing: 0.7px;
-  color: #899881;
-  background: #f2f6ed;
+  color: #7b999e;
+  background: #edf5f6;
   border-radius: 4px;
   padding: 5px 6px;
   white-space: nowrap;
@@ -539,7 +554,7 @@ a:hover {
 .rate-number small {
   font-size: 25px;
   margin-left: 3px;
-  color: #9ba894;
+  color: #8fa8ad;
 }
 .delivery-panel > p {
   font-size: 10px !important;
@@ -547,19 +562,19 @@ a:hover {
 }
 .delivery-panel .progress {
   height: 6px;
-  background: #edf2e7;
+  background: #e7f0f2;
   margin: 22px 23px;
   border-radius: 100px;
 }
 .progress-bar {
-  background: #9fbc76;
+  background: var(--brand-accent);
 }
 .delivery-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: 10px;
-  color: #7c8874;
+  color: #6b8b91;
   margin: 0 23px;
 }
 .delivery-bottom strong {
@@ -570,7 +585,7 @@ a:hover {
   display: inline-block;
   height: 6px;
   width: 6px;
-  background: #a8bd8a;
+  background: #8ab5bd;
   border-radius: 100%;
   margin-right: 6px;
 }
@@ -580,11 +595,11 @@ a:hover {
 .table-search {
   display: flex;
   align-items: center;
-  border: 1px solid #e6ebe1;
+  border: 1px solid #e1eaeb;
   border-radius: 7px;
   padding: 8px 10px;
   gap: 7px;
-  color: #9aa591;
+  color: #8ca6aa;
 }
 .table-search input {
   border: 0;
@@ -597,14 +612,14 @@ a:hover {
   font-size: 11px;
   margin: 0;
   --bs-table-color: var(--ink);
-  --bs-table-border-color: #eff2eb;
+  --bs-table-border-color: #ebf1f2;
 }
 .workspace-table th {
-  background: #fafbf8;
+  background: #f8fbfb;
   font-weight: 500;
   font-size: 8px;
   letter-spacing: 1px;
-  color: #8c9887;
+  color: #7f9ba0;
   border-bottom: 1px solid var(--line);
   padding: 13px 17px;
   white-space: nowrap;
@@ -616,7 +631,7 @@ a:hover {
 .workspace-table td {
   padding: 16px 17px;
   vertical-align: middle;
-  color: #64705f;
+  color: #587277;
 }
 .table-campaign {
   display: flex;
@@ -634,8 +649,8 @@ a:hover {
   font-size: 18px;
 }
 .tone-mint {
-  background: #e5eddf;
-  color: #7b9166;
+  background: #dfebed;
+  color: #668b91;
 }
 .tone-peach {
   background: #f5e8db;
@@ -647,20 +662,20 @@ a:hover {
 }
 .table-campaign strong {
   display: block;
-  color: #3a4d37;
+  color: #374a4d;
   font-size: 11px;
   font-weight: 600;
 }
 .table-campaign small {
   display: block;
   font-size: 9px;
-  color: #8d9687;
+  color: #7e9a9f;
   margin-top: 5px;
 }
 .status-badge {
-  background: #f2f2eb;
-  border: 1px solid #e5e7dd;
-  color: #7e8770;
+  background: #ebf1f2;
+  border: 1px solid #dde6e7;
+  color: #69888e;
   border-radius: 5px;
   font-size: 9px;
   padding: 4px 7px;
@@ -669,9 +684,9 @@ a:hover {
 .status-active,
 .status-approved,
 .status-running {
-  background: #edf5e6;
-  border-color: #e0eccd;
-  color: #748c52;
+  background: #e6f3f5;
+  border-color: #cde7ec;
+  color: #52838c;
 }
 .status-paused,
 .status-pending {
@@ -695,11 +710,11 @@ a:hover {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #b0b4a5;
+  background: #a0b5b9;
   margin-right: 6px;
 }
 .review-approved {
-  background: #a2b97b;
+  background: #7bb0b9;
 }
 .review-pending {
   background: #dab877;
@@ -709,9 +724,9 @@ a:hover {
 }
 .panel-footnote {
   padding: 12px 23px;
-  background: #fdfefb;
+  background: #fbfefe;
   font-size: 9px;
-  color: #949d8c;
+  color: #85a0a4;
 }
 .panel-footnote i {
   margin-right: 6px;
@@ -738,8 +753,8 @@ a:hover {
   width: 34px;
   height: 34px;
   font-size: 16px;
-  background: #f1f4ec;
-  color: #7d8f6c;
+  background: #ecf3f4;
+  color: #6b8b90;
 }
 .location-info {
   flex: 1;
@@ -751,13 +766,13 @@ a:hover {
 }
 .location-info small {
   font-size: 9px;
-  color: #929b88;
+  color: #819da2;
   display: block;
   margin-top: 5px;
 }
 .panel-icon {
   font-size: 19px;
-  color: #a0ad92;
+  color: #91aaae;
 }
 .billing-option {
   display: flex;
@@ -770,8 +785,8 @@ a:hover {
   width: 37px;
   height: 37px;
   border-radius: 9px;
-  background: #eef3e7;
-  color: #809468;
+  background: #e7f1f3;
+  color: #688d94;
   display: grid;
   place-items: center;
   font-size: 18px;
@@ -788,18 +803,18 @@ a:hover {
 .billing-option p {
   margin: 5px 0;
   font-size: 10px;
-  color: #7d8973;
+  color: #6b8b91;
 }
 .billing-option small {
   font-size: 9px;
-  color: #a2ab99;
+  color: #94acb0;
 }
 .billing-note {
   margin: 4px 23px 17px;
-  background: #f7f8f3;
-  border: 1px solid #ecefe4;
+  background: #f3f7f8;
+  border: 1px solid #e4edef;
   border-radius: 7px;
-  color: #8c977e;
+  color: #79979c;
   font-size: 9px;
   line-height: 1.8;
   padding: 10px;
@@ -811,7 +826,7 @@ a:hover {
   display: flex;
   justify-content: space-between;
   padding: 8px 38px 25px;
-  color: #9da694;
+  color: #8ea7ac;
   font-size: 9px;
 }
 .workspace-footer i {
@@ -820,11 +835,11 @@ a:hover {
 .empty-state {
   padding: 33px 20px;
   text-align: center;
-  color: #8c9a83;
+  color: #7e9a9f;
 }
 .empty-state > i {
   font-size: 26px;
-  color: #b0c29d;
+  color: #9dbcc2;
   display: block;
   margin-bottom: 14px;
 }
@@ -851,7 +866,7 @@ a:hover {
   padding: 20px;
   text-align: center;
   font-size: 12px;
-  color: #78816e;
+  color: #668489;
 }
 .submission-grid {
   display: grid;
@@ -867,7 +882,7 @@ a:hover {
 }
 .submission-guide {
   border-radius: 12px;
-  background: #eaf0e1;
+  background: #e1eef0;
   padding: 35px;
   align-self: start;
 }
@@ -879,7 +894,7 @@ a:hover {
 .submission-guide p,
 .submission-guide li {
   font-size: 12px;
-  color: #7c8b6d;
+  color: #69898f;
   line-height: 1.9;
 }
 .submission-guide ol {
@@ -888,7 +903,7 @@ a:hover {
 }
 .submission-guide .billing-note {
   margin: 0;
-  background: #f4f7ed;
+  background: #edf5f7;
 }
 .login-layout {
   min-height: 100vh;
@@ -896,7 +911,7 @@ a:hover {
   grid-template-columns: 1fr 1fr;
 }
 .login-story {
-  background: var(--green);
+  background: var(--brand-primary);
   padding: 48px 65px;
   color: white;
   display: flex;
@@ -906,11 +921,11 @@ a:hover {
   overflow: hidden;
 }
 .brand.light {
-  color: #eef4e7;
+  color: #e7f2f4;
 }
 .brand.light .brand-mark {
-  background: #d4e6b2;
-  color: var(--green);
+  background: #b2dee6;
+  color: var(--brand-primary);
 }
 .login-story h1 {
   font-size: clamp(35px, 4vw, 61px);
@@ -920,12 +935,12 @@ a:hover {
   margin: 25px 0;
 }
 .login-story h1 em {
-  color: #c4dda1;
+  color: #a1d4dd;
   font-style: normal;
 }
 .login-story p {
   max-width: 350px;
-  color: #b3c8b3;
+  color: #b3c5c8;
   font-size: 14px;
   line-height: 1.9;
 }
@@ -933,7 +948,7 @@ a:hover {
   display: grid;
   gap: 13px;
   font-size: 11px;
-  color: #c2d2b9;
+  color: #b9ced2;
   margin-top: 35px;
 }
 .login-points i {
@@ -941,16 +956,16 @@ a:hover {
 }
 .login-story > small {
   font-size: 10px;
-  color: #94ae96;
+  color: #93abaf;
 }
 .login-form-wrap {
   padding: 48px 60px;
   display: flex;
   flex-direction: column;
-  background: #fcfcf9;
+  background: #f9fcfc;
 }
 .back-link {
-  color: #8b957e;
+  color: #78969b;
   font-size: 11px;
 }
 .back-link i {
@@ -969,7 +984,7 @@ a:hover {
 }
 .login-form > p {
   font-size: 12px;
-  color: #8e9784;
+  color: #7c999f;
 }
 .role-chooser {
   display: grid;
@@ -979,9 +994,9 @@ a:hover {
 }
 .role-choice {
   padding: 14px 9px;
-  border: 1px solid #e3e8dd;
+  border: 1px solid #dde6e8;
   border-radius: 8px;
-  color: #87947a;
+  color: #759499;
   font-size: 10px;
   display: flex;
   align-items: center;
@@ -991,12 +1006,12 @@ a:hover {
   font-size: 17px;
 }
 .role-choice.active {
-  background: #eaf1e2;
-  border-color: #a5bc8b;
-  color: #4a633b;
+  background: #e2eff1;
+  border-color: #8bb5bc;
+  color: #3b5d63;
 }
 .role-choice:hover {
-  background: #f0f5e9;
+  background: #e9f3f5;
   text-decoration: none;
 }
 .login-help {
@@ -1015,8 +1030,8 @@ a:hover {
   padding: 14px;
 }
 .public-nav {
-  background: #fbfcf7;
-  border-bottom: 1px solid #e4e9dc;
+  background: #f7fbfc;
+  border-bottom: 1px solid #dce7e9;
 }
 .public-nav .container {
   max-width: 1200px;
@@ -1027,7 +1042,7 @@ a:hover {
 }
 .public-nav .nav-link {
   font-size: 12px;
-  color: #798470;
+  color: #68878c;
 }
 .public-nav .nav-link.active {
   color: var(--ink);
@@ -1038,7 +1053,7 @@ a:hover {
 }
 .nav-sign-in {
   font-size: 12px;
-  color: var(--green);
+  color: var(--brand-primary);
   font-weight: 600;
   margin-right: 22px;
 }
@@ -1049,7 +1064,7 @@ a:hover {
 }
 .public-hero {
   padding: 72px 0 65px;
-  background: #f6f8ef;
+  background: #eff7f8;
   overflow: hidden;
 }
 .hero-grid {
@@ -1062,8 +1077,8 @@ a:hover {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  background: #edf2e0;
-  color: #849464;
+  background: #e0eff2;
+  color: #648d94;
   padding: 6px 10px;
   border-radius: 100px;
   letter-spacing: 1px;
@@ -1074,7 +1089,7 @@ a:hover {
 .hero-eyebrow span {
   width: 5px;
   height: 5px;
-  background: #7da05d;
+  background: #5d96a0;
   border-radius: 100%;
 }
 .hero-copy h1 {
@@ -1086,12 +1101,12 @@ a:hover {
 }
 .hero-copy h1 em {
   font-style: normal;
-  color: #839d64;
+  color: #07939d;
 }
 .hero-copy > p {
   font-size: 14px;
   line-height: 1.9;
-  color: #89917e;
+  color: #769499;
   max-width: 440px;
   margin-bottom: 28px;
 }
@@ -1107,7 +1122,7 @@ a:hover {
   align-items: center;
   gap: 16px;
   margin-top: 30px;
-  color: #87947b;
+  color: #769499;
   font-size: 10px;
 }
 .proof-icons {
@@ -1117,12 +1132,12 @@ a:hover {
   width: 30px;
   height: 30px;
   border-radius: 100%;
-  background: #e7eadb;
-  border: 2px solid #f7f8f0;
+  background: #dbe8ea;
+  border: 2px solid #f0f7f8;
   display: grid;
   place-items: center;
   margin-right: -7px;
-  color: #91a27b;
+  color: #7b9ca2;
 }
 .hero-visual {
   position: relative;
@@ -1131,13 +1146,13 @@ a:hover {
 .poster-stage {
   position: absolute;
   inset: 10px 0 5px 13px;
-  background: #e5ebd5;
+  background: #d5e8eb;
   border-radius: 120px 18px 18px 18px;
 }
 .visual-orbit {
   position: absolute;
   inset: 23px;
-  border: 1px solid #c9d7b6;
+  border: 1px solid #b6d2d7;
   border-radius: 100%;
   transform: rotate(-20deg);
 }
@@ -1150,7 +1165,7 @@ a:hover {
   background: #fffef8;
   border-radius: 12px;
   padding: 12px;
-  box-shadow: 12px 16px 35px #39512822;
+  box-shadow: 12px 16px 35px #284b5122;
 }
 .poster-browser {
   display: flex;
@@ -1159,7 +1174,7 @@ a:hover {
   gap: 4px;
 }
 .poster-browser > span {
-  background: #d8dfce;
+  background: #cedcdf;
   width: 5px;
   height: 5px;
   border-radius: 100%;
@@ -1167,10 +1182,10 @@ a:hover {
 .poster-browser small {
   font-size: 7px;
   margin-left: 38px;
-  color: #b3b9aa;
+  color: #a6babd;
 }
 .coffee-poster {
-  background: #294b3b;
+  background: #002f4f;
   border-radius: 5px;
   min-height: 298px;
   position: relative;
@@ -1181,7 +1196,7 @@ a:hover {
 .poster-top {
   font-size: 8px;
   letter-spacing: 2px;
-  color: #d0dcbc;
+  color: #bcd7dc;
 }
 .coffee-poster h2 {
   font-family: Georgia, serif;
@@ -1196,7 +1211,7 @@ a:hover {
   font-size: 8px;
   max-width: 110px;
   line-height: 1.8;
-  color: #b3c7a8;
+  color: #a8c2c7;
   margin-top: 11px;
 }
 .coffee-poster svg {
@@ -1208,8 +1223,8 @@ a:hover {
 }
 .poster-badge {
   display: inline-block;
-  background: #d2e39a;
-  color: #375038;
+  background: #9ad8e3;
+  color: #374c50;
   font-size: 8px;
   border-radius: 20px;
   padding: 5px 9px;
@@ -1222,18 +1237,18 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   font-size: 8px;
-  color: #9aa68b;
+  color: #89a3a8;
   padding: 10px 4px 1px;
 }
 .poster-caption strong {
-  color: #627657;
+  color: #577176;
   font-size: 8px;
 }
 .floating-card {
   position: absolute;
   background: #fffef9;
-  box-shadow: 0 8px 30px #25482b0c;
-  border: 1px solid #e4e9d6;
+  box-shadow: 0 8px 30px #2543480c;
+  border: 1px solid #d6e6e9;
   border-radius: 10px;
   padding: 13px;
   display: flex;
@@ -1244,11 +1259,11 @@ a:hover {
 .floating-card i {
   display: grid;
   place-items: center;
-  background: #eef3e0;
+  background: #e0f0f3;
   border-radius: 8px;
   width: 32px;
   height: 32px;
-  color: #8aa269;
+  color: #6999a2;
   font-size: 16px;
 }
 .floating-card strong {
@@ -1258,7 +1273,7 @@ a:hover {
 .floating-card small {
   display: block;
   font-size: 8px;
-  color: #97a18a;
+  color: #86a1a5;
   margin-top: 3px;
 }
 .floating-one {
@@ -1273,15 +1288,15 @@ a:hover {
 }
 .location-strip {
   background: #fffefa;
-  border-top: 1px solid #e6eada;
-  border-bottom: 1px solid #e6eada;
+  border-top: 1px solid #dae8ea;
+  border-bottom: 1px solid #dae8ea;
   padding: 22px 0;
 }
 .strip-inner {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #99a18b;
+  color: #86a1a6;
   font-size: 10px;
 }
 .strip-inner > span {
@@ -1291,12 +1306,12 @@ a:hover {
 }
 .strip-inner i {
   font-size: 20px;
-  color: #a3af8f;
+  color: #8faaaf;
 }
 .strip-inner > strong {
   font-size: 9px;
   letter-spacing: 1px;
-  color: #7d8b67;
+  color: #67868b;
 }
 .public-section {
   padding: 65px 0;
@@ -1314,7 +1329,7 @@ a:hover {
 }
 .section-heading > p {
   font-size: 12px;
-  color: #89947c;
+  color: #76949a;
   line-height: 1.8;
 }
 .plan-grid {
@@ -1326,31 +1341,31 @@ a:hover {
 }
 .plan-card {
   background: #fffefa;
-  border: 1px solid #e3e8db;
+  border: 1px solid #dbe6e8;
   border-radius: 14px;
   padding: 30px;
 }
 .plan-card.owner {
-  background: #edf3e5;
+  background: #e5f1f3;
 }
 .plan-icon {
   font-size: 24px;
   width: 50px;
   height: 50px;
-  background: #edf2e3;
+  background: #e3f0f2;
   display: grid;
   place-items: center;
   border-radius: 12px;
   margin-bottom: 22px;
-  color: #8a9e70;
+  color: #70979e;
 }
 .owner .plan-icon {
-  background: #dce8cd;
+  background: #cde4e8;
 }
 .plan-category {
   font-size: 9px;
   letter-spacing: 1px;
-  color: #99a188;
+  color: #85a0a4;
   font-weight: 600;
 }
 .plan-card h3 {
@@ -1360,13 +1375,13 @@ a:hover {
 }
 .plan-card > p {
   font-size: 12px;
-  color: #849073;
+  color: #6f8f94;
   line-height: 1.8;
   max-width: 320px;
 }
 .plan-billing {
-  border-top: 1px solid #e1e7d5;
-  border-bottom: 1px solid #e1e7d5;
+  border-top: 1px solid #d5e4e7;
+  border-bottom: 1px solid #d5e4e7;
   padding: 17px 0;
   margin: 20px 0;
 }
@@ -1377,19 +1392,19 @@ a:hover {
 }
 .plan-billing small {
   font-size: 10px;
-  color: #95a083;
+  color: #819da2;
 }
 .plan-card ul {
   list-style: none;
   padding: 0;
   font-size: 11px;
-  color: #7d8e69;
+  color: #69888e;
   display: grid;
   gap: 12px;
   margin-bottom: 24px;
 }
 .plan-card ul i {
-  color: #89a469;
+  color: #699ba4;
   margin-right: 8px;
 }
 .plan-card .btn {
@@ -1403,8 +1418,8 @@ a:hover {
 }
 .step-number {
   font-size: 12px;
-  color: #98aa7e;
-  border: 1px solid #dce5ce;
+  color: #7ea3aa;
+  border: 1px solid #cee2e5;
   width: 34px;
   height: 34px;
   border-radius: 100%;
@@ -1420,11 +1435,11 @@ a:hover {
 .how-step p {
   font-size: 12px;
   line-height: 1.9;
-  color: #8a947d;
+  color: #77959a;
 }
 .roles-section {
-  background: #f0f4e8;
-  border-top: 1px solid #e4ead9;
+  background: #e8f2f4;
+  border-top: 1px solid #d9e7ea;
 }
 .roles-grid {
   display: grid;
@@ -1433,7 +1448,7 @@ a:hover {
 }
 .role-card {
   background: #fffefa;
-  border: 1px solid #e0e7d3;
+  border: 1px solid #d3e4e7;
   border-radius: 11px;
   padding: 22px;
   display: flex;
@@ -1442,7 +1457,7 @@ a:hover {
 }
 .role-card > i {
   font-size: 22px;
-  color: #8fa575;
+  color: #759ea5;
   margin-bottom: 18px;
 }
 .role-card h3 {
@@ -1452,7 +1467,7 @@ a:hover {
 .role-card p {
   font-size: 10px;
   line-height: 1.8;
-  color: #909a83;
+  color: #7e9a9f;
   flex: 1;
 }
 .role-card a {
@@ -1463,12 +1478,12 @@ a:hover {
   margin-left: 10px;
 }
 .public-footer {
-  background: #244b3b;
-  color: #d8e5c5;
+  background: #002f4f;
+  color: #c5e0e5;
   padding: 30px 0;
 }
 .public-footer .brand {
-  color: #e3ead7;
+  color: #d7e7ea;
 }
 .public-footer-inner {
   display: flex;
@@ -1477,11 +1492,11 @@ a:hover {
 }
 .public-footer small {
   font-size: 9px;
-  color: #a8bd99;
+  color: #99b8bd;
 }
 .public-footer a.contact-link {
   font-size: 11px;
-  color: #d7e4c3;
+  color: #c3dfe4;
 }
 .public-footer .brand-word {
   font-size: 24px;
