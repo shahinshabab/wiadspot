@@ -16,7 +16,10 @@ class SubdomainURLRoutingMiddleware:
         host = request.get_host().lower()
 
         # fallback to main site
-        request.urlconf = HOST_URLCONF_MAP.get(host, settings.ROOT_URLCONF)
+        if request.path_info.startswith(("/accounts/", "/portal/", "/management/")):
+            request.urlconf = settings.ROOT_URLCONF
+        else:
+            request.urlconf = HOST_URLCONF_MAP.get(host, settings.ROOT_URLCONF)
 
         response = self.get_response(request)
         return response

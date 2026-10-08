@@ -1,0 +1,41 @@
+{% extends "platform/base.html" %}
+{% block body_class %}workspace{% endblock %}
+{% block body %}
+    <aside class="workspace-sidebar offcanvas-lg offcanvas-start"
+           tabindex="-1"
+           id="workspaceSidebar"
+           aria-labelledby="sidebarLabel">
+        <div class="sidebar-brand">
+            <a href="{% url 'landing' %}" class="brand" id="sidebarLabel">{% include "platform/brand.html" %}</a>
+            <button type="button"
+                    class="btn-close d-lg-none"
+                    data-bs-dismiss="offcanvas"
+                    data-bs-target="#workspaceSidebar"
+                    aria-label="Close navigation"></button>
+        </div>
+        <div class="workspace-label">YOUR WORKSPACE</div>
+        <nav class="workspace-nav" aria-label="Workspace">
+            {% if role == 'manager' %}<a href="{% url 'review_queue' %}"><i aria-hidden="true" class="bi bi-check2-square"></i>Review queue</a>{% endif %}
+            <a class="selected"
+               href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-grid-1x2"></i>Overview<span class="nav-dot"></span></a>
+            <a href="{% url 'portal_dashboard' role %}#campaigns"><i aria-hidden="true" class="bi bi-megaphone"></i>Campaigns</a>
+            <a href="{% url 'portal_dashboard' role %}#locations"><i aria-hidden="true" class="bi bi-geo-alt"></i>Locations</a>
+            <a href="{% url 'portal_dashboard' role %}#billing"><i aria-hidden="true" class="bi bi-receipt"></i>Billing overview</a>
+            {% if role == "customer" or role == "owner" %}<a href="{% url 'portal_campaign_create' role %}"><i aria-hidden="true" class="bi bi-plus-square"></i>Submit a poster</a>{% endif %}
+        </nav>
+        <div class="sidebar-guide"><div class="guide-icon"><i aria-hidden="true" class="bi bi-lightbulb"></i></div><strong>A little help goes a long way.</strong><p>Let’s make your next connection a great one.</p><a href="{% url 'landing_contact' %}">Talk to WiadSpot <i aria-hidden="true" class="bi bi-arrow-up-right"></i></a></div>
+        <div class="sidebar-account"><span class="avatar">{{ request.user.username|first|upper }}</span><div><strong>{{ request.user.get_short_name|default:request.user.username }}</strong><small>{{ account.label }}</small></div><form method="post" action="{% url 'account_logout' %}">{% csrf_token %}<button class="icon-button" aria-label="Sign out"><i aria-hidden="true" class="bi bi-box-arrow-right"></i></button></form></div>
+    </aside>
+    <div class="workspace-main">
+        <header class="workspace-topbar"><div class="d-flex align-items-center gap-3"><button class="icon-button d-lg-none"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#workspaceSidebar"
+        aria-controls="workspaceSidebar"
+        aria-label="Open navigation"><i aria-hidden="true" class="bi bi-list"></i></button><span class="breadcrumb-label">Workspace <i aria-hidden="true" class="bi bi-chevron-right"></i> <strong>{{ account.label }}</strong></span></div><div class="d-flex align-items-center gap-3"><a class="topbar-help" href="{% url 'landing_contact' %}"><i aria-hidden="true" class="bi bi-question-circle"></i> Help</a><span class="account-pill"><span></span>{{ account.label }}</span></div></header>
+        <main id="main-content" class="workspace-content">
+            {% for message in messages %}<div class="alert alert-success" role="status">{{ message }}</div>{% endfor %}
+            {% block content %}{% endblock %}
+        </main>
+        <footer class="workspace-footer"><span>© {% now "Y" %} WiadSpot. Connections that matter.</span><span><i aria-hidden="true" class="bi bi-shield-check"></i> Your workspace, securely connected</span></footer>
+    </div>
+{% endblock %}
