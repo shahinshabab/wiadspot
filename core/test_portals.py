@@ -14,6 +14,7 @@ from ads.models import Ad, AdMetrics, Asset, Campaign, Placement
 from .portal_views import ROLES
 
 
+@override_settings(DEBUG=True)
 class PlatformPortalTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -251,7 +252,7 @@ class PlatformPortalTests(TestCase):
         self.client.force_login(self.users["manager"])
         self.assertEqual(self.client.get(reverse("review_queue")).status_code, 200)
         self.client.force_login(self.users["customer"])
-        self.assertEqual(self.client.get(reverse("review_queue")).status_code, 302)
+        self.assertEqual(self.client.get(reverse("review_queue")).status_code, 403)
 
     def test_existing_review_actions_approve_each_entity_separately(self):
         self.client.force_login(self.users["manager"])

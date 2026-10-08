@@ -1,42 +1,155 @@
 {% extends "platform/base.html" %}
 {% block body %}
-    <header class="public-nav"><nav class="navbar navbar-expand-lg" aria-label="Main navigation"><div class="container px-4"><a class="brand" href="{% url 'landing' %}">{% include "platform/brand.html" %}</a><button class="navbar-toggler border-0"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#publicNavigation"
-        aria-controls="publicNavigation"
-        aria-expanded="false"
-        aria-label="Open menu"><i aria-hidden="true" class="bi bi-list"></i></button><div class="collapse navbar-collapse" id="publicNavigation"><div class="navbar-nav mx-auto"><a class="nav-link active" href="#how-it-works">How it works</a><a class="nav-link" href="#locations">Our locations</a><a class="nav-link" href="#accounts">Your workspace</a><a class="nav-link" href="{% url 'landing_contact' %}">Contact</a></div><div class="d-flex align-items-center"><a class="nav-sign-in" href="{% url 'account_login' %}">Sign in</a><a class="btn btn-brand" href="{% url 'landing_contact' %}">Let’s connect <i aria-hidden="true" class="bi bi-arrow-up-right"></i></a></div></div></div></nav></header>
+    {% include "platform/public_nav.html" %}
     <main id="main-content">
-        <section class="public-hero"><div class="public-container hero-grid"><div class="hero-copy"><div class="hero-eyebrow"><span></span> WHERE WI-FI MEETS OPPORTUNITY</div><h1>Make every<br>connection<br><em>count.</em></h1><p>Your next customer is already connecting. Put your brand in the moment with poster ads at WiadSpot locations, or bring your own place to our network.</p><div class="hero-actions"><a href="{% url 'account_login' %}?role=customer" class="btn btn-brand">Start advertising <i aria-hidden="true" class="bi bi-arrow-right"></i></a><a href="{% url 'account_login' %}?role=owner"
-   class="btn btn-outline-brand">Connect my location <i aria-hidden="true" class="bi bi-geo-alt"></i></a></div><div class="hero-proof"><div class="proof-icons" aria-hidden="true"><span><i aria-hidden="true" class="bi bi-shop"></i></span><span><i aria-hidden="true" class="bi bi-cup-hot"></i></span><span><i aria-hidden="true" class="bi bi-building"></i></span></div><span>Built for brands, businesses and everyday places.</span></div></div><div class="hero-visual"
-     aria-label="Illustration of a poster advertisement at a Wi-Fi location"><div class="poster-stage"><div class="visual-orbit"></div></div><div class="poster-window"><div class="poster-browser"><span></span><span></span><span></span><small>YOUR BRAND. THEIR NEXT CONNECTION.</small></div><div class="coffee-poster"><div class="poster-top">THE DAILY BREW</div><h2>Good mornings<br>start here.</h2><p class="poster-sub">A little pause.<br>A freshly brewed possibility.</p><span class="poster-badge">FIND YOUR DAILY CUP ↗</span><svg viewBox="0 0 180 190" role="presentation" aria-hidden="true"><circle cx="95" cy="117" r="72" fill="#09b6c2" /><ellipse cx="94" cy="159" rx="66" ry="13" fill="#d1d3a5" /><path d="M44 74h84v55c0 25-16 31-41 31S44 150 44 129Z" fill="#f0e6c6" /><path d="M128 84h15c28 0 28 46 0 46h-15" fill="none" stroke="#f0e6c6" stroke-width="10" /><ellipse cx="86" cy="75" rx="42" ry="10" fill="#d4c59b" /><ellipse cx="86" cy="75" rx="34" ry="7" fill="#6c573e" /><path d="M73 55c-16-16 12-19 0-36M94 55c-16-16 12-19 0-36" stroke="#e6e3bb" stroke-width="3" fill="none" stroke-linecap="round" /></svg></div><div class="poster-caption"><span><i aria-hidden="true" class="bi bi-wifi"></i> A WiadSpot connection</span><strong>Poster preview</strong></div></div><div class="floating-card floating-one"><i aria-hidden="true" class="bi bi-geo-alt"></i><div><strong>Your brand, in the right place.</strong><small>WiadSpot location network</small></div></div><div class="floating-card floating-two"><i aria-hidden="true" class="bi bi-broadcast"></i><div><strong>More than a Wi-Fi connection.</strong><small>A moment to meet your next customer</small></div></div></div></div></section>
-        <section class="location-strip" aria-label="Types of locations">
-            <div class="public-container strip-inner"><strong>REAL PLACES. REAL OPPORTUNITIES.</strong><span><i aria-hidden="true" class="bi bi-cup-hot"></i> Cafés & restaurants</span><span><i aria-hidden="true" class="bi bi-shop"></i> Retail spaces</span><span><i aria-hidden="true" class="bi bi-buildings"></i> Hospitality</span><span><i aria-hidden="true" class="bi bi-people"></i> Community spaces</span></div>
-        </section>
-        <section class="public-section" id="locations"><div class="public-container"><div class="section-heading"><div class="eyebrow">ONE NETWORK. TWO WAYS TO CONNECT.</div><h2>A place for every possibility.</h2><p>Advertise across our hosted locations, or turn your own location into a connected WiadSpot experience.</p></div><div class="plan-grid"><article class="plan-card"><div class="plan-icon"><i aria-hidden="true" class="bi bi-broadcast"></i></div><div class="plan-category">FOR ADVERTISING CUSTOMERS</div><h3>WiadSpot-hosted locations</h3><p>Your poster, our network. Reach people at locations hosted and managed by WiadSpot.</p><div class="plan-billing"><strong>Pay per user.</strong><small>Usage billed monthly · rate to be configured</small></div><ul><li><i aria-hidden="true" class="bi bi-check2"></i> Submit image posters for review</li><li><i aria-hidden="true" class="bi bi-check2"></i> Choose available network locations</li><li><i aria-hidden="true" class="bi bi-check2"></i> Track recorded impressions and clicks</li></ul><a class="btn btn-outline-brand"
-   href="{% url 'account_login' %}?role=customer">Explore advertising <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article><article class="plan-card owner"><div class="plan-icon"><i aria-hidden="true" class="bi bi-buildings"></i></div><div class="plan-category">FOR CUSTOMER-OWNED LOCATIONS</div><h3>Your location. Your audience.</h3><p>Connect your own place to WiadSpot and manage your locations from a dedicated workspace.</p><div class="plan-billing"><strong>A monthly subscription.</strong><small>Platform access · plan pricing to be configured</small></div><ul><li><i aria-hidden="true" class="bi bi-check2"></i> Manage your own locations</li><li><i aria-hidden="true" class="bi bi-check2"></i> View visitor and poster activity</li><li><i aria-hidden="true" class="bi bi-check2"></i> Keep subscription details in one place</li></ul><a class="btn btn-brand" href="{% url 'account_login' %}?role=owner">Connect your location <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article></div></div></section>
-        <section class="public-section pt-0" id="how-it-works">
-            <div class="public-container">
-                <div class="section-heading">
-                    <div class="eyebrow">FROM YOUR BRAND TO THEIR SCREEN</div>
-                    <h2>Good connections start simply.</h2>
+        <section class="public-hero">
+            <div class="public-container hero-grid">
+                <div class="hero-copy">
+                    <div class="hero-eyebrow"><span></span> WHERE WI-FI MEETS OPPORTUNITY</div>
+                    <h1>
+                        Make every
+                        <br>
+                        connection
+                        <br>
+                        <em>count.</em>
+                    </h1>
+                    <p>Your next customer is already connecting. Put your brand in the moment with poster ads at WiadSpot locations, or bring your own place to our network.</p>
+                    <div class="hero-actions"><a href="{{ client_login_url }}" class="btn btn-brand">Start advertising <i aria-hidden="true" class="bi bi-arrow-right"></i></a><a href="{{ owner_login_url }}" class="btn btn-outline-brand">Connect my location <i aria-hidden="true" class="bi bi-geo-alt"></i></a></div>
+                    <div class="hero-proof">
+                        <div class="proof-icons" aria-hidden="true">
+                            <span><i aria-hidden="true" class="bi bi-shop"></i></span><span><i aria-hidden="true" class="bi bi-cup-hot"></i></span><span><i aria-hidden="true" class="bi bi-building"></i></span>
+                        </div>
+                        <span>Built for brands, businesses and everyday places.</span>
+                    </div>
                 </div>
-                <div class="how-grid">
-                    <article class="how-step"><span class="step-number">01</span>
-                        <h3>Find your place.</h3>
-                        <p>Choose a WiadSpot-hosted location or connect the location you own.</p>
-                    </article><article class="how-step"><span class="step-number">02</span>
-                        <h3>Make your impression.</h3>
-                        <p>Upload a poster and submit your campaign and placement for review.</p>
-                    </article><article class="how-step"><span class="step-number">03</span>
-                        <h3>See the connection.</h3>
-                        <p>Follow recorded impressions, clicks and location activity from your workspace.</p>
-                    </article>
+                <div class="hero-visual"
+                     aria-label="Illustration of a poster advertisement at a Wi-Fi location">
+                    <div class="poster-stage">
+                        <div class="visual-orbit"></div>
+                    </div>
+                    <div class="poster-window">
+                        <div class="poster-browser"><span></span><span></span><span></span><small>YOUR BRAND. THEIR NEXT CONNECTION.</small></div>
+                        <div class="coffee-poster">
+                            <div class="poster-top">THE DAILY BREW</div>
+                            <h2>
+                                Good mornings
+                                <br>
+                                start here.
+                            </h2>
+                            <p class="poster-sub">
+                                A little pause.
+                                <br>
+                                A freshly brewed possibility.
+                            </p>
+                            <span class="poster-badge">FIND YOUR DAILY CUP ↗</span><svg viewBox="0 0 180 190"
+     role="presentation"
+     aria-hidden="true">
+                                <circle cx="95" cy="117" r="72" fill="#09b6c2" /><ellipse cx="94" cy="159" rx="66" ry="13" fill="#d1d3a5" />
+                                <path d="M44 74h84v55c0 25-16 31-41 31S44 150 44 129Z" fill="#f0e6c6" />
+                                <path d="M128 84h15c28 0 28 46 0 46h-15" fill="none" stroke="#f0e6c6" stroke-width="10" />
+                                <ellipse cx="86" cy="75" rx="42" ry="10" fill="#d4c59b" /><ellipse cx="86" cy="75" rx="34" ry="7" fill="#6c573e" />
+                                <path d="M73 55c-16-16 12-19 0-36M94 55c-16-16 12-19 0-36" stroke="#e6e3bb" stroke-width="3" fill="none" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="poster-caption"><span><i aria-hidden="true" class="bi bi-wifi"></i> A WiadSpot connection</span><strong>Poster preview</strong></div>
+                    </div>
+                    <div class="floating-card floating-one">
+                        <i aria-hidden="true" class="bi bi-geo-alt"></i>
+                        <div><strong>Your brand, in the right place.</strong><small>WiadSpot location network</small></div>
+                    </div>
+                    <div class="floating-card floating-two">
+                        <i aria-hidden="true" class="bi bi-broadcast"></i>
+                        <div><strong>More than a Wi-Fi connection.</strong><small>A moment to meet your next customer</small></div>
+                    </div>
                 </div>
             </div>
         </section>
-        <section class="public-section roles-section" id="accounts"><div class="public-container"><div class="section-heading"><div class="eyebrow">THE RIGHT TOOLS FOR THE RIGHT PEOPLE</div><h2>One platform. Your own workspace.</h2><p>Four account types, each with a focused view of what matters.</p></div><div class="roles-grid"><article class="role-card"><i aria-hidden="true" class="bi bi-grid-1x2"></i><h3>Administrator</h3><p>Oversee the platform’s campaigns, locations and billing models.</p><a href="{% url 'account_login' %}?role=admin">Admin sign in <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article><article class="role-card"><i aria-hidden="true" class="bi bi-megaphone"></i><h3>Ad manager</h3><p>Monitor campaigns, review status and advertising performance.</p><a href="{% url 'account_login' %}?role=manager">Manager sign in <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article><article class="role-card"><i aria-hidden="true" class="bi bi-image"></i><h3>Advertising customer</h3><p>Submit your posters and see your own campaign activity.</p><a href="{% url 'account_login' %}?role=customer">Customer sign in <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article><article class="role-card"><i aria-hidden="true" class="bi bi-geo-alt"></i><h3>Location owner</h3><p>Manage the places you own and see your subscription details.</p><a href="{% url 'account_login' %}?role=owner">Owner sign in <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article></div></div></section>
-    </main>
-    <footer class="public-footer"><div class="public-container public-footer-inner"><a href="{% url 'landing' %}" class="brand light">{% include "platform/brand.html" %}</a><small>Make every connection count. © {% now "Y" %} WiadSpot.</small><a href="{% url 'landing_contact' %}" class="contact-link">Let’s build your next connection <i aria-hidden="true" class="bi bi-arrow-up-right"></i></a></div></footer>
+        <section class="location-strip" aria-label="Types of locations">
+            <div class="public-container strip-inner"><strong>REAL PLACES. REAL OPPORTUNITIES.</strong><span><i aria-hidden="true" class="bi bi-cup-hot"></i> Cafés & restaurants</span><span><i aria-hidden="true" class="bi bi-shop"></i> Retail spaces</span><span><i aria-hidden="true" class="bi bi-buildings"></i> Hospitality</span><span><i aria-hidden="true" class="bi bi-people"></i> Community spaces</span></div>
+        </section>
+        <section class="public-section" id="locations">
+            <div class="public-container">
+                <div class="section-heading">
+                    <div class="eyebrow">ONE NETWORK. TWO WAYS TO CONNECT.</div>
+                    <h2>A place for every possibility.</h2>
+                    <p>Advertise across our hosted locations, or turn your own location into a connected WiadSpot experience.</p>
+                </div>
+                <div class="plan-grid">
+                    <article class="plan-card">
+                        <div class="plan-icon">
+                            <i aria-hidden="true" class="bi bi-broadcast"></i>
+                        </div>
+                        <div class="plan-category">FOR ADVERTISING CUSTOMERS</div>
+                        <h3>WiadSpot-hosted locations</h3>
+                        <p>Your poster, our network. Reach people at locations hosted and managed by WiadSpot.</p>
+                        <div class="plan-billing"><strong>Pay per user.</strong><small>Usage billed monthly · rate to be configured</small></div>
+                        <ul>
+                            <li><i aria-hidden="true" class="bi bi-check2"></i> Submit image posters for review</li>
+                            <li><i aria-hidden="true" class="bi bi-check2"></i> Choose available network locations</li>
+                            <li><i aria-hidden="true"
+   class="bi bi-check2"></i> Track recorded impressions and clicks</li>
+                        </ul>
+                        <a class="btn btn-outline-brand" href="{{ client_login_url }}">Explore advertising <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article><article class="plan-card owner">
+                            <div class="plan-icon">
+                                <i aria-hidden="true" class="bi bi-buildings"></i>
+                            </div>
+                            <div class="plan-category">FOR CUSTOMER-OWNED LOCATIONS</div>
+                            <h3>Your location. Your audience.</h3>
+                            <p>Connect your own place to WiadSpot and manage your locations from a dedicated workspace.</p>
+                            <div class="plan-billing"><strong>A monthly subscription.</strong><small>Platform access · plan pricing to be configured</small></div>
+                            <ul>
+                                <li><i aria-hidden="true" class="bi bi-check2"></i> Manage your own locations</li>
+                                <li><i aria-hidden="true"
+   class="bi bi-check2"></i> View visitor and poster activity</li>
+                                <li><i aria-hidden="true"
+   class="bi bi-check2"></i> Keep subscription details in one place</li>
+                            </ul>
+                            <a class="btn btn-brand"
+                               href="{{ owner_login_url }}">Connect your location <i aria-hidden="true" class="bi bi-arrow-right"></i></a></article>
+                    </div>
+                </div>
+            </section>
+            <section class="public-section pt-0" id="how-it-works">
+                <div class="public-container">
+                    <div class="section-heading">
+                        <div class="eyebrow">FROM YOUR BRAND TO THEIR SCREEN</div>
+                        <h2>Good connections start simply.</h2>
+                    </div>
+                    <div class="how-grid">
+                        <article class="how-step"><span class="step-number">01</span>
+                            <h3>Find your place.</h3>
+                            <p>Choose a WiadSpot-hosted location or connect the location you own.</p>
+                        </article><article class="how-step"><span class="step-number">02</span>
+                            <h3>Make your impression.</h3>
+                            <p>Upload a poster and submit your campaign and placement for review.</p>
+                        </article><article class="how-step"><span class="step-number">03</span>
+                            <h3>See the connection.</h3>
+                            <p>Follow recorded impressions, clicks and location activity from your workspace.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            <section class="public-section roles-section" id="accounts">
+                <div class="public-container">
+                    <div class="section-heading">
+                        <div class="eyebrow">A WORKSPACE FOR YOUR BUSINESS</div>
+                        <h2>One platform. Your own workspace.</h2>
+                        <p>Choose the account that fits how you connect with WiadSpot.</p>
+                    </div>
+                    <div class="plan-grid">
+                        <article class="role-card"><i aria-hidden="true" class="bi bi-image"></i>
+                            <h3>Client · Advertiser</h3>
+                            <p>Submit posters and follow your campaign activity across our location network.</p>
+                            <a href="{{ client_login_url }}">Client sign in <i aria-hidden="true"
+    class="bi bi-arrow-right"></i></a></article>
+                        <article class="role-card"><i aria-hidden="true" class="bi bi-geo-alt"></i>
+                            <h3>Location owner</h3>
+                            <p>Manage the places you own and see your location activity and subscription details.</p>
+                            <a href="{{ owner_login_url }}">Owner sign in <i aria-hidden="true"
+    class="bi bi-arrow-right"></i></a></article>
+                    </div>
+                </div>
+            </section>
+        </main>
+        {% include "platform/public_footer.html" %}
 {% endblock %}

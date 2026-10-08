@@ -1,7 +1,6 @@
 # core/urls.py
 from django.contrib import admin
 from django.urls import include, path
-from .views import login_view, logout_view
 from . import portal_views
 from django.conf import settings
 from django.conf.urls.static import static
@@ -21,8 +20,9 @@ urlpatterns = [
     ),
     path("", include("website.urls")),
     path("secure-django-admin/", admin.site.urls),
-    path("login/", login_view, name="login"),
-    path("logout/", logout_view, name="logout"),
+    path("login/", portal_views.account_login, name="login"),
+    path("logout/", portal_views.account_logout, name="logout"),
+    path("", include("core.fas_urls")),
 ]
 
 if settings.DEBUG:

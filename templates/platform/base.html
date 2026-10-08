@@ -5,17 +5,21 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}WiadSpot · Make every connection count{% endblock %}</title>
-        <link rel="icon" type="image/svg+xml" href="{% static 'images/wiadspot-mark.svg' %}">
+        <link rel="icon"
+              type="image/svg+xml"
+              href="{% static 'images/wiadspot-mark.svg' %}">
         <link rel="stylesheet"
               href="{% static 'vendor/bootstrap/bootstrap.min.css' %}">
         <link rel="stylesheet"
               href="{% static 'vendor/bootstrap-icons/bootstrap-icons.min.css' %}">
         <link rel="stylesheet" href="{% static 'css/platform.css' %}">
+        {% block extra_head %}{% endblock %}
     </head>
     <body class="{% block body_class %}{% endblock %}">
         <a class="skip-link" href="#main-content">Skip to content</a>
         {% block body %}{% endblock %}
         <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
         <script src="{% static 'js/platform.js' %}"></script>
+        {% block extra_js %}{% endblock %}
     </body>
 </html>
