@@ -15,6 +15,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST
 
 from ads.models import Ad, AdMetrics, Asset, AudienceSession, Campaign, UserSubscription
+from config.host_routing import site_address
 from .portal_forms import CampaignSubmissionForm
 
 ROLES = {
@@ -57,18 +58,34 @@ def role_details(role):
 
 def authorize(request, role):
     details = role_details(role)
+    if request.workspace_role and request.workspace_role != role:
+        raise PermissionDenied("This workspace belongs to another account type.")
     if not request.user.is_authenticated:
         return redirect(reverse("account_login") + "?" + urlencode({"role": role}))
     if not request.user.groups.filter(name=details["group"]).exists():
         raise PermissionDenied("This account does not have access to this workspace.")
+    if request.workspace_role and request.session.get("workspace_role", role) != role:
+        raise PermissionDenied("Sign in separately to this workspace.")
     return None
 
 
 @require_http_methods(["GET", "POST"])
 def account_login(request):
-    role = request.POST.get("role", request.GET.get("role", "customer"))
+    role = request.workspace_role or request.POST.get(
+        "role", request.GET.get("role", "customer")
+    )
     details = role_details(role)
     error = ""
+    if request.workspace_role:
+        supplied_role = (
+            request.POST.get("role")
+            if request.method == "POST"
+            else request.GET.get("role")
+        )
+        if supplied_role and supplied_role != request.workspace_role:
+            raise PermissionDenied(
+                "The account type is fixed by this workspace address."
+            )
     if request.method == "POST":
         user = authenticate(
             request,
@@ -77,24 +94,36 @@ def account_login(request):
         )
         if user and user.groups.filter(name=details["group"]).exists():
             login(request, user)
+            request.session["workspace_role"] = role
             return redirect("portal_dashboard", role=role)
         error = "The credentials or account type are incorrect. Please try again."
     elif (
         request.user.is_authenticated
         and request.user.groups.filter(name=details["group"]).exists()
+        and request.session.get("workspace_role", role) == role
     ):
         return redirect("portal_dashboard", role=role)
     return render(
         request,
         "platform/login.html",
-        {"role": role, "account": details, "roles": ROLES.items(), "error": error},
+        {
+            "role": role,
+            "account": details,
+            "roles": [(role, details)] if request.workspace_role else ROLES.items(),
+            "error": error,
+        },
     )
 
 
 @require_POST
 def account_logout(request):
     logout(request)
-    return redirect("landing")
+    return redirect(site_address(request) + "/")
+
+
+@require_http_methods(["GET"])
+def workspace_home(request):
+    return dashboard(request, request.workspace_role)
 
 
 @require_http_methods(["GET"])

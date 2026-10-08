@@ -1860,3 +1860,43 @@ a:hover {
     animation: none !important;
   }
 }
+
+/* Public pages share the brand shell without depending on workspace layouts. */
+.landing-content {
+  min-height: 65vh;
+}
+.landing-content .section {
+  padding: 72px 20px;
+}
+.landing-content .btn-primary {
+  background: var(--brand-accent);
+  border-color: var(--brand-accent);
+}
+.landing-content .btn-primary {
+  color: var(--brand-primary);
+}
+.landing-content .btn-primary:hover {
+  background: var(--brand-primary);
+  border-color: var(--brand-primary);
+  color: #fff;
+}
+.landing-content .text-primary {
+  color: var(--brand-primary) !important;
+}
+.landing-content .contact-form {
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+}
+.public-nav .dropdown-item:active {
+  background: var(--brand-primary);
+}
+@media (max-width: 767px) {
+  .landing-content .section {
+    padding: 44px 16px;
+  }
+  .landing-content .contact-form {
+    padding: 22px;
+  }
+}
