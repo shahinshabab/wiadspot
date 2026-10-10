@@ -1,0 +1,33 @@
+{% extends "landing/landing_base.html" %}
+{% block title %}Choose your workspace · WiadSpot{% endblock %}
+{% block content %}
+    <section class="public-section">
+        <div class="public-container">
+            <div class="section-heading">
+                <div class="eyebrow">WELCOME BACK</div>
+                <h1>Your workspace awaits.</h1>
+                <p>Choose your account to continue to its sign-in page.</p>
+            </div>
+            <div class="plan-grid">
+                <article class="plan-card">
+                    <div class="plan-icon">
+                        <i class="bi bi-image" aria-hidden="true"></i>
+                    </div>
+                    <h2>Client · Advertiser</h2>
+                    <p>Create poster campaigns and follow your advertising performance.</p>
+                    <a href="{{ client_login_url }}"
+                       class="btn btn-brand">Client sign in <i class="bi bi-arrow-right"
+    aria-hidden="true"></i></a></article>
+                <article class="plan-card">
+                    <div class="plan-icon">
+                        <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                    </div>
+                    <h2>Location owner</h2>
+                    <p>Manage your locations, visitors and monthly subscription overview.</p>
+                    <a href="{{ owner_login_url }}"
+                       class="btn btn-brand">Owner sign in <i class="bi bi-arrow-right"
+    aria-hidden="true"></i></a></article>
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -49,15 +49,13 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[
     "clients.wiadspot.com",
     "ads.wiadspot.com",
     "admin.wiadspot.com",
+    "client.wiadspot.com",
+    "owner.wiadspot.com",
+    "manager.wiadspot.com",
 ])
 
-CSRF_TRUSTED_ORIGINS = [
-    "http://127.0.0.1:8000",
-    "http://localhost:8000",
-    "http://*.wiadspot.local:8000",
-    "https://wiadspot.com",
-    "https://*.wiadspot.com",
-]
+# Django accepts same-origin requests by default; do not trust sibling hosts.
+CSRF_TRUSTED_ORIGINS = []
 
 # --------------------------------------------------
 # MSG91 settings
@@ -106,33 +104,16 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "config.middleware.SubdomainURLRoutingMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
-    "config.middleware.SubdomainURLRoutingMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
-
-# Map each host to its own URLConf
-HOST_URLCONF_MAP = {
-    "partner.wiadspot.com": "partner.urls",
-    "clients.wiadspot.com": "clients.urls",
-    "ads.wiadspot.com": "ads.urls",
-    "admin.wiadspot.com": "dashboard_admin.urls",
-    "www.wiadspot.com": "core.urls",          # or "website.urls" if you create that app
-
-    # local development
-    "partner.wiadspot.local": "partner.urls",
-    "clients.wiadspot.local": "clients.urls",
-    "ads.wiadspot.local": "ads.urls",
-    "admin.wiadspot.local": "dashboard_admin.urls",
-    "www.wiadspot.local": "core.urls",        # or "website.urls"
-}
 
 TEMPLATES = [
     {
@@ -144,6 +125,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.site_links",
             ],
         },
     },
@@ -213,6 +195,12 @@ LOGOUT_REDIRECT_URL = "/login/"
 # Default primary key type
 # --------------------------------------------------
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Each workspace signs in independently. Never share cookies across subdomains.
+SESSION_COOKIE_DOMAIN = None
+CSRF_COOKIE_DOMAIN = None
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "Lax"
 
 # --------------------------------------------------
 # Security settings for production
