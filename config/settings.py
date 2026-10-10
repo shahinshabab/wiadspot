@@ -39,7 +39,7 @@ SECRET_KEY = env(
 
 DEBUG = env.bool("DEBUG", default=True)
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[
     "127.0.0.1",
     "localhost",
     ".wiadspot.local",   # allows partner.wiadspot.local, admin.wiadspot.local, etc.
@@ -49,7 +49,7 @@ ALLOWED_HOSTS = [
     "clients.wiadspot.com",
     "ads.wiadspot.com",
     "admin.wiadspot.com",
-]
+])
 
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:8000",
@@ -124,14 +124,14 @@ HOST_URLCONF_MAP = {
     "clients.wiadspot.com": "clients.urls",
     "ads.wiadspot.com": "ads.urls",
     "admin.wiadspot.com": "dashboard_admin.urls",
-    "www.wiadspot.com": "config.urls",          # or "website.urls" if you create that app
+    "www.wiadspot.com": "core.urls",          # or "website.urls" if you create that app
 
     # local development
     "partner.wiadspot.local": "partner.urls",
     "clients.wiadspot.local": "clients.urls",
     "ads.wiadspot.local": "ads.urls",
     "admin.wiadspot.local": "dashboard_admin.urls",
-    "www.wiadspot.local": "config.urls",        # or "website.urls"
+    "www.wiadspot.local": "core.urls",        # or "website.urls"
 }
 
 TEMPLATES = [
@@ -194,13 +194,13 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = Path(env("STATIC_ROOT", default=str(BASE_DIR / "staticfiles")))
 
 # --------------------------------------------------
 # Media files
 # --------------------------------------------------
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = Path(env("MEDIA_ROOT", default=str(BASE_DIR / "media")))
 
 # --------------------------------------------------
 # Authentication redirects
@@ -223,3 +223,5 @@ if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"
+# Only Nginx can reach the loopback-bound application server.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
