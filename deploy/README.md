@@ -6,6 +6,11 @@ migrate, collectstatic, restart gunicorn).
 
 ## One-time server setup (Ubuntu/Debian)
 
+Easiest: copy `deploy/setup-server.sh` to the server and run
+`sudo bash setup-server.sh <server-ip> "<contents of deploy_key.pub>"`
+(it needs `main` to contain `deploy/`, so merge `dev` into `main` first, or
+clone the repo yourself and check out `dev`). Manual steps:
+
 ```bash
 sudo apt install python3-venv python3-pip nginx git
 sudo adduser --disabled-password wiadspot && sudo usermod -aG www-data wiadspot
