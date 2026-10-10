@@ -1,0 +1,46 @@
+<header class="public-nav">
+    <nav class="navbar navbar-expand-lg" aria-label="Main navigation">
+        <div class="container px-4">
+            <a class="brand" href="{% url 'landing' %}">{% include "platform/brand.html" %}</a>
+            <button class="navbar-toggler border-0"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#publicNavigation"
+                    aria-controls="publicNavigation"
+                    aria-expanded="false"
+                    aria-label="Open menu">
+                <i aria-hidden="true" class="bi bi-list"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="publicNavigation">
+                {% with current=request.resolver_match.url_name %}
+                    <div class="navbar-nav mx-auto">
+                        <a class="nav-link {% if current == 'landing' %}active{% endif %}"
+                           href="{% url 'landing' %}">Home</a>
+                        <a class="nav-link {% if current == 'landing_about' %}active{% endif %}"
+                           href="{% url 'landing_about' %}">About</a>
+                        <a class="nav-link {% if current == 'landing_articles' or current == 'landing_article_read' %}active{% endif %}"
+                           href="{% url 'landing_articles' %}">Articles</a>
+                        <a class="nav-link {% if current == 'landing_career' %}active{% endif %}"
+                           href="{% url 'landing_career' %}">Careers</a>
+                        <a class="nav-link {% if current == 'landing_contact' %}active{% endif %}"
+                           href="{% url 'landing_contact' %}">Contact</a>
+                    </div>
+                {% endwith %}
+                <div class="dropdown py-2">
+                    <button class="btn btn-brand dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">Sign in</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item"
+   href="{{ client_login_url }}"><i class="bi bi-image me-2"
+   aria-hidden="true"></i>Client · Advertiser</a></li>
+                        <li><a class="dropdown-item"
+   href="{{ owner_login_url }}"><i class="bi bi-geo-alt me-2"
+   aria-hidden="true"></i>Location owner</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>

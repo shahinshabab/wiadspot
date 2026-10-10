@@ -51,7 +51,7 @@ umask 022
 venv/bin/python manage.py collectstatic --noinput
 sudo -n /bin/systemctl restart wiadspot
 sudo -n /bin/systemctl is-active --quiet wiadspot
-for portal_host in wiadspot.com www.wiadspot.com partner.wiadspot.com clients.wiadspot.com ads.wiadspot.com admin.wiadspot.com; do
+for portal_host in wiadspot.com www.wiadspot.com client.wiadspot.com owner.wiadspot.com manager.wiadspot.com admin.wiadspot.com partner.wiadspot.com clients.wiadspot.com ads.wiadspot.com; do
     curl --fail --silent --show-error --retry 8 --retry-connrefused --retry-delay 2 --max-time 10 -H "Host: $portal_host" http://127.0.0.1:8000/ >/dev/null
 done
 echo "Deployment healthy at $(git rev-parse --short HEAD)."
