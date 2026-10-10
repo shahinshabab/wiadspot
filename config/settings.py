@@ -39,6 +39,12 @@ SECRET_KEY = env(
 
 DEBUG = env.bool("DEBUG", default=True)
 
+# "path": http://<server-ip>/<client|owner|manager|admin>/... (no DNS needed).
+# "subdomain": http://<client|owner|manager|admin>.<domain>/... (needs a domain).
+ROUTING_MODE = env("ROUTING_MODE", default="path")
+if ROUTING_MODE not in ("path", "subdomain"):
+    raise ValueError("ROUTING_MODE must be 'path' or 'subdomain'")
+
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[
     "127.0.0.1",
     "localhost",
@@ -62,6 +68,12 @@ ALLOWED_HOSTS += [
     )
     if host not in ALLOWED_HOSTS
 ]
+
+# Path routing does not depend on the Host header, so the bare server IP (which
+# is not known here) must be accepted. Set ALLOW_ANY_HOST=False and list the IP
+# in ALLOWED_HOSTS to restrict it.
+if env.bool("ALLOW_ANY_HOST", default=ROUTING_MODE == "path") and "*" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append("*")
 
 # Django accepts same-origin requests by default; do not trust sibling hosts.
 CSRF_TRUSTED_ORIGINS = []
@@ -196,7 +208,7 @@ MEDIA_ROOT = Path(env("MEDIA_ROOT", default=str(BASE_DIR / "media")))
 # --------------------------------------------------
 # Authentication redirects
 # --------------------------------------------------
-LOGIN_URL = "/login/"
+LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/login/"
 
@@ -214,9 +226,13 @@ SESSION_COOKIE_SAMESITE = "Lax"
 # --------------------------------------------------
 # Security settings for production
 # --------------------------------------------------
+# Secure cookies are never sent over plain HTTP, so login would silently fail
+# on an IP-only HTTP server. Default them on only once the site is on HTTPS
+# (subdomain mode); in path mode set SECURE_COOKIES=True after enabling HTTPS.
+SECURE_COOKIES = env.bool("SECURE_COOKIES", default=ROUTING_MODE == "subdomain")
 if not DEBUG:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = SECURE_COOKIES
+    CSRF_COOKIE_SECURE = SECURE_COOKIES
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"

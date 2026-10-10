@@ -29,6 +29,12 @@ Install that runner's systemd service so it survives logout/reboot. Only pushes
 to main and manual runs on main trigger production deployment; PR jobs must not
 use this production runner.
 
+Routing: `ROUTING_MODE=path` (default) serves the site at `http://<server-ip>/`
+and each workspace at `/client/`, `/owner/`, `/manager/` and `/admin/`; no DNS is
+needed. When a domain exists, set `ROUTING_MODE=subdomain` in `.env` (and
+`SECURE_COOKIES=True` once HTTPS is on) to use `client.<domain>` etc. again.
+Path mode accepts any Host header unless `ALLOW_ANY_HOST=False`.
+
 The supplied Nginx file provides HTTP only. Set up domain DNS and HTTPS before
 using public login pages. Django keeps secure authentication cookies enabled.
 External MSG91/FAS functionality requires the corresponding private credentials.

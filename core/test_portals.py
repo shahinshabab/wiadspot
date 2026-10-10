@@ -14,7 +14,7 @@ from ads.models import Ad, AdMetrics, Asset, Campaign, Placement
 from .portal_views import ROLES
 
 
-@override_settings(DEBUG=True)
+@override_settings(DEBUG=True, ROUTING_MODE="subdomain")
 class PlatformPortalTests(TestCase):
     @classmethod
     def setUpTestData(cls):
