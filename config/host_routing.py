@@ -1,5 +1,7 @@
 """Trusted workspace addresses; ports do not change the selected channel."""
 
+import ipaddress
+
 from django.conf import settings
 
 ROLE_SUBDOMAINS = {
@@ -16,6 +18,27 @@ DEVELOPMENT_HOSTS = {"localhost", "127.0.0.1", "testserver"}
 
 def hostname(request):
     return request.get_host().split(":", 1)[0].lower()
+
+
+def is_ip_host(request):
+    """True when the site is opened by IP address (no DNS name available yet)."""
+    try:
+        ipaddress.ip_address(hostname(request).strip("[]"))
+    except ValueError:
+        return False
+    return not is_development_host(request)
+
+
+def split_ip_workspace(path):
+    """Split "/owner/portal/x/" into ("owner", "/owner", "/portal/x/").
+
+    Only used for IP access, where /client/, /owner/, /manager/ and /admin/
+    stand in for the client., owner., manager. and admin. subdomains.
+    """
+    first, _, rest = path.lstrip("/").partition("/")
+    if first in ROLE_SUBDOMAINS.values():
+        return first, "/" + first, "/" + rest
+    return None, "", path
 
 
 def workspace_role(request):
@@ -36,6 +59,9 @@ def site_address(request, role=None):
     host = hostname(request)
     if is_development_host(request):
         return request.build_absolute_uri("/").rstrip("/")
+    if is_ip_host(request):
+        prefix = "/" + ROLE_SUBDOMAINS[role] if role else ""
+        return request.scheme + "://" + request.get_host() + prefix
     local = host == "wiadspot.local" or host.endswith(".wiadspot.local")
     domain = "wiadspot.local" if local else "wiadspot.com"
     port = request.get_host().partition(":")[2]

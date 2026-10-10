@@ -54,6 +54,10 @@ ALLOWED_HOSTS = [
     "manager.wiadspot.com",
 ]
 
+# Extra hosts, e.g. the server IP while the domain is not ready:
+# ALLOWED_HOSTS_EXTRA=203.0.113.10
+ALLOWED_HOSTS += env.list("ALLOWED_HOSTS_EXTRA", default=[])
+
 # Django accepts same-origin requests by default; do not trust sibling hosts.
 CSRF_TRUSTED_ORIGINS = []
 
@@ -205,9 +209,14 @@ SESSION_COOKIE_SAMESITE = "Lax"
 # --------------------------------------------------
 # Security settings for production
 # --------------------------------------------------
+# Secure cookies need HTTPS. Set USE_HTTPS=False in .env while the site is
+# served over plain http on an IP address, and back to True once TLS is set up.
+USE_HTTPS = env.bool("USE_HTTPS", default=True)
+
 if not DEBUG:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = USE_HTTPS
+    CSRF_COOKIE_SECURE = USE_HTTPS
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = "DENY"

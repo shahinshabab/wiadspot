@@ -1,4 +1,12 @@
-from .host_routing import is_development_host, workspace_role
+from django.urls import set_script_prefix
+
+from .host_routing import (
+    SUBDOMAIN_ROLES,
+    is_development_host,
+    is_ip_host,
+    split_ip_workspace,
+    workspace_role,
+)
 
 
 class SubdomainURLRoutingMiddleware:
@@ -8,7 +16,17 @@ class SubdomainURLRoutingMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        request.workspace_role = workspace_role(request)
+        if is_ip_host(request):
+            # IP access: /client/, /owner/, ... replace the subdomains.
+            name, prefix, rest = split_ip_workspace(request.path_info)
+            request.workspace_role = SUBDOMAIN_ROLES.get(name)
+            if prefix:
+                request.path_info = rest
+                request.path = prefix + rest
+            # reverse() and redirect() now emit /owner/... style URLs.
+            set_script_prefix(request.META.get("SCRIPT_NAME", "").rstrip("/") + prefix + "/")
+        else:
+            request.workspace_role = workspace_role(request)
         request.development_workspace = is_development_host(request)
         if request.path_info.startswith(
             ("/fas/", "/wiadspot/fas/", "/ad-click/", "/wiadspot/ad-click/")

@@ -410,3 +410,33 @@ class ChannelRoutingTests(TestCase):
         )
         self.assertEqual(ContactMessage.objects.count(), 1)
         cache.clear()
+
+
+from django.test import TestCase, override_settings  # noqa: E402
+
+
+@override_settings(DEBUG=False, ALLOWED_HOSTS=["203.0.113.10"])
+class IpAddressWorkspaceTests(TestCase):
+    """Until DNS exists, /client/, /owner/, ... replace the subdomains."""
+
+    host = {"HTTP_HOST": "203.0.113.10"}
+
+    def test_public_site_on_ip_root(self):
+        response = self.client.get("/", **self.host)
+        self.assertEqual(response.status_code, 200)
+
+    def test_workspace_prefixes_select_role_and_keep_prefix_in_links(self):
+        for prefix, role in [("client", "customer"), ("owner", "owner"),
+                             ("manager", "manager"), ("admin", "admin")]:
+            response = self.client.get(f"/{prefix}/accounts/login/", **self.host)
+            self.assertEqual(response.status_code, 200, prefix)
+            self.assertEqual(response.wsgi_request.workspace_role, role)
+
+    def test_workspace_root_redirects_inside_the_prefix(self):
+        response = self.client.get("/owner/", **self.host)
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(response["Location"].startswith("/owner/"), response["Location"])
+
+    def test_fas_still_reachable_on_ip(self):
+        response = self.client.get("/fas/", **self.host)
+        self.assertEqual(response.wsgi_request.urlconf, "core.fas_urls")
