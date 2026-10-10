@@ -28,7 +28,7 @@ HOSTS = {
 }
 
 
-@override_settings(DEBUG=True)
+@override_settings(DEBUG=True, ROUTING_MODE="subdomain")
 class ChannelRoutingTests(TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -410,3 +410,72 @@ class ChannelRoutingTests(TestCase):
         )
         self.assertEqual(ContactMessage.objects.count(), 1)
         cache.clear()
+
+
+@override_settings(DEBUG=False, ROUTING_MODE="path", ALLOWED_HOSTS=["*"])
+class PathRoutingTests(TestCase):
+    """http://<server-ip>/<client|owner|manager|admin>/... without any domain."""
+
+    IP = "203.0.113.7"
+    PREFIXES = {"client": "customer", "owner": "owner", "manager": "manager", "admin": "admin"}
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.users = {}
+        for role, details in ROLES.items():
+            user = get_user_model().objects.create_user(
+                role, password="channel-test-password"
+            )
+            user.groups.add(Group.objects.create(name=details["group"]))
+            cls.users[role] = user
+
+    def get(self, path, **extra):
+        return self.client.get(path, HTTP_HOST=self.IP, **extra)
+
+    def test_public_site_is_served_at_the_ip_root(self):
+        self.assertEqual(self.get("/").status_code, 200)
+        self.assertEqual(self.get("/about/").status_code, 200)
+
+    def test_each_prefix_selects_its_workspace_and_urls_keep_the_prefix(self):
+        for prefix, role in self.PREFIXES.items():
+            response = self.get(f"/{prefix}/")
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, f"/{prefix}/accounts/login/?role={role}")
+            response = self.get(f"/{prefix}/accounts/login/")
+            self.assertEqual(response.context["role"], role)
+            self.assertEqual(response.context["request"].workspace_role, role)
+            # Workspaces do not mount the public website.
+            self.assertEqual(self.get(f"/{prefix}/about/").status_code, 404)
+
+    def test_each_role_can_sign_in_under_its_prefix(self):
+        for prefix, role in self.PREFIXES.items():
+            client = Client()
+            response = client.post(
+                f"/{prefix}/accounts/login/",
+                {"username": role, "password": "channel-test-password"},
+                HTTP_HOST=self.IP,
+            )
+            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.url, f"/{prefix}/portal/{role}/")
+            self.assertEqual(
+                client.get(response.url, HTTP_HOST=self.IP).status_code, 200
+            )
+
+    def test_a_prefix_cannot_open_another_role(self):
+        self.client.force_login(self.users["customer"])
+        self.assertEqual(self.get("/owner/portal/customer/").status_code, 403)
+
+    def test_public_sign_in_and_private_links_redirect_to_prefixes(self):
+        response = self.get("/accounts/login/", data={"role": "owner"})
+        self.assertEqual(response.url, f"http://{self.IP}/owner/accounts/login/")
+        response = self.get("/portal/owner/")
+        self.assertEqual(response.url, f"http://{self.IP}/owner/portal/owner/")
+        response = self.get("/management/reviews/")
+        self.assertEqual(
+            response.url, f"http://{self.IP}/manager/management/reviews/"
+        )
+
+    def test_logout_returns_to_the_public_root(self):
+        self.client.force_login(self.users["owner"])
+        response = self.client.post("/owner/accounts/logout/", HTTP_HOST=self.IP)
+        self.assertEqual(response.url, f"http://{self.IP}/")
