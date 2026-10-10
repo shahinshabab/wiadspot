@@ -49,10 +49,19 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[
     "clients.wiadspot.com",
     "ads.wiadspot.com",
     "admin.wiadspot.com",
-    "client.wiadspot.com",
-    "owner.wiadspot.com",
-    "manager.wiadspot.com",
 ])
+# The four workspace subdomains are always served, even if the server's
+# ALLOWED_HOSTS env predates them.
+ALLOWED_HOSTS += [
+    host
+    for host in (
+        "client.wiadspot.com",
+        "owner.wiadspot.com",
+        "manager.wiadspot.com",
+        "admin.wiadspot.com",
+    )
+    if host not in ALLOWED_HOSTS
+]
 
 # Django accepts same-origin requests by default; do not trust sibling hosts.
 CSRF_TRUSTED_ORIGINS = []
