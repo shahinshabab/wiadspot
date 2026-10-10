@@ -1,3 +1,5 @@
+Django>=6.0,<6.1
+gunicorn>=23.0,<27.0
 django-environ
 Pillow
 requests

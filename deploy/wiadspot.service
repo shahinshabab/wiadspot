@@ -1,0 +1,24 @@
+[Unit]
+Description=Wiadspot Django application (Gunicorn)
+After=network.target
+
+[Service]
+Type=simple
+User=wiadspot
+Group=www-data
+WorkingDirectory=/srv/wiadspot
+EnvironmentFile=/srv/wiadspot/.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/srv/wiadspot/venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8000 --workers 2 --timeout 60 --access-logfile - --error-logfile -
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+UMask=0027
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/srv/wiadspot
+
+[Install]
+WantedBy=multi-user.target

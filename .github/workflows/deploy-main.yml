@@ -1,0 +1,23 @@
+name: Deploy main to Wiadspot
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: wiadspot-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, Linux, wiadspot-prod]
+    timeout-minutes: 20
+    steps:
+      - name: Deploy this main commit as wiadspot
+        shell: bash
+        env:
+          WIADSPOT_DEPLOY_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          sudo -n -u wiadspot env WIADSPOT_DEPLOY_SHA="$WIADSPOT_DEPLOY_SHA" bash /srv/wiadspot/deploy/deploy.sh
