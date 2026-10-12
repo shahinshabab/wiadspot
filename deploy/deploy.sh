@@ -16,14 +16,21 @@ if grep -q '^SECRET_KEY=CHANGE_ME$' .env; then
     echo 'Generate a private SECRET_KEY before deploying.' >&2
     exit 1
 fi
-test "$(git branch --show-current)" = main
+branch=${WIADSPOT_DEPLOY_BRANCH:-dev}
 git diff --quiet
 git diff --cached --quiet
-git fetch origin main
-deploy_commit=${WIADSPOT_DEPLOY_SHA:-origin/main}
-git merge-base --is-ancestor "$deploy_commit" origin/main
+git fetch origin "$branch"
+deploy_commit=${WIADSPOT_DEPLOY_SHA:-origin/$branch}
+git merge-base --is-ancestor "$deploy_commit" "origin/$branch"
+if [ "$(git branch --show-current)" != "$branch" ]; then
+    git checkout -B "$branch" "origin/$branch"
+fi
 git merge --ff-only "$deploy_commit"
 test "$(git rev-parse HEAD)" = "$(git rev-parse "$deploy_commit")"
+# The sync may have replaced this script; continue with the deployed copy.
+if [ -z "${WIADSPOT_REEXEC:-}" ]; then
+    WIADSPOT_REEXEC=1 exec bash "$app_dir/deploy/deploy.sh"
+fi
 if [ ! -x venv/bin/python ]; then python3 -m venv venv; fi
 venv/bin/python -m pip install -r requirements.txt
 venv/bin/python manage.py check
