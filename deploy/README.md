@@ -17,7 +17,7 @@ The sudoers entry for wiadspot must allow only:
 Validate the entry with visudo -cf before installing it with mode 440.
 
 First and later manual deployments: `sudo -u wiadspot bash /srv/wiadspot/deploy/deploy.sh`.
-The script fast-forwards main, installs dependencies, checks Django, backs up
+The script fast-forwards the deploy branch (`dev`, set by `WIADSPOT_DEPLOY_BRANCH`), installs dependencies, checks Django, backs up
 existing SQLite data, migrates, collects static files, restarts and health-checks.
 It refuses concurrent deployments or modified tracked files. It does not delete
 local credentials, uploads or backups. Failed migrations require investigation;
@@ -26,7 +26,7 @@ code and database backups are not automatically rolled back.
 The GitHub workflow uses the existing runner label `wiadspot-prod`, running as
 ubuntu. Ubuntu must be allowed to run the deployment script as wiadspot.
 Install that runner's systemd service so it survives logout/reboot. Only pushes
-to main and manual runs on main trigger production deployment; PR jobs must not
+to dev and manual runs on dev trigger production deployment; PR jobs must not
 use this production runner.
 
 Routing: `ROUTING_MODE=path` (default) serves the site at `http://<server-ip>/`
