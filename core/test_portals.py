@@ -163,18 +163,62 @@ class PlatformPortalTests(TestCase):
     def test_customer_only_sees_own_campaign_metrics(self):
         self.client.force_login(self.users["customer"])
         response = self.client.get(reverse("portal_dashboard", args=["customer"]))
-        self.assertContains(response, "My campaign")
-        self.assertNotContains(response, "Private foreign campaign")
         self.assertEqual(response.context["stats"][2]["value"], 50)
         self.assertEqual(response.context["click_rate"], 10)
+        response = self.client.get(reverse("portal_campaigns", args=["customer"]))
+        self.assertContains(response, "My campaign")
+        self.assertNotContains(response, "Private foreign campaign")
 
     def test_owner_only_sees_own_locations_and_their_activity(self):
         self.client.force_login(self.users["owner"])
         response = self.client.get(reverse("portal_dashboard", args=["owner"]))
+        self.assertEqual(response.context["stats"][2]["value"], 50)
+        response = self.client.get(reverse("portal_locations", args=["owner"]))
         self.assertContains(response, "Owner café")
         self.assertNotContains(response, "Unrelated location")
+        response = self.client.get(reverse("portal_campaigns", args=["owner"]))
         self.assertNotContains(response, "Private foreign campaign")
-        self.assertEqual(response.context["stats"][2]["value"], 50)
+
+    def test_every_role_has_section_pages_and_profile_menu(self):
+        for role, user in self.users.items():
+            self.client.force_login(user)
+            for name in ("portal_campaigns", "portal_locations", "portal_billing", "portal_profile"):
+                response = self.client.get(reverse(name, args=[role]))
+                self.assertEqual(response.status_code, 200, (role, name))
+                self.assertContains(response, reverse("portal_profile", args=[role]))
+                self.assertContains(response, "Log out")
+
+    def test_section_pages_require_login_and_matching_role(self):
+        url = reverse("portal_profile", args=["customer"])
+        self.assertRedirects(
+            self.client.get(url), reverse("account_login") + "?role=customer"
+        )
+        self.client.force_login(self.users["owner"])
+        self.assertEqual(self.client.get(url).status_code, 403)
+
+    def test_profile_update_and_password_change(self):
+        user = self.users["customer"]
+        self.client.force_login(user)
+        url = reverse("portal_profile", args=["customer"])
+        self.client.post(
+            url,
+            {"form": "profile", "first_name": "Ada", "last_name": "L", "email": "a@example.com"},
+        )
+        user.refresh_from_db()
+        self.assertEqual((user.first_name, user.email), ("Ada", "a@example.com"))
+        response = self.client.post(
+            url,
+            {
+                "form": "password",
+                "old_password": "test-password",
+                "new_password1": "Another-pass-4821",
+                "new_password2": "Another-pass-4821",
+            },
+        )
+        self.assertRedirects(response, url)
+        user.refresh_from_db()
+        self.assertTrue(user.check_password("Another-pass-4821"))
+        self.assertEqual(self.client.get(url).status_code, 200)
 
     def test_wrong_account_selection_does_not_authenticate(self):
         response = self.client.post(
