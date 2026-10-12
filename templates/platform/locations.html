@@ -1,0 +1,7 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Locations · WiadSpot{% endblock %}
+{% block content %}
+    <div class="page-heading"><div><div class="eyebrow">LOCATIONS</div><h1>Your location network</h1><p>Every place is an opportunity to connect.</p></div></div>
+    <section class="panel"><div class="panel-heading"><div><h2>Your location network</h2><p>Every place is an opportunity to connect.</p></div><i aria-hidden="true" class="bi bi-geo-alt panel-icon"></i></div><div class="location-list">{% for location in locations %}<div class="location-item"><span class="location-icon"><i aria-hidden="true"
+   class="bi {% if location.owner_type == 'ADMIN' %}bi-shop{% else %}bi-buildings{% endif %}"></i></span><div class="location-info"><strong>{{ location.name }}</strong><small>{{ location.location|default:'Location not specified' }} · {% if location.owner_type == "ADMIN" %}WiadSpot hosted{% else %}Customer owned{% endif %}</small></div><span class="status-badge status-{{ location.status|lower }}">{{ location.get_status_display }}</span></div>{% empty %}<div class="empty-state compact"><i aria-hidden="true" class="bi bi-geo-alt"></i><p>No locations connected yet.</p><a href="{{ public_site_url }}/contact/">Talk to us about a location <i aria-hidden="true" class="bi bi-arrow-right"></i></a></div>{% endfor %}</div></section>
+{% endblock %}

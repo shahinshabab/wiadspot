@@ -4,7 +4,8 @@ import os
 from urllib.parse import urlencode
 
 from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import PermissionDenied
 from django.db import transaction
 from django.db.models import Q, Sum
@@ -17,7 +18,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 from ads.models import Ad, AdMetrics, Asset, AudienceSession, Campaign, UserSubscription
 from config.host_routing import site_address
 from config.role_utils import has_role_access
-from .portal_forms import CampaignSubmissionForm
+from .portal_forms import CampaignSubmissionForm, ProfileForm
 
 ROLES = {
     "admin": {
@@ -127,11 +128,8 @@ def workspace_home(request):
     return dashboard(request, request.workspace_role)
 
 
-@require_http_methods(["GET"])
-def dashboard(request, role):
-    response = authorize(request, role)
-    if response:
-        return response
+def workspace_data(request, role):
+    """Role-scoped querysets and month-to-date figures shared by workspace pages."""
     now = timezone.localdate()
     month_start = now.replace(day=1)
     campaigns = Campaign.objects.select_related("owner").prefetch_related("ads")
@@ -153,8 +151,28 @@ def dashboard(request, role):
         metrics = metrics.filter(placement__asset__in=locations)
         sessions = sessions.filter(asset__in=locations)
     totals = metrics.aggregate(impressions=Sum("impressions"), clicks=Sum("clicks"))
-    impressions = totals["impressions"] or 0
-    clicks = totals["clicks"] or 0
+    return {
+        "campaigns": campaigns,
+        "locations": locations,
+        "sessions": sessions,
+        "impressions": totals["impressions"] or 0,
+        "clicks": totals["clicks"] or 0,
+        "month": now,
+    }
+
+
+def base_context(role):
+    return {"role": role, "account": ROLES[role]}
+
+
+@require_http_methods(["GET"])
+def dashboard(request, role):
+    response = authorize(request, role)
+    if response:
+        return response
+    data = workspace_data(request, role)
+    campaigns, locations = data["campaigns"], data["locations"]
+    impressions, clicks = data["impressions"], data["clicks"]
     stats = [
         {
             "label": "Campaigns",
@@ -184,7 +202,8 @@ def dashboard(request, role):
     if role == "owner":
         stats[0] = {
             "label": "Verified visitors",
-            "value": sessions.filter(is_verified=True)
+            "value": data["sessions"]
+            .filter(is_verified=True)
             .values("audience_id")
             .distinct()
             .count(),
@@ -192,20 +211,93 @@ def dashboard(request, role):
             "hint": "Unique visitors this month",
         }
     context = {
-        "role": role,
-        "account": ROLES[role],
+        **base_context(role),
         "stats": stats,
-        "campaigns": campaigns[:8],
-        "locations": locations[:6],
         "pending_count": campaigns.filter(review_status="PENDING").count(),
-        "subscription": UserSubscription.objects.select_related("plan")
-        .filter(user=request.user)
-        .first(),
         "click_rate": round(clicks / impressions * 100, 1) if impressions else 0,
-        "month": now,
+        "month": data["month"],
         "demo": os.environ.get("WIADSPOT_DEMO") == "1",
     }
     return render(request, "platform/dashboard.html", context)
+
+
+@require_http_methods(["GET"])
+def campaigns_page(request, role):
+    response = authorize(request, role)
+    if response:
+        return response
+    data = workspace_data(request, role)
+    return render(
+        request,
+        "platform/campaigns.html",
+        {**base_context(role), "campaigns": data["campaigns"][:50]},
+    )
+
+
+@require_http_methods(["GET"])
+def locations_page(request, role):
+    response = authorize(request, role)
+    if response:
+        return response
+    data = workspace_data(request, role)
+    return render(
+        request,
+        "platform/locations.html",
+        {**base_context(role), "locations": data["locations"][:50]},
+    )
+
+
+@require_http_methods(["GET"])
+def billing_page(request, role):
+    response = authorize(request, role)
+    if response:
+        return response
+    subscription = (
+        UserSubscription.objects.select_related("plan")
+        .filter(user=request.user)
+        .first()
+    )
+    return render(
+        request,
+        "platform/billing.html",
+        {**base_context(role), "subscription": subscription},
+    )
+
+
+@require_http_methods(["GET", "POST"])
+def profile_page(request, role):
+    response = authorize(request, role)
+    if response:
+        return response
+    profile_form = ProfileForm(
+        request.POST if request.POST.get("form") == "profile" else None,
+        instance=request.user,
+    )
+    password_form = PasswordChangeForm(
+        request.user,
+        request.POST if request.POST.get("form") == "password" else None,
+    )
+    for field in password_form.fields.values():
+        field.widget.attrs["class"] = "form-control"
+    if request.method == "POST":
+        if request.POST.get("form") == "profile" and profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, "Your profile has been updated.")
+            return redirect("portal_profile", role=role)
+        if request.POST.get("form") == "password" and password_form.is_valid():
+            user = password_form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, "Your password has been changed.")
+            return redirect("portal_profile", role=role)
+    return render(
+        request,
+        "platform/profile.html",
+        {
+            **base_context(role),
+            "profile_form": profile_form,
+            "password_form": password_form,
+        },
+    )
 
 
 @require_http_methods(["GET", "POST"])

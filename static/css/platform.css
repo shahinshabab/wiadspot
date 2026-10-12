@@ -1957,3 +1957,28 @@ h1, h2, h3, h4, .page-heading h1, .metric-value, .rate-number { font-weight: 800
 .poster-browser small, .poster-caption, .poster-caption * { font-size: 9px; }
 .floating-card small { font-size: 11px; color: #35505b; }
 .public-footer small { color: #cfe3e8; font-size: 13px; }
+
+/* Profile menu and profile page */
+.profile-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #dde7e9;
+  border-radius: 999px;
+  padding: 4px 12px 4px 4px;
+  color: var(--ink);
+}
+.profile-toggle:hover { background: #f5fafb; }
+.profile-toggle .avatar { width: 32px; height: 32px; }
+.profile-name { text-align: left; line-height: 1.2; }
+.profile-name strong { display: block; font-size: 14px; font-weight: 700; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.profile-name small { font-size: 12px; color: var(--muted); }
+.profile-menu .dropdown-menu { min-width: 220px; font-size: 14px; border-color: var(--line); box-shadow: 0 12px 30px rgba(13, 44, 64, 0.12); }
+.profile-menu .dropdown-item { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.profile-menu .dropdown-header { font-size: 12px; }
+.profile-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; align-items: start; }
+.profile-summary { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+.profile-summary strong { display: block; font-size: 17px; font-weight: 700; }
+.profile-summary small { color: var(--muted); font-size: 13px; }
+.avatar-lg { width: 52px; height: 52px; font-size: 20px; }

@@ -13,6 +13,10 @@ urlpatterns = [
     path("accounts/login/", portal_views.account_login, name="account_login"),
     path("accounts/logout/", portal_views.account_logout, name="account_logout"),
     path("portal/<slug:role>/", portal_views.dashboard, name="portal_dashboard"),
+    path("portal/<slug:role>/campaigns/", portal_views.campaigns_page, name="portal_campaigns"),
+    path("portal/<slug:role>/locations/", portal_views.locations_page, name="portal_locations"),
+    path("portal/<slug:role>/billing/", portal_views.billing_page, name="portal_billing"),
+    path("portal/<slug:role>/profile/", portal_views.profile_page, name="portal_profile"),
     path(
         "portal/<slug:role>/campaigns/new/",
         portal_views.create_campaign,

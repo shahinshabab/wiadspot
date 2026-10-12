@@ -1,0 +1,6 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Billing overview · WiadSpot{% endblock %}
+{% block content %}
+    <div class="page-heading"><div><div class="eyebrow">BILLING</div><h1>Simple, transparent billing</h1><p>Two ways to be part of WiadSpot.</p></div></div>
+    <section class="panel billing-panel"><div class="panel-heading"><div><h2>Simple, transparent billing</h2><p>Two ways to be part of WiadSpot.</p></div><i aria-hidden="true" class="bi bi-receipt panel-icon"></i></div><div class="billing-option"><span class="billing-icon"><i aria-hidden="true" class="bi bi-broadcast"></i></span><div><strong>WiadSpot-hosted locations</strong><p>Per-user charge, billed monthly</p><small>Rate to be configured</small></div></div><div class="billing-option"><span class="billing-icon peach"><i aria-hidden="true" class="bi bi-buildings"></i></span><div><strong>Customer-owned locations</strong><p>Monthly subscription</p><small>{% if subscription and subscription.plan %}{{ subscription.plan.name }} · {{ subscription.get_status_display }}{% else %}Plan not assigned{% endif %}</small></div></div><p class="billing-note"><i aria-hidden="true" class="bi bi-info-circle"></i> Monthly invoices and payment collection are not enabled yet. SMS charges, if applicable, require a separate rate.</p></section>
+{% endblock %}
