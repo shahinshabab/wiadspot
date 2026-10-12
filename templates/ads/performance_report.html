@@ -1,104 +1,37 @@
 {% extends "shared/base_portal.html" %}
-
-{% block title %}Performance Report{% endblock %}
-
+{% block title %}Performance · WiadSpot{% endblock %}
 {% block content %}
-<div class="mb-4">
-    <h1 class="h3 fw-bold mb-1">Performance Report</h1>
-    <p class="text-body-secondary mb-0">View impressions, clicks, engagement, and spend by ad and placement.</p>
+<div class="page-heading"><div><div class="eyebrow">SEE THE CONNECTION</div><h1>Performance report</h1><p>Impressions, clicks, engagement and spend by ad and placement.</p></div></div>
+<div class="stats-row">
+    <section class="metric-card"><div class="metric-top"><span>Impressions</span><i aria-hidden="true" class="bi bi-eye"></i></div><div class="metric-value">{{ totals.impressions|default:0 }}</div></section>
+    <section class="metric-card"><div class="metric-top"><span>Clicks</span><i aria-hidden="true" class="bi bi-cursor"></i></div><div class="metric-value">{{ totals.clicks|default:0 }}</div></section>
+    <section class="metric-card"><div class="metric-top"><span>Views</span><i aria-hidden="true" class="bi bi-play-circle"></i></div><div class="metric-value">{{ totals.views|default:0 }}</div></section>
+    <section class="metric-card"><div class="metric-top"><span>Spend</span><i aria-hidden="true" class="bi bi-cash-coin"></i></div><div class="metric-value">{{ totals.spend|default:0 }}</div></section>
 </div>
-
-<div class="card border-0 shadow-sm rounded-4 mb-4">
-    <div class="card-body">
-        <form method="get" class="row g-3 align-items-end">
-            <div class="col-12 col-md-5">
-                <label class="form-label fw-semibold">Start Date</label>
-                {{ form.start_date }}
-            </div>
-
-            <div class="col-12 col-md-5">
-                <label class="form-label fw-semibold">End Date</label>
-                {{ form.end_date }}
-            </div>
-
-            <div class="col-12 col-md-2 d-grid">
-                <button type="submit" class="btn btn-primary rounded-3">Apply Filters</button>
-            </div>
-        </form>
+<section class="panel mb-4">
+    <div class="panel-heading"><h2>Filter by date</h2></div>
+    <form method="get" class="row g-3 align-items-end px-4 pb-4">
+        <div class="col-12 col-md-5"><label class="form-label">Start date</label>{{ form.start_date }}</div>
+        <div class="col-12 col-md-5"><label class="form-label">End date</label>{{ form.end_date }}</div>
+        <div class="col-12 col-md-2 d-grid"><button type="submit" class="btn btn-brand"><i aria-hidden="true" class="bi bi-funnel"></i> Apply</button></div>
+    </form>
+</section>
+<section class="panel">
+    <div class="table-responsive">
+        <table class="table workspace-table">
+            <thead><tr><th>DATE</th><th>AD</th><th>LOCATION</th><th>IMPRESSIONS</th><th>CLICKS</th><th>VIEWS</th><th>ENGAGEMENT</th><th>SPEND</th></tr></thead>
+            <tbody>
+                {% for item in metrics %}
+                <tr>
+                    <td>{{ item.date|date:"d M Y" }}</td><td><strong>{{ item.ad.title }}</strong></td>
+                    <td>{% if item.placement and item.placement.asset %}{{ item.placement.asset.name }}{% else %}-{% endif %}</td>
+                    <td>{{ item.impressions }}</td><td>{{ item.clicks }}</td><td>{{ item.views }}</td><td>{{ item.engagement }}</td><td>{{ item.spend }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="8"><div class="empty-state compact"><i aria-hidden="true" class="bi bi-graph-up"></i><p>No report data found.</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-</div>
-
-<div class="row g-3 mb-4">
-    <div class="col-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body">
-                <div class="small text-body-secondary mb-2">Impressions</div>
-                <div class="fs-3 fw-bold">{{ totals.impressions|default:0 }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body">
-                <div class="small text-body-secondary mb-2">Clicks</div>
-                <div class="fs-3 fw-bold">{{ totals.clicks|default:0 }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body">
-                <div class="small text-body-secondary mb-2">Views</div>
-                <div class="fs-3 fw-bold">{{ totals.views|default:0 }}</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-4 h-100">
-            <div class="card-body">
-                <div class="small text-body-secondary mb-2">Spend</div>
-                <div class="fs-3 fw-bold">{{ totals.spend|default:0 }}</div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card border-0 shadow-sm rounded-4">
-    <div class="card-body">
-        <div class="table-responsive">
-            <table class="table align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th>Date</th>
-                        <th>Ad</th>
-                        <th>Asset</th>
-                        <th>Impressions</th>
-                        <th>Clicks</th>
-                        <th>Views</th>
-                        <th>Engagement</th>
-                        <th>Spend</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in metrics %}
-                        <tr>
-                            <td>{{ item.date|date:"d M Y" }}</td>
-                            <td>{{ item.ad.title }}</td>
-                            <td>{% if item.placement and item.placement.asset %}{{ item.placement.asset.name }}{% else %}-{% endif %}</td>
-                            <td>{{ item.impressions }}</td>
-                            <td>{{ item.clicks }}</td>
-                            <td>{{ item.views }}</td>
-                            <td>{{ item.engagement }}</td>
-                            <td>{{ item.spend }}</td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="8" class="text-center text-muted py-4">No report data found.</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+</section>
 {% endblock %}

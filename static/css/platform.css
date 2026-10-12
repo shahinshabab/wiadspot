@@ -1,6 +1,6 @@
 :root {
-  --ink: #163b53;
-  --muted: #617782;
+  --ink: #0d2c40;
+  --muted: #3f5963;
   --brand-primary: #002f4f;
   --brand-soft: #d7f1f4;
   --brand-accent-soft: #a7e9ed;
@@ -18,10 +18,11 @@ html {
   scroll-padding-top: 25px;
 }
 body {
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family: Inter, "Segoe UI", system-ui, Arial, sans-serif;
   color: var(--ink);
   background: var(--paper);
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   -webkit-font-smoothing: antialiased;
 }
 a {
@@ -128,7 +129,7 @@ a:hover {
 }
 .eyebrow,
 .light-eyebrow {
-  font-size: 10px;
+  font-size: 12.5px;
   letter-spacing: 1.8px;
   font-weight: 700;
   color: #658389;
@@ -151,7 +152,7 @@ a:hover {
   padding: 0 8px;
 }
 .workspace-label {
-  font-size: 9px;
+  font-size: 12.5px;
   letter-spacing: 1.8px;
   color: #87a2a7;
   margin: 42px 13px 16px;
@@ -208,13 +209,13 @@ a:hover {
   line-height: 1.6;
 }
 .sidebar-guide p {
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.7;
   color: #759499;
   margin: 8px 0 15px;
 }
 .sidebar-guide a {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 650;
 }
 .sidebar-guide a i {
@@ -239,14 +240,14 @@ a:hover {
   flex-shrink: 0;
 }
 .sidebar-account strong {
-  font-size: 11px;
+  font-size: 13px;
   display: block;
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .sidebar-account small {
-  font-size: 9px;
+  font-size: 12.5px;
   color: var(--muted);
 }
 .sidebar-account form {
@@ -277,15 +278,15 @@ a:hover {
   padding: 0 38px;
 }
 .breadcrumb-label {
-  font-size: 11px;
+  font-size: 13px;
   color: #809da2;
 }
 .breadcrumb-label i {
   margin: 0 13px;
-  font-size: 9px;
+  font-size: 12.5px;
 }
 .breadcrumb-label strong {
-  font-weight: 500;
+  font-weight: 600;
   color: #485e62;
 }
 .topbar-help {
@@ -300,7 +301,7 @@ a:hover {
   background: #f5fafb;
   border-radius: 6px;
   padding: 6px 9px;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #547176;
   display: flex;
   align-items: center;
@@ -318,7 +319,7 @@ a:hover {
   margin: auto;
 }
 .preview-note {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #8c6c40;
   border: 1px solid #ebe1c7;
   background: #faf6e9;
@@ -357,7 +358,7 @@ a:hover {
   border: 1px solid var(--line);
   border-radius: 7px;
   padding: 11px 12px;
-  font-size: 11px;
+  font-size: 13px;
   color: #627f84;
   white-space: nowrap;
 }
@@ -380,7 +381,7 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
+  font-size: 13px;
   color: #6e8e94;
 }
 .metric-top i {
@@ -398,7 +399,7 @@ a:hover {
   font-weight: 600;
 }
 .metric-hint {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #759499;
 }
 .overview-grid {
@@ -418,7 +419,7 @@ a:hover {
 }
 .light-eyebrow {
   color: #adc6cb;
-  font-size: 9px;
+  font-size: 12.5px;
   letter-spacing: 1.5px;
 }
 .light-eyebrow i {
@@ -431,20 +432,20 @@ a:hover {
 }
 .connection-text h2 {
   font-size: 27px;
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.7px;
   line-height: 1.25;
   margin: 17px 0 12px;
 }
 .connection-text p {
-  font-size: 10px;
+  font-size: 12.5px;
   line-height: 1.8;
   color: #b7cbce;
   max-width: 280px;
   margin-bottom: 16px;
 }
 .connection-text a {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #bee8ef;
   font-weight: 600;
 }
@@ -525,12 +526,12 @@ a:hover {
   margin: 0;
 }
 .panel-heading p {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #7d9a9f;
   margin: 6px 0 0;
 }
 .soft-label {
-  font-size: 8px;
+  font-size: 11.5px;
   letter-spacing: 0.7px;
   color: #7b999e;
   background: #edf5f6;
@@ -549,7 +550,7 @@ a:hover {
   letter-spacing: -1.6px;
   line-height: 1.2;
   margin: 3px 23px 6px;
-  font-weight: 500;
+  font-weight: 600;
 }
 .rate-number small {
   font-size: 25px;
@@ -557,7 +558,7 @@ a:hover {
   color: #8fa8ad;
 }
 .delivery-panel > p {
-  font-size: 10px !important;
+  font-size: 12.5px !important;
   margin: 0 23px;
 }
 .delivery-panel .progress {
@@ -573,7 +574,7 @@ a:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #6b8b91;
   margin: 0 23px;
 }
@@ -606,18 +607,18 @@ a:hover {
   background: transparent;
   outline: 0;
   width: 145px;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .workspace-table {
-  font-size: 11px;
+  font-size: 13px;
   margin: 0;
   --bs-table-color: var(--ink);
   --bs-table-border-color: #ebf1f2;
 }
 .workspace-table th {
   background: #f8fbfb;
-  font-weight: 500;
-  font-size: 8px;
+  font-weight: 600;
+  font-size: 11.5px;
   letter-spacing: 1px;
   color: #7f9ba0;
   border-bottom: 1px solid var(--line);
@@ -663,12 +664,12 @@ a:hover {
 .table-campaign strong {
   display: block;
   color: #374a4d;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
 }
 .table-campaign small {
   display: block;
-  font-size: 9px;
+  font-size: 12.5px;
   color: #7e9a9f;
   margin-top: 5px;
 }
@@ -677,7 +678,7 @@ a:hover {
   border: 1px solid #dde6e7;
   color: #69888e;
   border-radius: 5px;
-  font-size: 9px;
+  font-size: 12.5px;
   padding: 4px 7px;
   white-space: nowrap;
 }
@@ -702,7 +703,7 @@ a:hover {
   color: #a2756d;
 }
 .review-label {
-  font-size: 10px;
+  font-size: 12.5px;
   white-space: nowrap;
 }
 .review-dot {
@@ -725,7 +726,7 @@ a:hover {
 .panel-footnote {
   padding: 12px 23px;
   background: #fbfefe;
-  font-size: 9px;
+  font-size: 12.5px;
   color: #85a0a4;
 }
 .panel-footnote i {
@@ -760,12 +761,12 @@ a:hover {
   flex: 1;
 }
 .location-info strong {
-  font-size: 11px;
+  font-size: 13px;
   display: block;
   font-weight: 600;
 }
 .location-info small {
-  font-size: 9px;
+  font-size: 12.5px;
   color: #819da2;
   display: block;
   margin-top: 5px;
@@ -797,16 +798,16 @@ a:hover {
   color: #b79372;
 }
 .billing-option strong {
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 600;
 }
 .billing-option p {
   margin: 5px 0;
-  font-size: 10px;
+  font-size: 12.5px;
   color: #6b8b91;
 }
 .billing-option small {
-  font-size: 9px;
+  font-size: 12.5px;
   color: #94acb0;
 }
 .billing-note {
@@ -815,7 +816,7 @@ a:hover {
   border: 1px solid #e4edef;
   border-radius: 7px;
   color: #79979c;
-  font-size: 9px;
+  font-size: 12.5px;
   line-height: 1.8;
   padding: 10px;
 }
@@ -827,7 +828,7 @@ a:hover {
   justify-content: space-between;
   padding: 8px 38px 25px;
   color: #8ea7ac;
-  font-size: 9px;
+  font-size: 12.5px;
 }
 .workspace-footer i {
   margin-right: 4px;
@@ -848,19 +849,19 @@ a:hover {
   color: var(--ink);
 }
 .empty-state p {
-  font-size: 11px;
+  font-size: 13px;
   max-width: 370px;
   margin: 10px auto 20px;
   line-height: 1.8;
 }
 .empty-state .btn {
-  font-size: 11px;
+  font-size: 13px;
 }
 .empty-state.compact {
   padding: 25px 0;
 }
 .empty-state.compact a {
-  font-size: 11px;
+  font-size: 13px;
 }
 .search-empty {
   padding: 20px;
@@ -889,7 +890,7 @@ a:hover {
 .submission-guide h2 {
   font-size: 30px;
   letter-spacing: -1px;
-  font-weight: 500;
+  font-weight: 600;
 }
 .submission-guide p,
 .submission-guide li {
@@ -929,7 +930,7 @@ a:hover {
 }
 .login-story h1 {
   font-size: clamp(35px, 4vw, 61px);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -2.5px;
   line-height: 1.17;
   margin: 25px 0;
@@ -947,7 +948,7 @@ a:hover {
 .login-points {
   display: grid;
   gap: 13px;
-  font-size: 11px;
+  font-size: 13px;
   color: #b9ced2;
   margin-top: 35px;
 }
@@ -955,7 +956,7 @@ a:hover {
   margin-right: 10px;
 }
 .login-story > small {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #93abaf;
 }
 .login-form-wrap {
@@ -966,7 +967,7 @@ a:hover {
 }
 .back-link {
   color: #78969b;
-  font-size: 11px;
+  font-size: 13px;
 }
 .back-link i {
   margin-right: 10px;
@@ -997,7 +998,7 @@ a:hover {
   border: 1px solid #dde6e8;
   border-radius: 8px;
   color: #759499;
-  font-size: 10px;
+  font-size: 12.5px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -1023,7 +1024,7 @@ a:hover {
 }
 .login-form > .small {
   text-align: center;
-  font-size: 9px !important;
+  font-size: 12.5px !important;
   margin-top: 28px;
 }
 .login-form .btn {
@@ -1082,7 +1083,7 @@ a:hover {
   padding: 6px 10px;
   border-radius: 100px;
   letter-spacing: 1px;
-  font-size: 9px;
+  font-size: 12.5px;
   font-weight: 650;
   margin-bottom: 25px;
 }
@@ -1123,7 +1124,7 @@ a:hover {
   gap: 16px;
   margin-top: 30px;
   color: #769499;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .proof-icons {
   display: flex;
@@ -1180,7 +1181,7 @@ a:hover {
   border-radius: 100%;
 }
 .poster-browser small {
-  font-size: 7px;
+  font-size: 11.5px;
   margin-left: 38px;
   color: #a6babd;
 }
@@ -1194,7 +1195,7 @@ a:hover {
   overflow: hidden;
 }
 .poster-top {
-  font-size: 8px;
+  font-size: 11.5px;
   letter-spacing: 2px;
   color: #bcd7dc;
 }
@@ -1208,7 +1209,7 @@ a:hover {
   z-index: 1;
 }
 .poster-sub {
-  font-size: 8px;
+  font-size: 11.5px;
   max-width: 110px;
   line-height: 1.8;
   color: #a8c2c7;
@@ -1225,7 +1226,7 @@ a:hover {
   display: inline-block;
   background: #9ad8e3;
   color: #374c50;
-  font-size: 8px;
+  font-size: 11.5px;
   border-radius: 20px;
   padding: 5px 9px;
   margin-top: 38px;
@@ -1236,13 +1237,13 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #89a3a8;
   padding: 10px 4px 1px;
 }
 .poster-caption strong {
   color: #577176;
-  font-size: 8px;
+  font-size: 11.5px;
 }
 .floating-card {
   position: absolute;
@@ -1268,11 +1269,11 @@ a:hover {
 }
 .floating-card strong {
   display: block;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .floating-card small {
   display: block;
-  font-size: 8px;
+  font-size: 11.5px;
   color: #86a1a5;
   margin-top: 3px;
 }
@@ -1297,7 +1298,7 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   color: #86a1a6;
-  font-size: 10px;
+  font-size: 12.5px;
 }
 .strip-inner > span {
   display: flex;
@@ -1309,7 +1310,7 @@ a:hover {
   color: #8faaaf;
 }
 .strip-inner > strong {
-  font-size: 9px;
+  font-size: 12.5px;
   letter-spacing: 1px;
   color: #67868b;
 }
@@ -1363,7 +1364,7 @@ a:hover {
   background: #cde4e8;
 }
 .plan-category {
-  font-size: 9px;
+  font-size: 12.5px;
   letter-spacing: 1px;
   color: #85a0a4;
   font-weight: 600;
@@ -1391,13 +1392,13 @@ a:hover {
   font-weight: 550;
 }
 .plan-billing small {
-  font-size: 10px;
+  font-size: 12.5px;
   color: #819da2;
 }
 .plan-card ul {
   list-style: none;
   padding: 0;
-  font-size: 11px;
+  font-size: 13px;
   color: #69888e;
   display: grid;
   gap: 12px;
@@ -1408,7 +1409,7 @@ a:hover {
   margin-right: 8px;
 }
 .plan-card .btn {
-  font-size: 11px;
+  font-size: 13px;
 }
 .how-grid {
   display: grid;
@@ -1465,13 +1466,13 @@ a:hover {
   font-weight: 650;
 }
 .role-card p {
-  font-size: 10px;
+  font-size: 12.5px;
   line-height: 1.8;
   color: #7e9a9f;
   flex: 1;
 }
 .role-card a {
-  font-size: 10px;
+  font-size: 12.5px;
   font-weight: 600;
 }
 .role-card a i {
@@ -1491,11 +1492,11 @@ a:hover {
   justify-content: space-between;
 }
 .public-footer small {
-  font-size: 9px;
+  font-size: 12.5px;
   color: #99b8bd;
 }
 .public-footer a.contact-link {
-  font-size: 11px;
+  font-size: 13px;
   color: #c3dfe4;
 }
 .public-footer .brand-word {
@@ -1629,19 +1630,19 @@ a:hover {
     display: none;
   }
   .breadcrumb-label {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .breadcrumb-label i {
     margin: 0 5px;
   }
   .account-pill {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .page-heading h1 {
     font-size: 25px;
   }
   .page-heading p {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.7;
   }
   .heading-actions {
@@ -1658,10 +1659,10 @@ a:hover {
     font-size: 27px;
   }
   .metric-top {
-    font-size: 10px;
+    font-size: 12.5px;
   }
   .metric-hint {
-    font-size: 9px;
+    font-size: 12.5px;
   }
   .overview-grid,
   .bottom-grid,
@@ -1699,7 +1700,7 @@ a:hover {
     padding: 0 18px 10px;
   }
   .location-info small {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .location-item {
     gap: 8px;
@@ -1708,7 +1709,7 @@ a:hover {
     padding: 10px 16px 25px;
     gap: 15px;
     flex-direction: column;
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .login-layout {
     grid-template-columns: 1fr;
@@ -1780,10 +1781,10 @@ a:hover {
     font-size: 13px;
   }
   .floating-card strong {
-    font-size: 8px;
+    font-size: 11.5px;
   }
   .floating-card small {
-    font-size: 7px;
+    font-size: 11.5px;
   }
   .floating-one {
     right: -2px;
@@ -1842,10 +1843,10 @@ a:hover {
     gap: 20px;
   }
   .hero-proof {
-    font-size: 9px;
+    font-size: 12.5px;
   }
   .hero-actions .btn {
-    font-size: 11px;
+    font-size: 13px;
     padding: 12px 15px;
   }
 }
@@ -1900,3 +1901,59 @@ a:hover {
     padding: 22px;
   }
 }
+
+/* Readability pass: workspace text was set very small. */
+.workspace-table { font-size: 13px; }
+.workspace-table th { font-size: 13px; }
+.workspace-table .form-control { min-height: 0; }
+.table-campaign strong { font-size: 13px; }
+.table-campaign small { font-size: 13px; }
+.status-badge { font-size: 13px; padding: 4px 9px; border-radius: 999px; text-transform: capitalize; }
+.status-draft,
+.status-completed { background: #eef2f3; color: #6b8186; }
+.panel h2 { font-size: 16px; }
+.panel-heading p { font-size: 12px; }
+.page-heading p { font-size: 14px; }
+.metric-hint, .review-label { font-size: 12px; }
+.workspace-nav a { font-size: 14px; }
+.empty-state p { font-size: 13px; }
+.panel-footnote { font-size: 12px; }
+.btn-sm { font-size: 12px; padding: 7px 12px; }
+.workspace-main textarea.form-control { min-height: 110px; }
+
+/* Small stat boxes used by manager pages. */
+.mini-box { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; height: 100%; }
+.mini-box small { display: block; font-size: 12.5px; letter-spacing: 0.8px; color: #7b999e; margin-bottom: 6px; }
+.mini-box strong { font-size: 20px; color: var(--ink); font-weight: 650; word-break: break-word; }
+.text-capitalize.eyebrow { text-transform: none; }
+.role-choice, .account-pill, .breadcrumb-label, .topbar-help { font-size: 13px; }
+.metric-top span, .sidebar-account small, .sidebar-guide p, .login-help, .location-info small, .billing-option small, .billing-option p, .billing-note, .workspace-footer { font-size: 12px; }
+.location-info strong, .billing-option strong { font-size: 14px; }
+
+/* Stronger type: heavier headings, darker secondary text. */
+h1, h2, h3, h4, .page-heading h1, .metric-value, .rate-number { font-weight: 800; letter-spacing: -0.02em; }
+.panel h2, .panel-heading h2 { font-weight: 700; }
+.metric-hint, .panel-heading p, .page-heading p, .table-campaign small, .location-info small,
+.billing-option small, .billing-option p, .sidebar-account small, .sidebar-guide p, .empty-state p,
+.workspace-table td, .panel-footnote, .workspace-footer { color: #3f5963; }
+.workspace-table th, .eyebrow, .light-eyebrow, .workspace-label, .soft-label { color: #35545f; font-weight: 700; }
+.workspace-nav a { font-weight: 600; color: #274a5a; }
+.workspace-nav a.selected { font-weight: 700; color: var(--brand-primary); }
+.btn { font-size: 14px; font-weight: 700; }
+.btn-sm { font-size: 13px; }
+.form-label { font-size: 14px; font-weight: 700; }
+.form-control, .form-select { font-size: 15px; }
+.status-badge { font-weight: 700; }
+.light-eyebrow { color: #a7e9ed; }
+/* Public site: confident type */
+.hero-copy p, .section-heading p, .plan-card p, .plan-card li, .how-step p, .role-card p, .plan-billing small, .strip-inner span { color: #35505b; font-size: 16px; line-height: 1.65; }
+.hero-copy h1 { font-weight: 800; }
+.section-heading h2, .plan-card h3, .how-step h3, .role-card h3, .plan-billing strong { font-weight: 800; color: var(--ink); }
+.section-heading h2 { font-size: clamp(30px, 4vw, 42px); }
+.plan-category, .plan-card .plan-category, .hero-eyebrow, .strip-inner strong { color: #1f4656; font-weight: 700; }
+.public-nav .nav-link { font-size: 15px; font-weight: 600; color: #1d3f50; }
+.public-nav .nav-link.active { color: var(--brand-primary); font-weight: 700; }
+.plan-billing small { font-size: 13px; }
+.poster-browser small, .poster-caption, .poster-caption * { font-size: 9px; }
+.floating-card small { font-size: 11px; color: #35505b; }
+.public-footer small { color: #cfe3e8; font-size: 13px; }

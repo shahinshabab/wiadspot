@@ -1,65 +1,25 @@
 {% extends "shared/base_portal.html" %}
-
-{% block title %}Review Action{% endblock %}
-
+{% block title %}Review action · WiadSpot{% endblock %}
 {% block content %}
-<div class="mb-4">
-    <h1 class="h3 fw-bold mb-1 text-capitalize">{{ action }} {{ object_type }}</h1>
-    <p class="text-body-secondary mb-0">Confirm this manager action and add remarks if needed.</p>
-</div>
-
-<div class="row">
-    <div class="col-12 col-xl-8">
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4">
-                <div class="row g-3 mb-4">
-                    <div class="col-12 col-md-4">
-                        <div class="border rounded-4 p-3 bg-body-tertiary h-100">
-                            <div class="small text-uppercase text-body-secondary fw-semibold mb-1">Type</div>
-                            <div class="fw-semibold text-capitalize">{{ object_type }}</div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <div class="border rounded-4 p-3 bg-body-tertiary h-100">
-                            <div class="small text-uppercase text-body-secondary fw-semibold mb-1">Action</div>
-                            <div class="fw-semibold text-capitalize">{{ action }}</div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-md-4">
-                        <div class="border rounded-4 p-3 bg-body-tertiary h-100">
-                            <div class="small text-uppercase text-body-secondary fw-semibold mb-1">Item</div>
-                            <div class="fw-semibold">
-                                {% if object_type == "campaign" %}
-                                    {{ object.name }}
-                                {% elif object_type == "ad" %}
-                                    {{ object.title }}
-                                {% else %}
-                                    Placement #{{ object.id }}
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <form method="post">
-                    {% csrf_token %}
-
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">Remarks / Reason</label>
-                        {{ form.reason }}
-                    </div>
-
-                    <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
-                        <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-3">Cancel</a>
-                        <button type="submit" class="btn btn-primary rounded-3 text-capitalize">
-                            Confirm {{ action }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+<div class="page-heading"><div><div class="eyebrow">MANAGER ACTION</div><h1 class="text-capitalize">{{ action }} {{ object_type }}</h1><p>Confirm this action and add remarks if needed.</p></div></div>
+<div class="row"><div class="col-12 col-xl-8">
+<section class="panel submission-panel">
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-4"><div class="mini-box"><small>TYPE</small><strong class="text-capitalize">{{ object_type }}</strong></div></div>
+        <div class="col-12 col-md-4"><div class="mini-box"><small>ACTION</small><strong class="text-capitalize">{{ action }}</strong></div></div>
+        <div class="col-12 col-md-4"><div class="mini-box"><small>ITEM</small><strong>{% if object_type == "campaign" %}{{ object.name }}{% elif object_type == "ad" %}{{ object.title }}{% else %}Placement #{{ object.id }}{% endif %}</strong></div></div>
     </div>
-</div>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-4">
+            <label class="form-label">Remarks / reason</label>
+            {{ form.reason }}
+        </div>
+        <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+            <a href="javascript:history.back()" class="btn btn-outline-brand">Cancel</a>
+            <button type="submit" class="btn btn-brand text-capitalize"><i aria-hidden="true" class="bi bi-check2"></i> Confirm {{ action }}</button>
+        </div>
+    </form>
+</section>
+</div></div>
 {% endblock %}

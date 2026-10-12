@@ -15,17 +15,20 @@
         </div>
         <div class="workspace-label">YOUR WORKSPACE</div>
         <nav class="workspace-nav" aria-label="Workspace">
-            {% if role == "manager" %}<a href="{% url 'review_queue' %}"><i aria-hidden="true"
-   class="bi bi-check2-square"></i>Review queue</a>{% endif %}
-            <a class="selected"
-               href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-grid-1x2"></i>Overview<span class="nav-dot"></span></a>
-            <a href="{% url 'portal_dashboard' role %}#campaigns"><i aria-hidden="true"
-   class="bi bi-megaphone"></i>Campaigns</a>
-            <a href="{% url 'portal_dashboard' role %}#locations"><i aria-hidden="true"
-   class="bi bi-geo-alt"></i>Locations</a>
-            <a href="{% url 'portal_dashboard' role %}#billing"><i aria-hidden="true"
-   class="bi bi-receipt"></i>Billing overview</a>
-            {% if role == "customer" or role == "owner" %}<a href="{% url 'portal_campaign_create' role %}"><i aria-hidden="true" class="bi bi-plus-square"></i>Submit a poster</a>{% endif %}
+            {% with current=request.resolver_match.url_name %}
+            {% if role == "manager" %}
+                <a class="{% if current == 'home' or current == 'portal_dashboard' %}selected{% endif %}" href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-grid-1x2"></i>Overview</a>
+                <a class="{% if current == 'review_queue' or current == 'campaign_review' or current == 'ad_review' or current == 'placement_review' %}selected{% endif %}" href="{% url 'review_queue' %}"><i aria-hidden="true" class="bi bi-check2-square"></i>Review queue</a>
+                <a class="{% if current == 'campaign_list' %}selected{% endif %}" href="{% url 'campaign_list' %}"><i aria-hidden="true" class="bi bi-megaphone"></i>Campaigns</a>
+                <a class="{% if current == 'performance_report' %}selected{% endif %}" href="{% url 'performance_report' %}"><i aria-hidden="true" class="bi bi-graph-up-arrow"></i>Performance</a>
+            {% else %}
+                <a class="{% if current == 'portal_dashboard' or current == 'workspace_home' %}selected{% endif %}" href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-grid-1x2"></i>Overview</a>
+                <a href="{% url 'portal_dashboard' role %}#campaigns"><i aria-hidden="true" class="bi bi-megaphone"></i>Campaigns</a>
+                <a href="{% url 'portal_dashboard' role %}#locations"><i aria-hidden="true" class="bi bi-geo-alt"></i>Locations</a>
+                <a href="{% url 'portal_dashboard' role %}#billing"><i aria-hidden="true" class="bi bi-receipt"></i>Billing overview</a>
+                {% if role == "customer" or role == "owner" %}<a class="{% if current == 'portal_campaign_create' %}selected{% endif %}" href="{% url 'portal_campaign_create' role %}"><i aria-hidden="true" class="bi bi-plus-square"></i>Submit a poster</a>{% endif %}
+            {% endif %}
+            {% endwith %}
         </nav>
         <div class="sidebar-guide">
             <div class="guide-icon">
@@ -53,7 +56,7 @@
             <div class="d-flex align-items-center gap-3"><a class="topbar-help" href="{{ public_site_url }}/contact/"><i aria-hidden="true" class="bi bi-question-circle"></i> Help</a><span class="account-pill"><span></span>{{ account.label }}</span></div>
         </header>
         <main id="main-content" class="workspace-content">
-            {% for message in messages %}<div class="alert alert-success" role="status">{{ message }}</div>{% endfor %}
+            {% for message in messages %}<div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% else %}success{% endif %}" role="status">{{ message }}</div>{% endfor %}
             {% block content %}{% endblock %}
         </main>
         <footer class="workspace-footer"><span>© {% now "Y" %} WiadSpot. Connections that matter.</span><span><i aria-hidden="true" class="bi bi-shield-check"></i> Your workspace, securely connected</span></footer>
