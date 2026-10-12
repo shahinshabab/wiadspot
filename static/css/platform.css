@@ -1900,3 +1900,31 @@ a:hover {
     padding: 22px;
   }
 }
+
+/* Readability pass: workspace text was set very small. */
+.workspace-table { font-size: 13px; }
+.workspace-table th { font-size: 10.5px; }
+.workspace-table .form-control { min-height: 0; }
+.table-campaign strong { font-size: 13px; }
+.table-campaign small { font-size: 11px; }
+.status-badge { font-size: 11px; padding: 4px 9px; border-radius: 999px; text-transform: capitalize; }
+.status-draft,
+.status-completed { background: #eef2f3; color: #6b8186; }
+.panel h2 { font-size: 16px; }
+.panel-heading p { font-size: 12px; }
+.page-heading p { font-size: 14px; }
+.metric-hint, .review-label { font-size: 12px; }
+.workspace-nav a { font-size: 14px; }
+.empty-state p { font-size: 13px; }
+.panel-footnote { font-size: 12px; }
+.btn-sm { font-size: 12px; padding: 7px 12px; }
+.workspace-main textarea.form-control { min-height: 110px; }
+
+/* Small stat boxes used by manager pages. */
+.mini-box { background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; height: 100%; }
+.mini-box small { display: block; font-size: 10px; letter-spacing: 0.8px; color: #7b999e; margin-bottom: 6px; }
+.mini-box strong { font-size: 20px; color: var(--ink); font-weight: 650; word-break: break-word; }
+.text-capitalize.eyebrow { text-transform: none; }
+.role-choice, .account-pill, .breadcrumb-label, .topbar-help { font-size: 13px; }
+.metric-top span, .sidebar-account small, .sidebar-guide p, .login-help, .location-info small, .billing-option small, .billing-option p, .billing-note, .workspace-footer { font-size: 12px; }
+.location-info strong, .billing-option strong { font-size: 14px; }
