@@ -68,7 +68,7 @@ def redirect_user_by_host(request, user):
 
     allowed_role = PORTAL_ROLE_MAP.get(portal)
 
-    if user_role == allowed_role:
+    if user.is_superuser or user_role == allowed_role:
         return redirect(PORTAL_HOME_MAP[portal])
 
     messages.error(request, f"You do not have access to the {portal} portal.")

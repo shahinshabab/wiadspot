@@ -55,6 +55,8 @@ PY
 umask 077
 venv/bin/python manage.py migrate --noinput
 umask 022
+# Creates/updates the super admin only when SUPERADMIN_PASSWORD is set in .env.
+venv/bin/python manage.py ensure_superadmin
 venv/bin/python manage.py collectstatic --noinput
 sudo -n /bin/systemctl restart wiadspot
 sudo -n /bin/systemctl is-active --quiet wiadspot

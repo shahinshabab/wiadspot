@@ -16,6 +16,7 @@ from django.views.decorators.http import require_http_methods, require_POST
 
 from ads.models import Ad, AdMetrics, Asset, AudienceSession, Campaign, UserSubscription
 from config.host_routing import site_address
+from config.role_utils import has_role_access
 from .portal_forms import CampaignSubmissionForm
 
 ROLES = {
@@ -62,7 +63,7 @@ def authorize(request, role):
         raise PermissionDenied("This workspace belongs to another account type.")
     if not request.user.is_authenticated:
         return redirect(reverse("account_login") + "?" + urlencode({"role": role}))
-    if not request.user.groups.filter(name=details["group"]).exists():
+    if not has_role_access(request.user, details["group"]):
         raise PermissionDenied("This account does not have access to this workspace.")
     if request.workspace_role and request.session.get("workspace_role", role) != role:
         raise PermissionDenied("Sign in separately to this workspace.")
@@ -92,14 +93,14 @@ def account_login(request):
             username=request.POST.get("username", "").strip(),
             password=request.POST.get("password", ""),
         )
-        if user and user.groups.filter(name=details["group"]).exists():
+        if user and has_role_access(user, details["group"]):
             login(request, user)
             request.session["workspace_role"] = role
             return redirect("portal_dashboard", role=role)
         error = "The credentials or account type are incorrect. Please try again."
     elif (
         request.user.is_authenticated
-        and request.user.groups.filter(name=details["group"]).exists()
+        and has_role_access(request.user, details["group"])
         and request.session.get("workspace_role", role) == role
     ):
         return redirect("portal_dashboard", role=role)

@@ -2,6 +2,9 @@ import io
 import shutil
 import tempfile
 
+import os
+from unittest import mock
+
 from PIL import Image
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -12,6 +15,10 @@ from django.utils import timezone
 
 from ads.models import Ad, AdMetrics, Asset, Campaign, Placement
 from .portal_views import ROLES
+
+
+def unittest_env(**values):
+    return mock.patch.dict(os.environ, values)
 
 
 @override_settings(DEBUG=True, ROUTING_MODE="subdomain")
@@ -130,6 +137,28 @@ class PlatformPortalTests(TestCase):
                         ).status_code,
                         403,
                     )
+
+    def test_superadmin_can_sign_in_to_and_render_every_workspace(self):
+        from django.core.management import call_command
+
+        with unittest_env(
+            SUPERADMIN_USERNAME="shahin", SUPERADMIN_PASSWORD="pw-for-test"
+        ):
+            call_command("ensure_superadmin")
+            call_command("ensure_superadmin")  # idempotent
+        self.assertEqual(get_user_model().objects.filter(username="shahin").count(), 1)
+        for role in ROLES:
+            client = Client()
+            response = client.post(
+                reverse("account_login"),
+                {"role": role, "username": "shahin", "password": "pw-for-test"},
+            )
+            self.assertEqual(response.status_code, 302, role)
+            self.assertEqual(
+                client.get(reverse("portal_dashboard", args=[role])).status_code,
+                200,
+                role,
+            )
 
     def test_customer_only_sees_own_campaign_metrics(self):
         self.client.force_login(self.users["customer"])
