@@ -54,3 +54,13 @@
 .alert i { margin-right: .35rem; }
 .mp-review-body h2 { margin-bottom: .5rem; }
 @media (max-width: 900px) { .panel:not(:has(> .panel-heading)) { padding: 18px; } }
+
+/* Ad form spacing (explicit, so it doesn't depend on :has support). */
+#adForm .panel { padding: 24px 26px; }
+#adForm .panel > h2 { font-size: 17px; margin: 0 0 .5rem; }
+#adForm .panel > p { margin: 0 0 1rem; }
+#adForm .mb-3 { margin-bottom: 1.1rem !important; }
+#adForm .form-label { display: block; margin-bottom: .4rem; }
+#adForm .mp-stack { gap: 1.5rem; }
+#adForm .table-search { display: flex; width: 100%; }
+#adForm .table-search i { flex-shrink: 0; }
