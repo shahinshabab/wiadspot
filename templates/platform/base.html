@@ -5,9 +5,13 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}WiadSpot · Make every connection count{% endblock %}</title>
-        <link rel="icon"
-              type="image/svg+xml"
-              href="{% static 'images/wiadspot-mark.svg' %}">
+        <link rel="icon" href="{% static 'images/logo/favicon.ico' %}" sizes="any">
+        <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/logo/favicon-32.png' %}">
+        <link rel="apple-touch-icon" href="{% static 'images/logo/apple-touch-icon.png' %}">
+        <meta name="theme-color" content="#002f4f">
+        <meta property="og:title" content="WiadSpot · Make every connection count">
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="{% static 'images/logo/og-image.png' %}">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap">

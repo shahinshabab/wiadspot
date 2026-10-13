@@ -1,118 +1,66 @@
 {% extends "landing/landing_base.html" %}
-{% block title %}Careers | WiadSpot{% endblock %}
 {% load static %}
+{% block title %}Careers | WiadSpot{% endblock %}
 
 {% block content %}
-
-<!-- Coming Soon / Update Soon -->
-<section class="section bg-light">
-  <div class="container">
-    <div class="text-center py-5">
-      <h1 class="mb-3">Careers</h1>
-      <div class="alert alert-info d-inline-flex align-items-center gap-2 px-3 py-2" role="alert">
-        <i class="bi bi-tools"></i>
-        <strong>We’ll update this page soon.</strong> New roles are being prepared.
-      </div>
-      <p class="text-muted mt-3 mb-4">
-        If you’re passionate about public Wi-Fi, privacy-first analytics, and ad tech, we’d still love to hear from you.
-      </p>
-      <div class="d-flex justify-content-center gap-2 flex-wrap">
-        <a class="btn btn-primary" href="mailto:careers@wiadspot.com">
-          <i class="bi bi-envelope"></i> Email your resume
-        </a>
-        <a class="btn btn-outline-secondary" href="mailto:shahin@wiadspot.com">
-          <i class="bi bi-person-lines-fill"></i> Contact Shahin
-        </a>
-      </div>
+<section class="lp-page-hero lp-page-hero-center">
+  <div class="lp-container">
+    <span class="lp-pill"><i aria-hidden="true" class="bi bi-people"></i> Careers</span>
+    <h1>Help us make every connection count.</h1>
+    <p class="lp-lead">If you care about public Wi-Fi, privacy-first analytics and ad tech, we would love to hear from you.</p>
+    <div class="lp-actions lp-actions-center">
+      <a class="lp-btn lp-btn-primary" href="mailto:careers@wiadspot.com"><i aria-hidden="true" class="bi bi-envelope"></i> Email your resume</a>
+      <a class="lp-btn lp-btn-ghost" href="mailto:shahin@wiadspot.com"><i aria-hidden="true" class="bi bi-person-lines-fill"></i> Contact Shahin</a>
     </div>
   </div>
 </section>
 
-<!-- Recent Posts -->
-<section class="section">
-  <div class="container">
-    <div class="d-flex align-items-end justify-content-between mb-3">
-      <h2 class="h4 mb-0">Recent Posts</h2>
-      <a class="text-decoration-none small" href="{% url 'landing' %}#articles">
-        View all
-        <i class="bi bi-arrow-right-short"></i>
-      </a>
+<section class="lp-section">
+  <div class="lp-container">
+    <div class="lp-head">
+      <span class="lp-eyebrow">Why WiadSpot</span>
+      <h2>Work that reaches real people.</h2>
     </div>
-
-    {# If you already have articles in context, render them #}
-    {% if articles %}
-      <div class="list-group">
-        {% for a in articles %}
-          <a href="/articles/read/{{ a.slug }}" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-              <h5 class="mb-1">{{ a.title }}</h5>
-              <small class="text-muted">{{ a.published_at|date:"M d, Y" }}</small>
-            </div>
-            <p class="mb-1 text-muted">{{ a.excerpt }}</p>
-            <small class="text-primary">Read more</small>
-          </a>
-        {% endfor %}
-      </div>
-
-    {% else %}
-      {# Fallback: show a few known posts similar to your existing ones #}
-      <div class="list-group">
-        <a href="/articles/read/captive-portal-101" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Captive Portal 101</h5>
-            <small class="text-muted">Updated recently</small>
-          </div>
-          <p class="mb-1 text-muted">A quick primer on how captive portals work, onboarding flows, and best practices.</p>
-          <small class="text-primary">Read more</small>
-        </a>
-
-        <a href="/articles/read/public-wifi-pros-cons" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Public Wi-Fi: Pros & Cons</h5>
-            <small class="text-muted">Updated recently</small>
-          </div>
-          <p class="mb-1 text-muted">The value of free Wi-Fi for venues and users — and what to watch out for.</p>
-          <small class="text-primary">Read more</small>
-        </a>
-
-        <a href="/articles/read/wifi-marketing-playbook" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Wi-Fi Marketing Playbook</h5>
-            <small class="text-muted">Updated recently</small>
-          </div>
-          <p class="mb-1 text-muted">Consent-first tactics to engage visitors without being intrusive.</p>
-          <small class="text-primary">Read more</small>
-        </a>
-
-        <a href="/articles/read/network-analytics-privacy" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Network Analytics & Privacy</h5>
-            <small class="text-muted">Updated recently</small>
-          </div>
-          <p class="mb-1 text-muted">Measuring footfall and sessions while keeping user identities protected.</p>
-          <small class="text-primary">Read more</small>
-        </a>
-
-        <a href="/articles/read/monetizing-wifi-venues" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">Monetizing Wi-Fi for Venues</h5>
-            <small class="text-muted">Updated recently</small>
-          </div>
-          <p class="mb-1 text-muted">Sustainable models: sponsored access, CPM/CPC, and local campaigns.</p>
-          <small class="text-primary">Read more</small>
-        </a>
-
-        <a href="/articles/read/otp-vs-social-login" class="list-group-item list-group-item-action">
-          <div class="d-flex w-100 justify-content-between">
-            <h5 class="mb-1">OTP vs Social Login</h5>
-            <small class="text-muted">Updated recently</small>
-          </div>
-          <p class="mb-1 text-muted">Choosing the right onboarding flow for your audience and compliance.</p>
-          <small class="text-primary">Read more</small>
-        </a>
-      </div>
-    {% endif %}
+    <div class="lp-features">
+      <article><span><i aria-hidden="true" class="bi bi-geo-alt"></i></span><h3>Real places</h3><p>Your work shows up in cafés, shops and community spaces.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-shield-check"></i></span><h3>Privacy first</h3><p>We build analytics and ads people can trust.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-lightning-charge"></i></span><h3>Small and fast</h3><p>A focused team where you own what you build.</p></article>
+    </div>
   </div>
 </section>
 
+<section class="lp-section lp-alt">
+  <div class="lp-container lp-narrow">
+    <div class="lp-head">
+      <span class="lp-eyebrow">Open roles</span>
+      <h2>New roles are being prepared.</h2>
+      <p>We will update this page soon. In the meantime, send us a note and tell us what you would like to build.</p>
+    </div>
+  </div>
+</section>
+
+{% if articles %}
+<section class="lp-section">
+  <div class="lp-container">
+    <div class="lp-head">
+      <span class="lp-eyebrow">From the blog</span>
+      <h2>Recent articles</h2>
+    </div>
+    <div class="lp-articles">
+      {% for a in articles %}
+      <article class="lp-article-card">
+        <a class="lp-article-thumb" href="{% url 'landing_article_read' a.slug %}" tabindex="-1" aria-hidden="true"><img src="{% static a.thumb %}" alt="" loading="lazy"></a>
+        <div class="lp-article-body">
+          {% if a.category %}<span class="lp-chip">{{ a.category }}</span>{% endif %}
+          <h2><a href="{% url 'landing_article_read' a.slug %}">{{ a.title }}</a></h2>
+          <p>{{ a.summary }}</p>
+          <div class="lp-article-meta"><span>{{ a.published_at }} · {{ a.minutes }} min read</span><a href="{% url 'landing_article_read' a.slug %}">Read <i aria-hidden="true" class="bi bi-arrow-right"></i></a></div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p class="lp-more"><a href="{% url 'landing_articles' %}">View all articles <i aria-hidden="true" class="bi bi-arrow-right"></i></a></p>
+  </div>
+</section>
+{% endif %}
 {% endblock %}

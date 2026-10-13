@@ -1,7 +1,9 @@
 {% extends "platform/base.html" %}
+{% load static %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/landing.css' %}">{% endblock %}
 {% block body %}
     {% include "platform/public_nav.html" %}
-    <main id="main-content" class="landing-content">
+    <main id="main-content" class="lp">
         {% block content %}{% endblock %}
     </main>
     {% include "platform/public_footer.html" %}

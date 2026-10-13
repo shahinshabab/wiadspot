@@ -95,16 +95,13 @@ a:hover {
   text-decoration: none !important;
 }
 .brand-logo {
-  height: 56px;
+  height: 59px;
   width: 85px;
   object-fit: contain;
 }
 .brand.light .brand-logo {
-  width: 102px;
-  height: 66px;
-  background: #fff;
-  padding: 6px 9px;
-  border-radius: 8px;
+  width: 96px;
+  height: 67px;
 }
 .brand-mark {
   display: grid;
