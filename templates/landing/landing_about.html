@@ -4,116 +4,78 @@
 {% block body_class %}about-page{% endblock %}
 
 {% block content %}
+<section class="lp-page-hero">
+  <div class="lp-container lp-split">
+    <div>
+      <span class="lp-pill"><i aria-hidden="true" class="bi bi-info-circle"></i> About WiadSpot</span>
+      <h1>Redefining connectivity in public spaces.</h1>
+      <p class="lp-lead">We deliver free, fast and secure Wi-Fi, and turn every connection into a trusted, privacy-respecting moment for people, venues and brands.</p>
+    </div>
+    <img class="lp-hero-art" src="{% static 'portal/img/about-illustration.png' %}" alt="Illustration of the WiadSpot network" loading="lazy">
+  </div>
+</section>
 
-<!-- Intro -->
-<section class="section bg-light">
-  <div class="container">
-    <h1 class="mb-3 text-center">About Us</h1>
-    <div class="row align-items-center g-4">
-      <div class="col-lg-6">
-        <p class="lead">
-          At <strong>WiadSpot</strong>, we’re redefining connectivity in public spaces.
-          We deliver free, fast, and secure Wi-Fi while unlocking high-intent ad moments through a privacy-respecting captive portal.
-        </p>
-        <ul class="list-unstyled mb-0">
-          <li class="mb-2">• Privacy-first analytics and consented engagement</li>
-          <li class="mb-2">• Resilient networks for outdoor &amp; high-footfall venues</li>
-          <li class="mb-2">• Self-serve advertiser tools &amp; real-time dashboards</li>
+<section class="lp-section">
+  <div class="lp-container">
+    <div class="lp-head">
+      <span class="lp-eyebrow">Our goal</span>
+      <h2>Public Wi-Fi that works for everyone.</h2>
+      <p>To make public Wi-Fi effortless for venues and meaningful for users.</p>
+    </div>
+    <div class="lp-features">
+      <article><span><i aria-hidden="true" class="bi bi-wifi"></i></span><h3>Reliable access</h3><p>Seamless onboarding with OTP and social options.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-shield-lock"></i></span><h3>Respect for privacy</h3><p>Clear consent flows and transparent controls.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-megaphone"></i></span><h3>Win-win monetization</h3><p>Context-aware ads that help fund free Wi-Fi.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-bar-chart-line"></i></span><h3>Useful insights</h3><p>Venue trends without exposing identities.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-broadcast-pin"></i></span><h3>Resilient networks</h3><p>Built for outdoor and high-footfall venues.</p></article>
+      <article><span><i aria-hidden="true" class="bi bi-speedometer2"></i></span><h3>Self-serve tools</h3><p>Advertiser tools and real-time dashboards.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="lp-section lp-alt">
+  <div class="lp-container lp-split lp-split-even">
+    <div>
+      <span class="lp-eyebrow">What we’re building</span>
+      <h2 class="lp-h2">A platform venues can deploy in minutes.</h2>
+      <p class="lp-body">Cafés, clinics, libraries, bus hubs and malls can run WiadSpot with little setup. Operators run their networks safely, advertisers reach audiences respectfully, and people get fast, free internet.</p>
+      <a class="lp-btn lp-btn-outline" href="{% url 'landing_contact' %}">Talk to us <i aria-hidden="true" class="bi bi-arrow-right"></i></a>
+    </div>
+    <ul class="lp-checklist">
+      <li><i aria-hidden="true" class="bi bi-check-circle-fill"></i> Privacy-first analytics and consented engagement</li>
+      <li><i aria-hidden="true" class="bi bi-check-circle-fill"></i> Resilient networks for outdoor and high-footfall venues</li>
+      <li><i aria-hidden="true" class="bi bi-check-circle-fill"></i> Self-serve advertiser tools and real-time dashboards</li>
+    </ul>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container">
+    <div class="lp-head">
+      <span class="lp-eyebrow">Find us</span>
+      <h2>Based in Kerala, working with venues across the state.</h2>
+    </div>
+    <div class="lp-contact-grid">
+      <div class="lp-card">
+        <h3>Get in touch</h3>
+        <ul class="lp-contact-list">
+          <li><i aria-hidden="true" class="bi bi-envelope"></i><a href="mailto:shahin@wiadspot.com">shahin@wiadspot.com</a></li>
+          <li><i aria-hidden="true" class="bi bi-instagram"></i><a href="https://www.instagram.com/wiadspot" target="_blank" rel="noopener">instagram.com/wiadspot</a></li>
+          <li><i aria-hidden="true" class="bi bi-globe"></i><a href="https://www.wiadspot.com" target="_blank" rel="noopener">wiadspot.com</a></li>
+          <li><i aria-hidden="true" class="bi bi-geo-alt"></i><span>Koppam, Kerala, India<br><small>We operate across Kerala with partner venues.</small></span></li>
         </ul>
       </div>
-      <div class="col-lg-6 text-center">
-        <img
-          src="{% static 'portal/img/about-illustration.png' %}"
-          class="img-fluid"
-          alt="About WiadSpot"
-          style="max-width:60%; height:auto;">
+      <div class="lp-map">
+        <iframe src="https://www.google.com/maps?q=Koppam,+Pattambi,+Kerala,+India&amp;output=embed" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="WiadSpot location, Kerala"></iframe>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Mission / What we're building -->
-<section class="section">
-  <div class="container">
-    <div class="row g-4 align-items-center">
-      <div class="col-lg-6 order-lg-2">
-        <h2 class="h3 mb-3">Our Goal</h2>
-        <p class="mb-2">
-          To make <strong>public Wi-Fi</strong> effortless for venues and meaningful for users—turning every connection into a trusted, value-driven experience.
-        </p>
-        <ul class="mb-0">
-          <li class="mb-2"><strong>Reliable Access:</strong> Seamless onboarding with OTP/social options.</li>
-          <li class="mb-2"><strong>Respect for Privacy:</strong> Clear consent flows and transparent controls.</li>
-          <li class="mb-2"><strong>Win-Win Monetization:</strong> Context-aware ads that fund free Wi-Fi.</li>
-          <li class="mb-2"><strong>Useful Insights:</strong> Venue trends without exposing identities.</li>
-        </ul>
-      </div>
-      <div class="col-lg-6 order-lg-1">
-        <div class="p-4 rounded border bg-white h-100">
-          <h3 class="h5 mb-3">What we’re building</h3>
-          <p class="mb-0">
-            A platform that cafés, clinics, libraries, bus hubs and malls can deploy in minutes.
-            Operators run networks safely; advertisers reach audiences respectfully; people get fast, free internet.
-          </p>
-        </div>
-      </div>
-    </div>
+<section class="lp-cta">
+  <div class="lp-container lp-cta-inner">
+    <div><h2>Bring WiadSpot to your venue</h2><p>Free guest Wi-Fi with brand-safe monetization and privacy-first analytics.</p></div>
+    <div class="lp-actions"><a href="{% url 'landing_contact' %}" class="lp-btn lp-btn-primary">Contact us <i aria-hidden="true" class="bi bi-arrow-right"></i></a></div>
   </div>
 </section>
-
-<!-- Contact & Map -->
-<section class="section bg-light">
-  <div class="container">
-    <div class="row g-4">
-      <div class="col-lg-5">
-        <div class="p-4 rounded border h-100 bg-white">
-          <h2 class="h4 mb-3">Contact</h2>
-          <ul class="list-unstyled mb-4">
-            <li class="mb-2 d-flex align-items-center gap-2">
-              <i class="bi bi-envelope" aria-hidden="true"></i>
-              <a href="mailto:shahin@wiadspot.com">shahin@wiadspot.com</a>
-            </li>
-            <li class="mb-2 d-flex align-items-center gap-2">
-              <i class="bi bi-instagram" aria-hidden="true"></i>
-              <a href="https://www.instagram.com/wiadspot" target="_blank" rel="noopener">instagram.com/wiadspot</a>
-            </li>
-            <li class="mb-2 d-flex align-items-center gap-2">
-              <i class="bi bi-telephone" aria-hidden="true"></i> +91-XXXXXXXXXX
-            </li>
-            <li class="mb-2 d-flex align-items-center gap-2">
-              <i class="bi bi-globe" aria-hidden="true"></i>
-              <a href="https://www.wiadspot.com" target="_blank" rel="noopener">wiadspot.com</a>
-            </li>
-          </ul>
-
-          <h3 class="h6 text-uppercase text-muted mb-2">Address</h3>
-          <p class="mb-0">
-            Koppam, Kerala, India<br>
-            <small class="text-muted">We operate across Kerala with partner venues.</small>
-          </p>
-        </div>
-      </div>
-
-      <div class="col-lg-7">
-        <div class="ratio ratio-16x9 rounded overflow-hidden border">
-          <iframe
-            src="https://www.google.com/maps?q=Koppam,+Pattambi,+Kerala,+India&output=embed"
-            style="border:0;" allowfullscreen loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="WiadSpot Location - Palakkad, Kerala">
-          </iframe>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="section py-5">
-  <div class="container text-center">
-    <h2 class="h4 mb-2">Bring WiadSpot to your venue</h2>
-    <p class="text-muted mb-3">Free guest Wi-Fi with brand-safe monetization and privacy-first analytics.</p>
-  </div>
-</section>
-
 {% endblock %}

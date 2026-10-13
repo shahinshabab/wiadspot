@@ -1,61 +1,53 @@
 {% extends "landing/landing_base.html" %}
 {% block title %}Contact | WiadSpot{% endblock %}
 {% block content %}
-    <section class="section">
-        <div class="container">
-            <h1 class="text-center mb-4">Contact Us</h1>
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-xl-6">
-                    <form class="contact-form" method="post" action="">
-                        {% csrf_token %}
-                        {% if messages %}
-                            {% for m in messages %}
-                                <div class="alert alert-{{ m.tags|default:'info' }} mt-2">{{ m }}</div>
-                            {% endfor %}
-                        {% endif %}
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-                        {% endif %}
-                        {% if form.website.errors %}<div class="alert alert-danger">{{ form.website.errors }}</div>{% endif %}
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Name</label>
-                                <input name="{{ form.name.name }}"
-                                       type="text"
-                                       value="{{ form.name.value|default:'' }}"
-                                       class="form-control {% if form.name.errors %}is-invalid{% endif %}"
-                                       placeholder="Your name"
-                                       required>
-                                {% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input name="{{ form.email.name }}"
-                                       type="email"
-                                       value="{{ form.email.value|default:'' }}"
-                                       class="form-control {% if form.email.errors %}is-invalid{% endif %}"
-                                       placeholder="your@email.com"
-                                       required>
-                                {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Message</label>
-                                <textarea name="{{ form.message.name }}"
-                                          rows="5"
-                                          class="form-control {% if form.message.errors %}is-invalid{% endif %}"
-                                          placeholder="How can we help?"
-                                          required>{{ form.message.value|default:'' }}</textarea>
-                                {% for e in form.message.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
-                            </div>
-                        </div>
-                        <!-- Honeypot (hidden). Keep it rendered so bots see it -->
-                        {{ form.website }}
-                        <div class="text-center mt-3">
-                            <button type="submit" class="btn btn-primary px-4">Send Message</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+<section class="lp-page-hero lp-page-hero-center">
+  <div class="lp-container">
+    <span class="lp-pill"><i aria-hidden="true" class="bi bi-chat-dots"></i> Contact</span>
+    <h1>Let’s build your next connection.</h1>
+    <p class="lp-lead">Questions about advertising, locations or partnerships? Send us a message and we will get back to you.</p>
+  </div>
+</section>
+
+<section class="lp-section">
+  <div class="lp-container lp-contact-page">
+    <form class="lp-card lp-form contact-form" method="post" action="">
+      {% csrf_token %}
+      {% for m in messages %}
+        <div class="alert alert-{% if m.tags == 'error' %}danger{% elif m.tags == 'success' %}success{% else %}info{% endif %}" role="status">{{ m }}</div>
+      {% endfor %}
+      {% if form.non_field_errors %}<div class="alert alert-danger">{{ form.non_field_errors }}</div>{% endif %}
+      {% if form.website.errors %}<div class="alert alert-danger">{{ form.website.errors }}</div>{% endif %}
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="contact-name">Name</label>
+          <input id="contact-name" name="{{ form.name.name }}" type="text" value="{{ form.name.value|default:'' }}" class="form-control {% if form.name.errors %}is-invalid{% endif %}" placeholder="Your name" required>
+          {% for e in form.name.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
         </div>
-    </section>
+        <div class="col-md-6">
+          <label class="form-label" for="contact-email">Email</label>
+          <input id="contact-email" name="{{ form.email.name }}" type="email" value="{{ form.email.value|default:'' }}" class="form-control {% if form.email.errors %}is-invalid{% endif %}" placeholder="your@email.com" required>
+          {% for e in form.email.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+        <div class="col-12">
+          <label class="form-label" for="contact-message">Message</label>
+          <textarea id="contact-message" name="{{ form.message.name }}" rows="6" class="form-control {% if form.message.errors %}is-invalid{% endif %}" placeholder="How can we help?" required>{{ form.message.value|default:'' }}</textarea>
+          {% for e in form.message.errors %}<div class="invalid-feedback">{{ e }}</div>{% endfor %}
+        </div>
+      </div>
+      <!-- Honeypot (hidden). Keep it rendered so bots see it -->
+      {{ form.website }}
+      <button type="submit" class="lp-btn lp-btn-primary mt-4">Send message <i aria-hidden="true" class="bi bi-send"></i></button>
+    </form>
+    <aside class="lp-card lp-info">
+      <h2>Other ways to reach us</h2>
+      <ul class="lp-contact-list">
+        <li><i aria-hidden="true" class="bi bi-envelope"></i><a href="mailto:shahin@wiadspot.com">shahin@wiadspot.com</a></li>
+        <li><i aria-hidden="true" class="bi bi-instagram"></i><a href="https://www.instagram.com/wiadspot" target="_blank" rel="noopener">instagram.com/wiadspot</a></li>
+        <li><i aria-hidden="true" class="bi bi-geo-alt"></i><span>Koppam, Kerala, India<br><small>We operate across Kerala with partner venues.</small></span></li>
+      </ul>
+      <p class="lp-note"><i aria-hidden="true" class="bi bi-clock"></i> Please wait a minute between messages.</p>
+    </aside>
+  </div>
+</section>
 {% endblock %}
