@@ -24,3 +24,33 @@
 .mp-review-media img, .mp-review-media video { max-width: 100%; height: auto; border-radius: 10px; background: #0f172a; }
 .mp-pre { white-space: pre-wrap; word-break: break-word; background: rgba(0, 47, 79, .05); padding: .75rem; border-radius: 8px; }
 @media (max-width: 900px) { .mp-grid, .mp-review { grid-template-columns: 1fr; } }
+
+/* Sidebar: scroll when the links outgrow the screen (admin has many). */
+.workspace-sidebar { overflow-y: auto; overscroll-behavior: contain; }
+.workspace-sidebar > * { flex-shrink: 0; }
+.workspace-label { margin-top: 28px; }
+@media (max-height: 820px) { .workspace-sidebar .sidebar-guide { display: none; } }
+.workspace-sidebar .sidebar-account { margin-top: auto; }
+
+/* Panels from the marketplace pages: breathing room and spacing. */
+.workspace-content > .panel, .workspace-content > form > .panel, .mp-stack > .panel { margin-bottom: 1.25rem; }
+.mp-stack > .panel { margin-bottom: 0; }
+.panel:not(:has(> .panel-heading)) { padding: 22px 24px; }
+.panel:has(> .panel-heading) { padding-bottom: 20px; }
+.panel:has(> .panel-heading) > :not(.panel-heading):not(.table-responsive) { margin-left: 23px; margin-right: 23px; }
+.panel > h2 { margin-bottom: .9rem; }
+.panel > h2.mt-4 { margin-top: 1.5rem; }
+.mp-stats .panel { margin-bottom: 0; }
+.panel .billing-option { margin-bottom: .75rem; }
+.panel .table-search { max-width: 100%; }
+.panel .table-search input { width: 100%; }
+.mp-spot-list { background: #fff; }
+.mp-spot input[type="checkbox"] { flex-shrink: 0; margin: 0; }
+.mp-spot-text strong { overflow-wrap: anywhere; }
+.mp-spot-actions { margin-bottom: .25rem; }
+#adForm input[type="file"] { padding: 10px 12px; height: auto; }
+#adForm .form-text { font-size: 12.5px; }
+#adForm .btn-brand { align-self: flex-start; }
+.alert i { margin-right: .35rem; }
+.mp-review-body h2 { margin-bottom: .5rem; }
+@media (max-width: 900px) { .panel:not(:has(> .panel-heading)) { padding: 18px; } }
