@@ -30,7 +30,7 @@ class SubdomainURLRoutingMiddleware:
             is_development_host(request) and not request.workspace_role
         )
         if request.path_info.startswith(
-            ("/fas/", "/wiadspot/fas/", "/ad-click/", "/wiadspot/ad-click/")
+            ("/fas/", "/wiadspot/fas/", "/ad-click/", "/wiadspot/ad-click/", "/device/")
         ):
             request.urlconf = "core.fas_urls"
         elif request.development_workspace:

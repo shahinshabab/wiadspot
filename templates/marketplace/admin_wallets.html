@@ -1,0 +1,7 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Add funds · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ADMIN</div><h1>Add funds to a wallet</h1><p>Credit an advertiser or owner after you receive their payment.</p></div></div>
+<div class="mp-grid"><section class="panel"><form method="post">{% csrf_token %}{% include "marketplace/_fields.html" %}<button class="btn btn-brand" type="submit">Add funds</button></form></section>
+<section class="panel"><h2>Recent credits</h2><div class="table-responsive"><table class="table workspace-table"><tbody>{% for t in recent %}<tr><td>{{ t.wallet.user.username }}</td><td>₹{{ t.amount }}</td><td>{{ t.created_at|date:"d M Y H:i" }}</td><td>{{ t.reference_id|default:"" }}</td></tr>{% empty %}<tr><td class="text-muted">No credits yet.</td></tr>{% endfor %}</tbody></table></div></section></div>
+{% endblock %}

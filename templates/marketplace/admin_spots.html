@@ -1,0 +1,9 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Locations · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ADMIN</div><h1>Locations</h1><p>Set each spot's town, type and price, and manage its device key.</p></div></div>
+<section class="panel"><form method="get" class="mb-3"><label class="table-search"><i aria-hidden="true" class="bi bi-search"></i><input type="search" name="q" value="{{ q }}" placeholder="Search by name, code or town" aria-label="Search locations"></label></form>
+<div class="table-responsive"><table class="table workspace-table"><thead><tr><th>LOCATION</th><th>TOWN</th><th>TYPE</th><th>COST / USER</th><th>OWNER</th></tr></thead><tbody>
+{% for s in page %}<tr><td><a href="{% url 'portal_spot_edit' role s.pk %}"><strong>{{ s.asset.name }}</strong></a><br><small class="text-muted">{{ s.asset.code }}</small></td><td>{{ s.town.name|default:"—" }}</td><td>{{ s.get_mode_display }}</td><td>₹{{ s.rate_per_view }}</td><td>{{ s.asset.actual_owner.username|default:"—" }}</td></tr>{% empty %}<tr><td colspan="5" class="text-muted">No locations found.</td></tr>{% endfor %}</tbody></table></div>
+{% if page.has_other_pages %}<p>{% if page.has_previous %}<a href="?q={{ q|urlencode }}&page={{ page.previous_page_number }}">Previous</a>{% endif %} Page {{ page.number }} of {{ page.paginator.num_pages }} {% if page.has_next %}<a href="?q={{ q|urlencode }}&page={{ page.next_page_number }}">Next</a>{% endif %}</p>{% endif %}</section>
+{% endblock %}

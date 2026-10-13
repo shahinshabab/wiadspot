@@ -5,11 +5,13 @@ from . import portal_views
 from django.conf import settings
 from django.conf.urls.static import static
 from . import management_urls
+from marketplace.urls import urlpatterns as marketplace_patterns
 
 urlpatterns = [
     # Existing manager templates use both plain and ads-prefixed URL names.
     path("management/", include("core.management_urls")),
     path("management/", include((management_urls.urlpatterns, None))),
+    *marketplace_patterns,
     path("accounts/login/", portal_views.account_login, name="account_login"),
     path("accounts/logout/", portal_views.account_logout, name="account_logout"),
     path("portal/<slug:role>/", portal_views.dashboard, name="portal_dashboard"),

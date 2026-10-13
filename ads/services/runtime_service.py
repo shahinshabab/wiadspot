@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.db.models import Q
 from django.utils import timezone
 
+from marketplace import rules as marketplace_rules
 from ads.models import (
     Asset,
     Placement,
@@ -110,10 +111,15 @@ def is_placement_live(placement):
     return True
 
 
-def owner_can_pay(owner):
+def owner_can_pay(owner, placement=None):
     if user_requires_subscription(owner):
         if not has_valid_subscription(owner):
             return False
+    if placement is not None:
+        terms = marketplace_rules.terms_of(placement)
+        if terms is not None and terms.free_own_spot:
+            # Own spot: no per-user charge, but the subscription above is required.
+            return True
     return has_credit_balance(owner) or _user_in_group(owner, "Admin")
 
 
@@ -128,6 +134,8 @@ def check_asset_permission_for_placement(asset, placement):
         if asset.partner and approver == asset.partner:
             return True
         if asset.allow_admin_approval and _user_in_group(approver, "Admin"):
+            return True
+        if asset.allow_manager_approval and _user_in_group(approver, "Manager"):
             return True
 
         return False
@@ -216,9 +224,11 @@ def get_eligible_placements_for_asset(asset):
             continue
         if not check_asset_permission_for_placement(asset, placement):
             continue
-        if not owner_can_pay(owner):
+        if not owner_can_pay(owner, placement):
             continue
         if not placement_has_remaining_capacity(placement):
+            continue
+        if not marketplace_rules.placement_allowed(placement):
             continue
 
         eligible.append(placement)
@@ -246,10 +256,8 @@ def choose_best_placement(asset):
     if not eligible:
         return None
 
-    ranked = sorted(
-        eligible,
-        key=lambda p: calculate_effective_score(p, pricing),
-        reverse=True
+    ranked = marketplace_rules.rank_placements(
+        eligible, lambda p: calculate_effective_score(p, pricing)
     )
     return ranked[0]
 
@@ -267,10 +275,16 @@ def create_serve_session(asset, placement, visitor_token=None, client_ip=None, u
     return session
 
 
-def log_raw_event(*, asset, placement, ad, campaign, event_type, serve_session=None, metadata=None):
+def log_raw_event(*, asset, placement, ad, campaign, event_type, serve_session=None, metadata=None,
+                  billable=True, note=""):
     pricing = get_active_metric_pricing()
+    marketplace_amount = marketplace_rules.impression_amount(placement)
 
-    if event_type == "IMPRESSION":
+    if marketplace_amount is not None:
+        # Marketplace placements are charged per user (impression) at the booked rate.
+        amount = marketplace_amount if event_type == "IMPRESSION" else Decimal("0.0000")
+
+    elif event_type == "IMPRESSION":
         amount = pricing.cost_per_impression
         if campaign.max_bid_per_impression and amount > campaign.max_bid_per_impression:
             amount = campaign.max_bid_per_impression
@@ -290,6 +304,9 @@ def log_raw_event(*, asset, placement, ad, campaign, event_type, serve_session=N
     else:
         amount = Decimal("0.0000")
 
+    if not billable:
+        amount = Decimal("0.0000")
+
     return AdEventLog.objects.create(
         asset=asset,
         placement=placement,
@@ -298,6 +315,8 @@ def log_raw_event(*, asset, placement, ad, campaign, event_type, serve_session=N
         serve_session=serve_session,
         event_type=event_type,
         billable_amount=amount,
+        billing_status="PENDING" if billable else "SKIPPED",
+        notes=note or None,
         metadata=metadata or {},
     )
 
@@ -334,6 +353,9 @@ def serve_ad_for_asset(asset_code, visitor_token=None, client_ip=None, user_agen
         request_meta=request_meta,
     )
 
+    billable, reason = marketplace_rules.impression_is_billable(
+        asset, placement.ad, visitor_token, request_meta
+    )
     log_raw_event(
         asset=asset,
         placement=placement,
@@ -342,6 +364,8 @@ def serve_ad_for_asset(asset_code, visitor_token=None, client_ip=None, user_agen
         event_type="IMPRESSION",
         serve_session=serve_session,
         metadata=request_meta or {},
+        billable=billable,
+        note=reason,
     )
 
     placement.last_served_at = timezone.now()

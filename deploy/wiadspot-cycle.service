@@ -1,0 +1,13 @@
+[Unit]
+Description=Wiadspot billing and delivery cycle
+After=wiadspot.service
+
+[Service]
+Type=oneshot
+User=wiadspot
+Group=www-data
+WorkingDirectory=/srv/wiadspot
+EnvironmentFile=/srv/wiadspot/.env
+ExecStart=/srv/wiadspot/venv/bin/python manage.py run_ad_cycle
+NoNewPrivileges=true
+PrivateTmp=true

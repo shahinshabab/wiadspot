@@ -119,6 +119,7 @@ INSTALLED_APPS = [
     "partner",
     "clients",
     "ads",
+    "marketplace",
     "dashboard_admin",
     # "website",   # add this if you create an app for www.wiadspot.com
 ]

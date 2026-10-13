@@ -1,0 +1,57 @@
+{% extends "platform/workspace.html" %}
+{% load static %}
+{% block title %}Submit an ad · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">NEW AD</div><h1>Put your ad in front of people.</h1><p>Upload an image or video, pick towns and locations, set your budget. An ad manager reviews it before it goes live.</p></div><a class="btn btn-outline-brand" href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-arrow-left"></i> Back to overview</a></div>
+{% if not subscribed %}<div class="alert alert-warning" role="status"><i aria-hidden="true" class="bi bi-exclamation-triangle"></i> You have no active subscription. You can submit now, but your ad won't be shown until you <a href="{% url 'portal_billing' role %}">subscribe</a>.</div>{% endif %}
+<form method="post" enctype="multipart/form-data" id="adForm" novalidate>{% csrf_token %}
+<div class="mp-grid">
+  <div class="mp-stack">
+    <section class="panel"><h2>1 · Your ad</h2>
+      {{ form.non_field_errors }}
+      <div class="mb-3"><label for="{{ form.name.id_for_label }}" class="form-label">{{ form.name.label }} *</label>{{ form.name }}{% for e in form.name.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+      <div class="mb-3"><label for="{{ form.title.id_for_label }}" class="form-label">{{ form.title.label }} *</label>{{ form.title }}{% for e in form.title.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+      <div class="mb-3"><label for="{{ form.media_file.id_for_label }}" class="form-label">{{ form.media_file.label }} *</label>{{ form.media_file }}
+        <div class="form-text">Image: exactly {{ conf.image_width }}×{{ conf.image_height }} px, JPG, PNG or WebP, up to {{ conf.image_max_mb }} MB. Video: MP4 (H.264), exactly {{ conf.video_width }}×{{ conf.video_height }} px, {{ conf.video_min_seconds }}–{{ conf.video_max_seconds }} seconds, up to {{ conf.video_max_mb }} MB.</div>
+        {% for e in form.media_file.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+      <div class="mb-3"><label for="{{ form.target_url.id_for_label }}" class="form-label">{{ form.target_url.label }}</label>{{ form.target_url }}{% for e in form.target_url.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+    </section>
+
+    <section class="panel"><h2>2 · Locations</h2>
+      <p class="text-muted">Search by town name, then tick every location where the ad should run. {% if role == "owner" %}Your own locations are free per user (a subscription is still needed).{% endif %}</p>
+      <label class="table-search mb-3"><i aria-hidden="true" class="bi bi-search"></i><input type="search" id="spotSearch" placeholder="Search a town or location, e.g. Kochi" aria-label="Search towns and locations" autocomplete="off"></label>
+      <div class="mp-spot-actions"><button type="button" class="btn btn-sm btn-outline-brand" id="selectShown">Select all shown</button> <button type="button" class="btn btn-sm btn-outline-brand" id="clearAll">Clear</button> <span class="text-muted small" id="spotCount"></span></div>
+      <div class="mp-spot-list" id="spotList" role="group" aria-label="Locations"></div>
+      <div id="spotInputs"></div>
+      {% for e in form.spots.errors %}<div class="text-danger small mt-2" role="alert">{{ e }}</div>{% endfor %}
+    </section>
+
+    <section class="panel"><h2>3 · Budget and schedule</h2>
+      <div class="row g-3">
+        <div class="col-md-6"><label for="{{ form.total_budget.id_for_label }}" class="form-label">{{ form.total_budget.label }} *</label>{{ form.total_budget }}<div class="form-text">{{ form.total_budget.help_text }}</div>{% for e in form.total_budget.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+        <div class="col-md-6"><label for="{{ form.daily_budget.id_for_label }}" class="form-label">{{ form.daily_budget.label }}</label>{{ form.daily_budget }}<div class="form-text">{{ form.daily_budget.help_text }}</div>{% for e in form.daily_budget.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+        <div class="col-md-6"><label for="{{ form.max_views.id_for_label }}" class="form-label">{{ form.max_views.label }}</label>{{ form.max_views }}<div class="form-text">{{ form.max_views.help_text }}</div>{% for e in form.max_views.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+        <div class="col-md-3"><label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }}</label>{{ form.start_date }}{% for e in form.start_date.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+        <div class="col-md-3"><label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }}</label>{{ form.end_date }}{% for e in form.end_date.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>
+      </div>
+      <p class="mp-estimate" id="estimate" aria-live="polite"></p>
+    </section>
+    <button class="btn btn-brand" type="submit">Submit for review <i aria-hidden="true" class="bi bi-arrow-right"></i></button>
+  </div>
+
+  <aside class="mp-stack">
+    <section class="panel"><h2>What to upload</h2>
+      <p class="text-muted small">Use this size. Anything else is rejected.</p>
+      <figure class="mp-example"><img src="{% static 'marketplace/example-ad.png' %}" alt="Example ad image at {{ conf.image_width }} by {{ conf.image_height }} pixels" width="640" height="360"><figcaption>Example image · {{ conf.image_width }}×{{ conf.image_height }} px</figcaption></figure>
+      <figure class="mp-example"><video src="{% static 'marketplace/example-ad.mp4' %}" controls muted preload="none" width="640" height="360"></video><figcaption>Example video · {{ conf.video_width }}×{{ conf.video_height }} px, MP4, {{ conf.video_min_seconds }}–{{ conf.video_max_seconds }} s</figcaption></figure>
+    </section>
+    <section class="panel"><h2>How you're charged</h2>
+      <ul class="mp-list"><li>You pay <strong>per user</strong> who sees your ad, at the rate shown beside each location.</li><li>Charges come from your wallet (balance <strong>₹{{ wallet_balance }}</strong>).</li><li>Delivery stops when your total budget, daily budget or maximum views is reached.</li><li>Your ad only runs after an ad manager approves it.</li></ul>
+    </section>
+  </aside>
+</div>
+</form>
+{{ spots|json_script:"spotData" }}
+{{ selected|json_script:"selectedSpots" }}
+{% endblock %}
+{% block extra_js %}<script src="{% static 'js/marketplace.js' %}"></script>{% endblock %}

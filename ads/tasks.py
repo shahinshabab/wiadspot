@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.db import models, transaction
 from django.db.models import Sum, Count
 from django.utils import timezone
+from marketplace.services import credit_owner_earning
 from ads.models import (
     Campaign,
     Placement,
@@ -100,6 +101,16 @@ def bill_pending_events(batch_size=1000):
             processed += 1
             continue
 
+        amount = event.billable_amount or Decimal("0.0000")
+
+        # Free views (an owner on their own spot) cost nothing and need no wallet.
+        if amount <= 0:
+            event.billing_status = "BILLED"
+            event.billed_at = timezone.now()
+            event.save(update_fields=["billing_status", "billed_at"])
+            processed += 1
+            continue
+
         wallet = Wallet.objects.filter(user=owner, is_active=True).first()
         if not wallet:
             event.billing_status = "FAILED"
@@ -107,8 +118,6 @@ def bill_pending_events(batch_size=1000):
             event.save(update_fields=["billing_status", "notes"])
             processed += 1
             continue
-
-        amount = event.billable_amount or Decimal("0.0000")
 
         # If insufficient balance, mark failed and later pause campaign/placements
         if wallet.balance < amount:
@@ -143,6 +152,9 @@ def bill_pending_events(batch_size=1000):
             event.billing_status = "BILLED"
             event.billed_at = timezone.now()
             event.save(update_fields=["billing_status", "billed_at"])
+
+            # The owner of a listed spot earns a share of what the advertiser paid.
+            credit_owner_earning(event, amount)
 
         total_billed += amount
         processed += 1
@@ -269,13 +281,16 @@ def pause_entities_with_insufficient_balance():
         if wallet.balance > 0:
             continue
 
-        campaigns = Campaign.objects.filter(owner=owner, status="ACTIVE", is_active=True)
+        # Views on the owner's own spot are free, so an empty wallet doesn't stop them.
+        campaigns = Campaign.objects.filter(
+            owner=owner, status="ACTIVE", is_active=True
+        ).exclude(ads__placements__terms__free_own_spot=True)
         placements = Placement.objects.filter(
             ad__owner=owner,
             status__in=["APPROVED", "RUNNING"],
             is_active=True,
             serving_enabled=True,
-        )
+        ).exclude(terms__free_own_spot=True)
 
         for campaign in campaigns:
             campaign.status = "PAUSED"

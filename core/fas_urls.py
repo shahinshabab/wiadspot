@@ -4,8 +4,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 from ads.views import fas, ad_click_redirect
+from marketplace.urls import device_urlpatterns
 
 urlpatterns = [
+    *device_urlpatterns,
     path("fas/", fas, name="fas_gateway"),
     path("fas/<int:assetid>/", fas, name="fas"),
     path("wiadspot/fas/", fas, name="wiadspot_fas_gateway"),

@@ -1,0 +1,12 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Earnings · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">EARNINGS</div><h1>Earnings and withdrawals</h1><p>You earn {{ conf.owner_share_percent }}% of what advertisers pay for users who see ads on your listed locations.</p></div></div>
+<div class="mp-stats"><div class="panel"><small>Available</small><strong>₹{{ summary.available|floatformat:2 }}</strong></div><div class="panel"><small>Lifetime earned</small><strong>₹{{ summary.lifetime|floatformat:2 }}</strong></div><div class="panel"><small>Withdrawal pending</small><strong>₹{{ summary.pending|floatformat:2 }}</strong></div><div class="panel"><small>Paid out</small><strong>₹{{ summary.paid_out|floatformat:2 }}</strong></div></div>
+<div class="mp-grid">
+<section class="panel"><h2>Withdraw</h2><p class="text-muted">Minimum ₹{{ conf.min_withdrawal }}. WiadSpot sends the money to the details you give and marks it paid.</p>
+<form method="post">{% csrf_token %}{% include "marketplace/_fields.html" %}<button class="btn btn-brand" type="submit">Request withdrawal</button></form></section>
+<section class="panel"><h2>Withdrawals</h2>{% for w in withdrawals %}<div class="billing-option"><div><strong>₹{{ w.amount }}</strong><p>{{ w.created_at|date:"d M Y" }}</p>{% if w.note %}<small>{{ w.note }}</small>{% endif %}</div><span class="status-badge status-{% if w.status == 'PAID' %}active{% elif w.status == 'REJECTED' %}rejected{% else %}pending{% endif %} ms-auto">{{ w.get_status_display }}</span></div>{% empty %}<p class="text-muted">No withdrawals yet.</p>{% endfor %}</section>
+</div>
+<section class="panel"><h2>Recent earnings</h2><div class="table-responsive"><table class="table workspace-table"><thead><tr><th>WHEN</th><th>LOCATION</th><th>AMOUNT</th></tr></thead><tbody>{% for e in entries %}<tr><td>{{ e.created_at|date:"d M Y H:i" }}</td><td>{{ e.asset.name }}</td><td>₹{{ e.amount }}</td></tr>{% empty %}<tr><td colspan="3" class="text-muted">Earnings appear here once ads run on your listed locations.</td></tr>{% endfor %}</tbody></table></div></section>
+{% endblock %}

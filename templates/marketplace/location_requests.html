@@ -1,0 +1,15 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Location requests · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">REVIEW</div><h1>Location requests</h1><p>Approve owners who give their spot to WiadSpot, and track installations.</p></div></div>
+{% for r in open_requests %}<section class="panel"><h2>{{ r.name }} <span class="status-badge status-{{ r.status|lower }}">{{ r.get_status_display }}</span></h2>
+<p class="text-muted">{{ r.get_kind_display }} · {{ r.town.name }} · {{ r.user.username }} · {{ r.created_at|date:"d M Y" }}</p>
+{% if r.address %}<p class="small">{{ r.address }}</p>{% endif %}{% if r.contact_phone %}<p class="small">Phone: {{ r.contact_phone }}</p>{% endif %}{% if r.notes %}<p class="small">{{ r.notes }}</p>{% endif %}
+<form method="post" class="mp-actions">{% csrf_token %}<input type="hidden" name="request_id" value="{{ r.pk }}"><input class="form-control" name="note" placeholder="Note to the owner (optional)" aria-label="Note">
+{% if r.status == "PENDING" %}<button class="btn btn-brand" name="action" value="approve" type="submit">{% if r.kind == "LIST_EXISTING" %}Approve and list{% else %}Approve{% endif %}</button>
+{% elif r.kind == "NEW_INSTALL" and r.status == "APPROVED" %}<button class="btn btn-outline-brand" name="action" value="start_install" type="submit">Start installation</button><button class="btn btn-brand" name="action" value="complete" type="submit">Installed</button>
+{% elif r.kind == "NEW_INSTALL" and r.status == "INSTALLING" %}<button class="btn btn-brand" name="action" value="complete" type="submit">Installed</button>{% endif %}
+<button class="btn btn-outline-brand" name="action" value="reject" type="submit">Reject</button></form></section>
+{% empty %}<section class="panel"><div class="empty-state compact"><i aria-hidden="true" class="bi bi-check2-circle"></i><p>No open requests.</p></div></section>{% endfor %}
+{% if closed_requests %}<section class="panel"><h2>Recently closed</h2><div class="table-responsive"><table class="table workspace-table"><tbody>{% for r in closed_requests %}<tr><td>{{ r.name }}</td><td>{{ r.get_kind_display }}</td><td>{{ r.user.username }}</td><td><span class="status-badge status-{{ r.status|lower }}">{{ r.get_status_display }}</span></td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% endblock %}

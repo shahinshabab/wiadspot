@@ -95,3 +95,14 @@ The dashboard captures use an isolated preview database and are labelled **sampl
 - [About](docs/screenshots/about.png), [Contact](docs/screenshots/contact.png), [Articles](docs/screenshots/articles.png) and [Careers](docs/screenshots/careers.png)
 
 `main` is reserved for production. Start work on a task branch from the latest `dev`, validate it, then merge into `dev`. Pull `dev` locally to receive changes. Do not merge development work into `main` without an explicit production promotion request.
+
+## Ad marketplace
+
+- **Admin** (`Pricing and rules`): cost per user for WiadSpot-hosted and owner-listed spots, owner revenue share, minimum withdrawal, how the ad pool rotates, accepted image/video size, and the subscription plans and their monthly value. `Add funds` credits a wallet after a payment is received; `Withdrawals` pays owners; `All locations` sets each spot's town, type, price override and device key.
+- **Advertiser** (`Submit an ad`): upload an image or MP4 (checked for type, size, dimensions and length; images are re-encoded), search towns, tick several locations (the cost per user is shown beside each), set a total budget plus an optional daily budget or maximum views. The ad goes to an ad manager. Advertisers cannot add or manage locations.
+- **Location owner**: sees their own locations plus WiadSpot's when submitting an ad; views on their own spot cost nothing but still need an active subscription. They can give a spot to WiadSpot (priced higher, they earn a share), request a new installation, and withdraw earnings.
+- **Ad manager** (`Ad submissions`, `Location requests`): approving an ad approves its campaign, ad and every chosen location together; approving a listing makes the spot bookable; installations move Approved, Installing, Installed.
+- **Towns only**: all of Kerala is seeded as towns (no districts) and the list is editable in Django admin.
+- **Security**: only approved, in-budget ads are served; spots authenticate with hashed device keys; views are billed only when the request carried the spot's encrypted gateway payload, and a visitor's repeat views inside the repeat-view window are not billed again.
+
+Run `python manage.py run_ad_cycle` regularly (see `deploy/README.md`).

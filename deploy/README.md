@@ -41,3 +41,21 @@ External MSG91/FAS functionality requires the corresponding private credentials.
 
 Create the admin interactively:
 `sudo -u wiadspot /srv/wiadspot/venv/bin/python /srv/wiadspot/manage.py createsuperuser`.
+
+## Billing cycle and uploads (ad marketplace)
+
+Per-user charges, owner earnings and campaign status changes are produced by
+`manage.py run_ad_cycle`. Nothing schedules it by default: install
+`wiadspot-cycle.service` and `wiadspot-cycle.timer` into `/etc/systemd/system/`,
+then `systemctl daemon-reload && systemctl enable --now wiadspot-cycle.timer`.
+Until the timer runs, views are served and logged but not billed or credited.
+
+The supplied `nginx.conf` raises the upload limit to 40 MB (video ads) and serves
+`/media/` with `nosniff`, a sandboxing CSP, and no script or HTML types. Reinstall
+it and run `nginx -t && systemctl reload nginx` after deploying. The video size
+limit set in the admin workspace (default 20 MB) must stay below that.
+
+Spot devices authenticate to `/device/v1/` with a key created in the admin
+workspace (Locations, then a location). Gunicorn runs two workers and device rate
+limits use per-process memory, so the real limit is looser than the numbers in
+the code; put an Nginx `limit_req` in front of `/device/` if that matters.

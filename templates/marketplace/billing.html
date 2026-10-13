@@ -1,0 +1,14 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Billing · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">BILLING</div><h1>Wallet and subscription</h1><p>Per-user charges come from your wallet. A subscription keeps your account active.</p></div></div>
+<div class="mp-grid">
+<section class="panel"><div class="panel-heading"><div><h2>Subscription</h2><p>{% if subscription and subscription.plan %}{{ subscription.plan.name }} · {{ subscription.get_status_display }}{% if subscription.end_date %} · until {{ subscription.end_date|date:"d M Y" }}{% endif %}{% else %}You have no subscription yet. Ads won't be shown without one.{% endif %}</p></div><i aria-hidden="true" class="bi bi-receipt panel-icon"></i></div>
+{% for plan in plans %}<form method="post" class="billing-option">{% csrf_token %}<input type="hidden" name="plan_id" value="{{ plan.pk }}"><span class="billing-icon"><i aria-hidden="true" class="bi bi-box-seam"></i></span><div><strong>{{ plan.name }}</strong><p>₹{{ plan.monthly_price }} for 30 days · up to {{ plan.max_campaigns }} campaign{{ plan.max_campaigns|pluralize }}</p>{% if plan.description %}<small>{{ plan.description }}</small>{% endif %}</div><button class="btn btn-brand btn-sm ms-auto" type="submit">{% if subscription.plan_id == plan.pk %}Renew{% else %}Subscribe{% endif %}</button></form>{% empty %}<p class="text-muted">No plans are available yet.</p>{% endfor %}
+<p class="billing-note"><i aria-hidden="true" class="bi bi-info-circle"></i> The plan price is taken from your wallet balance.</p></section>
+<section class="panel"><div class="panel-heading"><div><h2>Wallet</h2><p>Balance <strong>₹{{ wallet.balance|default:"0.00" }}</strong></p></div><i aria-hidden="true" class="bi bi-wallet2 panel-icon"></i></div>
+<div class="billing-option"><span class="billing-icon"><i aria-hidden="true" class="bi bi-broadcast"></i></span><div><strong>Cost per user</strong><p>WiadSpot locations ₹{{ conf.company_rate_per_view }} · Owner locations ₹{{ conf.partner_rate_per_view }}</p>{% if role == "owner" %}<small>Your own locations: no per-user charge.</small>{% endif %}</div></div>
+<p class="billing-note"><i aria-hidden="true" class="bi bi-info-circle"></i> To add funds, pay WiadSpot and share the payment reference; the team credits your wallet.</p>
+{% if transactions %}<div class="table-responsive"><table class="table workspace-table"><thead><tr><th>WHEN</th><th>TYPE</th><th>AMOUNT</th><th>DETAILS</th></tr></thead><tbody>{% for t in transactions %}<tr><td>{{ t.created_at|date:"d M Y H:i" }}</td><td>{{ t.get_transaction_type_display }}</td><td>₹{{ t.amount }}</td><td>{{ t.description|truncatechars:50 }}</td></tr>{% endfor %}</tbody></table></div>{% endif %}</section>
+</div>
+{% endblock %}

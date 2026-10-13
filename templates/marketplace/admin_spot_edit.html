@@ -1,0 +1,12 @@
+{% extends "platform/workspace.html" %}
+{% block title %}{{ spot.asset.name }} · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">LOCATION</div><h1>{{ spot.asset.name }}</h1><p>{{ spot.asset.code }} · currently ₹{{ spot.rate_per_view }} per user</p></div><a class="btn btn-outline-brand" href="{% url 'portal_spots' role %}"><i aria-hidden="true" class="bi bi-arrow-left"></i> All locations</a></div>
+<div class="mp-grid">
+<section class="panel"><h2>Town, type and price</h2><form method="post">{% csrf_token %}<input type="hidden" name="form" value="spot">{% include "marketplace/_fields.html" %}<button class="btn btn-brand" type="submit">Save</button></form></section>
+<section class="panel"><h2>Device key</h2><p class="text-muted">The spot uses this key to prove who it is. It is shown once and only a hash is stored. Creating a new key replaces the old one.</p>
+{% if token %}<div class="alert alert-warning"><strong>Copy this key now. It won't be shown again.</strong><pre class="mp-pre">{{ token }}</pre></div>{% endif %}
+<p>{% if device and device.is_active %}Active key <code>wsd_{{ device.token_prefix }}_…</code>{% if device.last_seen_at %} · last seen {{ device.last_seen_at|date:"d M Y H:i" }} from {{ device.last_seen_ip }}{% endif %}{% elif device %}Key revoked.{% else %}No key yet.{% endif %}</p>
+<form method="post" class="d-inline">{% csrf_token %}<input type="hidden" name="form" value="device"><button class="btn btn-brand" type="submit">{% if device %}Create a new key{% else %}Create key{% endif %}</button></form>
+{% if device and device.is_active %}<form method="post" action="{% url 'portal_device_revoke' role spot.pk %}" class="d-inline">{% csrf_token %}<button class="btn btn-outline-brand" type="submit">Revoke</button></form>{% endif %}</section></div>
+{% endblock %}
