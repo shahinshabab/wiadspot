@@ -1,0 +1,9 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Withdrawals · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ADMIN</div><h1>Owner withdrawals</h1><p>Send the money, then mark the request paid. Rejecting returns the amount to the owner's balance.</p></div></div>
+{% for w in requested %}<section class="panel"><h2>₹{{ w.amount }} · {{ w.owner.username }}</h2><p class="text-muted">Requested {{ w.created_at|date:"d M Y H:i" }}</p><pre class="mp-pre">{{ w.payout_details }}</pre>
+<form method="post" class="mp-actions">{% csrf_token %}<input type="hidden" name="withdrawal_id" value="{{ w.pk }}"><input class="form-control" name="note" placeholder="Payment reference or reason" aria-label="Note"><button class="btn btn-brand" name="action" value="pay" type="submit">Mark paid</button><button class="btn btn-outline-brand" name="action" value="reject" type="submit">Reject</button></form></section>
+{% empty %}<section class="panel"><div class="empty-state compact"><i aria-hidden="true" class="bi bi-check2-circle"></i><p>No withdrawals waiting.</p></div></section>{% endfor %}
+{% if done %}<section class="panel"><h2>Recently processed</h2><div class="table-responsive"><table class="table workspace-table"><tbody>{% for w in done %}<tr><td>{{ w.owner.username }}</td><td>₹{{ w.amount }}</td><td><span class="status-badge status-{% if w.status == 'PAID' %}active{% else %}rejected{% endif %}">{{ w.get_status_display }}</span></td><td>{{ w.processed_at|date:"d M Y" }}</td><td>{{ w.note }}</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% endblock %}

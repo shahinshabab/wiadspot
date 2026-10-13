@@ -18,15 +18,26 @@
             {% with current=request.resolver_match.url_name %}
             {% if role == "manager" %}
                 <a class="{% if current == 'home' or current == 'portal_dashboard' %}selected{% endif %}" href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-grid-1x2"></i>Overview</a>
+                <a class="{% if current == 'portal_submissions' %}selected{% endif %}" href="{% url 'portal_submissions' role %}"><i aria-hidden="true" class="bi bi-badge-ad"></i>Ad submissions</a>
+                <a class="{% if current == 'portal_location_requests' %}selected{% endif %}" href="{% url 'portal_location_requests' role %}"><i aria-hidden="true" class="bi bi-geo-alt"></i>Location requests</a>
                 <a class="{% if current == 'review_queue' or current == 'campaign_review' or current == 'ad_review' or current == 'placement_review' %}selected{% endif %}" href="{% url 'review_queue' %}"><i aria-hidden="true" class="bi bi-check2-square"></i>Review queue</a>
                 <a class="{% if current == 'campaign_list' %}selected{% endif %}" href="{% url 'campaign_list' %}"><i aria-hidden="true" class="bi bi-megaphone"></i>Campaigns</a>
                 <a class="{% if current == 'performance_report' %}selected{% endif %}" href="{% url 'performance_report' %}"><i aria-hidden="true" class="bi bi-graph-up-arrow"></i>Performance</a>
             {% else %}
                 <a class="{% if current == 'portal_dashboard' or current == 'workspace_home' %}selected{% endif %}" href="{% url 'portal_dashboard' role %}"><i aria-hidden="true" class="bi bi-grid-1x2"></i>Overview</a>
+                {% if role == "customer" or role == "owner" %}<a class="{% if current == 'portal_ad_create' %}selected{% endif %}" href="{% url 'portal_ad_create' role %}"><i aria-hidden="true" class="bi bi-plus-square"></i>Submit an ad</a>{% endif %}
                 <a class="{% if current == 'portal_campaigns' %}selected{% endif %}" href="{% url 'portal_campaigns' role %}"><i aria-hidden="true" class="bi bi-megaphone"></i>Campaigns</a>
-                <a class="{% if current == 'portal_locations' %}selected{% endif %}" href="{% url 'portal_locations' role %}"><i aria-hidden="true" class="bi bi-geo-alt"></i>Locations</a>
+                {% if role != "customer" %}<a class="{% if current == 'portal_locations' %}selected{% endif %}" href="{% url 'portal_locations' role %}"><i aria-hidden="true" class="bi bi-geo-alt"></i>Locations</a>{% endif %}
+                {% if role == "owner" %}<a class="{% if current == 'portal_earnings' %}selected{% endif %}" href="{% url 'portal_earnings' role %}"><i aria-hidden="true" class="bi bi-cash-coin"></i>Earnings</a>{% endif %}
                 <a class="{% if current == 'portal_billing' %}selected{% endif %}" href="{% url 'portal_billing' role %}"><i aria-hidden="true" class="bi bi-receipt"></i>Billing overview</a>
-                {% if role == "customer" or role == "owner" %}<a class="{% if current == 'portal_campaign_create' %}selected{% endif %}" href="{% url 'portal_campaign_create' role %}"><i aria-hidden="true" class="bi bi-plus-square"></i>Submit a poster</a>{% endif %}
+                {% if role == "admin" %}
+                <a class="{% if current == 'portal_submissions' %}selected{% endif %}" href="{% url 'portal_submissions' role %}"><i aria-hidden="true" class="bi bi-badge-ad"></i>Ad submissions</a>
+                <a class="{% if current == 'portal_location_requests' %}selected{% endif %}" href="{% url 'portal_location_requests' role %}"><i aria-hidden="true" class="bi bi-hdd-network"></i>Location requests</a>
+                <a class="{% if current == 'portal_spots' or current == 'portal_spot_edit' %}selected{% endif %}" href="{% url 'portal_spots' role %}"><i aria-hidden="true" class="bi bi-broadcast"></i>All locations</a>
+                <a class="{% if current == 'portal_withdrawals' %}selected{% endif %}" href="{% url 'portal_withdrawals' role %}"><i aria-hidden="true" class="bi bi-bank"></i>Withdrawals</a>
+                <a class="{% if current == 'portal_wallets' %}selected{% endif %}" href="{% url 'portal_wallets' role %}"><i aria-hidden="true" class="bi bi-wallet2"></i>Add funds</a>
+                <a class="{% if current == 'portal_settings' %}selected{% endif %}" href="{% url 'portal_settings' role %}"><i aria-hidden="true" class="bi bi-sliders"></i>Pricing and rules</a>
+                {% endif %}
             {% endif %}
             {% endwith %}
         </nav>

@@ -1,0 +1,17 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Locations · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">LOCATIONS</div><h1>Your locations</h1><p>Advertise on them yourself, or give them to WiadSpot and earn from every user who sees an ad.</p></div><a class="btn btn-brand" href="{% url 'portal_ad_create' role %}"><i aria-hidden="true" class="bi bi-plus-square"></i> Submit an ad</a></div>
+<section class="panel"><div class="panel-heading"><div><h2>Your spots</h2><p>Listed spots earn {{ conf.owner_share_percent }}% of what advertisers pay (₹{{ conf.partner_rate_per_view }} per user).</p></div><i aria-hidden="true" class="bi bi-geo-alt panel-icon"></i></div>
+<div class="table-responsive"><table class="table workspace-table"><thead><tr><th>LOCATION</th><th>TOWN</th><th>STATUS</th><th>EARNED</th><th></th></tr></thead><tbody>
+{% for row in rows %}<tr><td><strong>{{ row.spot.asset.name }}</strong></td><td>{{ row.spot.town.name|default:"—" }}</td><td>{% if row.spot.mode == "LISTED" %}<span class="status-badge status-active">Listed on WiadSpot</span>{% elif row.pending %}<span class="status-badge status-pending">Waiting for review</span>{% else %}<span class="status-badge status-draft">Your own use</span>{% endif %}</td><td>₹{{ row.earned }}</td>
+<td>{% if row.spot.mode == "PRIVATE" and not row.pending %}<form method="post" class="mp-inline">{% csrf_token %}<input type="hidden" name="form" value="list"><input type="hidden" name="list-asset_id" value="{{ row.spot.asset_id }}"><select name="list-town" class="form-select form-select-sm" required aria-label="Town for {{ row.spot.asset.name }}"><option value="">Town…</option>{% for t in list_form.fields.town.queryset %}<option value="{{ t.pk }}"{% if t.pk == row.spot.town_id %} selected{% endif %}>{{ t.name }}</option>{% endfor %}</select><button class="btn btn-sm btn-outline-brand" type="submit">Give to WiadSpot</button></form>{% endif %}</td></tr>
+{% empty %}<tr><td colspan="5"><div class="empty-state compact"><i aria-hidden="true" class="bi bi-geo-alt"></i><p>You have no locations yet. Request one below and our team will set it up.</p></div></td></tr>{% endfor %}</tbody></table></div></section>
+
+<div class="mp-grid">
+<section class="panel"><div class="panel-heading"><div><h2>Request a new location</h2><p>Our team installs the equipment. After installation, subscribe and show your own ads for free per user.</p></div><i aria-hidden="true" class="bi bi-hdd-network panel-icon"></i></div>
+<form method="post">{% csrf_token %}<input type="hidden" name="form" value="install">{% with form=request_form %}{% include "marketplace/_fields.html" %}{% endwith %}<button class="btn btn-brand" type="submit">Send request</button></form></section>
+<section class="panel"><div class="panel-heading"><div><h2>Your requests</h2><p>Progress of listings and installations.</p></div></div>
+{% for r in requests %}<div class="billing-option"><div><strong>{{ r.name }}</strong><p>{{ r.get_kind_display }} · {{ r.town.name }}</p>{% if r.review_note %}<small>{{ r.review_note }}</small>{% endif %}</div><span class="status-badge status-{{ r.status|lower }} ms-auto">{{ r.get_status_display }}</span></div>{% empty %}<p class="text-muted">No requests yet.</p>{% endfor %}</section>
+</div>
+{% endblock %}

@@ -7,7 +7,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout, update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import PermissionDenied
-from django.db import transaction
 from django.db.models import Q, Sum
 from django.http import Http404
 from django.shortcuts import redirect, render
@@ -15,10 +14,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST
 
-from ads.models import Ad, AdMetrics, Asset, AudienceSession, Campaign, UserSubscription
+from ads.models import AdMetrics, Asset, AudienceSession, Campaign, UserSubscription
 from config.host_routing import site_address
 from config.role_utils import has_role_access
-from .portal_forms import CampaignSubmissionForm, ProfileForm
+from .portal_forms import ProfileForm
 
 ROLES = {
     "admin": {
@@ -234,11 +233,21 @@ def campaigns_page(request, role):
     )
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def locations_page(request, role):
     response = authorize(request, role)
     if response:
         return response
+    if role == "customer":
+        # Advertisers choose from available locations when they submit an ad;
+        # they don't manage locations.
+        raise PermissionDenied("Locations are managed by WiadSpot and location owners.")
+    if role == "owner":
+        from marketplace.views import owner_locations
+
+        return owner_locations(request, role)
+    if request.method != "GET":
+        raise PermissionDenied("This page is read-only.")
     data = workspace_data(request, role)
     return render(
         request,
@@ -247,11 +256,17 @@ def locations_page(request, role):
     )
 
 
-@require_http_methods(["GET"])
+@require_http_methods(["GET", "POST"])
 def billing_page(request, role):
     response = authorize(request, role)
     if response:
         return response
+    if role in ("customer", "owner"):
+        from marketplace.views import billing
+
+        return billing(request, role)
+    if request.method != "GET":
+        raise PermissionDenied("This page is read-only.")
     subscription = (
         UserSubscription.objects.select_related("plan")
         .filter(user=request.user)
@@ -302,62 +317,12 @@ def profile_page(request, role):
 
 @require_http_methods(["GET", "POST"])
 def create_campaign(request, role):
+    """Old single-location poster form; ads are now submitted through the marketplace form."""
     response = authorize(request, role)
     if response:
         return response
     if role not in {"customer", "owner"}:
         raise PermissionDenied(
-            "Use an advertising customer or location owner account to submit a poster."
+            "Use an advertising customer or location owner account to submit an ad."
         )
-    form = CampaignSubmissionForm(
-        request.POST or None, request.FILES or None, user=request.user, role=role
-    )
-    if request.method == "POST" and form.is_valid():
-        if Campaign.objects.filter(
-            owner=request.user, name=form.cleaned_data["name"]
-        ).exists():
-            form.add_error("name", "You already have a campaign with this name.")
-        else:
-            location = form.cleaned_data["location"]
-            if "IMAGE" not in [
-                kind.strip().upper() for kind in location.supported_ad_types.split(",")
-            ]:
-                form.add_error(
-                    "location", "This location does not support image posters."
-                )
-            else:
-                with transaction.atomic():
-                    campaign = Campaign.objects.create(
-                        owner=request.user,
-                        name=form.cleaned_data["name"],
-                        review_status="PENDING",
-                        submitted_at=timezone.now(),
-                        start_date=timezone.localdate(),
-                        created_by=request.user,
-                    )
-                    ad = Ad.objects.create(
-                        owner=request.user,
-                        campaign=campaign,
-                        title=form.cleaned_data["title"],
-                        ad_type="IMAGE",
-                        media_file=form.cleaned_data["poster"],
-                        target_url=form.cleaned_data["target_url"],
-                        status="PENDING",
-                        created_by=request.user,
-                    )
-                    ad.placements.create(
-                        asset=location,
-                        requested_by=request.user,
-                        status="PENDING",
-                        serving_enabled=False,
-                    )
-                messages.success(
-                    request,
-                    "Poster submitted. Your campaign and placement are awaiting review.",
-                )
-                return redirect("portal_dashboard", role=role)
-    return render(
-        request,
-        "platform/campaign_form.html",
-        {"role": role, "account": ROLES[role], "form": form},
-    )
+    return redirect("portal_ad_create", role=role)

@@ -3,6 +3,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import include, path
+from marketplace.urls import urlpatterns as marketplace_patterns
 from . import management_urls, portal_views
 
 urlpatterns = [
@@ -21,6 +22,7 @@ urlpatterns = [
         portal_views.create_campaign,
         name="portal_campaign_create",
     ),
+    *marketplace_patterns,
     path("management/", include("core.management_urls")),
     path("management/", include((management_urls.urlpatterns, None))),
 ]

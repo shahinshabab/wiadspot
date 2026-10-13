@@ -1,0 +1,21 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Pricing and rules · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">ADMIN</div><h1>Pricing and rules</h1><p>Cost per user, owner earnings, upload sizes, how ads rotate, and subscription plans.</p></div></div>
+<form method="post">{% csrf_token %}
+<div class="mp-grid">
+<section class="panel"><h2>Payment per user</h2>
+{% for field in form %}{% if field.name == "company_rate_per_view" or field.name == "partner_rate_per_view" or field.name == "owner_share_percent" or field.name == "min_withdrawal" %}<div class="mb-3"><label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>{{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{% for e in field.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>{% endif %}{% endfor %}
+<h2 class="mt-4">Ad pool logic</h2>
+{% for field in form %}{% if field.name == "pool_strategy" or field.name == "repeat_view_window_minutes" or field.name == "require_authentic_device" %}<div class="mb-3"><label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>{{ field }}{% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}{% for e in field.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>{% endif %}{% endfor %}
+</section>
+<section class="panel"><h2>Upload requirements</h2>
+{% for field in form %}{% if "image_" in field.name or "video_" in field.name %}<div class="mb-3"><label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>{{ field }}{% for e in field.errors %}<div class="text-danger small mt-1" role="alert">{{ e }}</div>{% endfor %}</div>{% endif %}{% endfor %}
+</section></div>
+<section class="panel"><h2>Subscription plans</h2><p class="text-muted">The monthly value advertisers and owners pay from their wallet. Use the empty row to add a plan.</p>
+{{ plans.management_form }}{{ plans.non_form_errors }}
+<div class="table-responsive"><table class="table workspace-table"><thead><tr><th>NAME</th><th>PRICE / 30 DAYS (₹)</th><th>CAMPAIGNS</th><th>ADS</th><th>ACTIVE</th></tr></thead><tbody>
+{% for f in plans %}<tr>{{ f.id }}<td>{{ f.name }}{{ f.name.errors }}</td><td>{{ f.monthly_price }}{{ f.monthly_price.errors }}</td><td>{{ f.max_campaigns }}</td><td>{{ f.max_ads }}</td><td>{{ f.is_active }}</td></tr>{% endfor %}</tbody></table></div></section>
+<button class="btn btn-brand" type="submit">Save settings</button>
+</form>
+{% endblock %}

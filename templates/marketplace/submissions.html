@@ -1,0 +1,15 @@
+{% extends "platform/workspace.html" %}
+{% block title %}Ad submissions · WiadSpot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">REVIEW</div><h1>Ad submissions</h1><p>Check each ad and its locations. Approving makes it live on every chosen location.</p></div></div>
+{% for c in pending %}{% with ad=c.ads.all.0 %}
+<section class="panel mp-review"><div class="mp-review-media">
+{% if ad.ad_type == "VIDEO" %}<video src="{{ ad.media_file.url }}" controls preload="metadata" width="480"></video>{% else %}<img src="{{ ad.media_file.url }}" alt="{{ ad.title }}" width="480">{% endif %}</div>
+<div class="mp-review-body"><h2>{{ c.name }}</h2><p class="text-muted">“{{ ad.title }}” · {{ ad.get_ad_type_display }} · from {{ c.owner.username }} · submitted {{ c.submitted_at|date:"d M Y H:i" }}</p>
+{% if ad.target_url %}<p class="small">Link: <code>{{ ad.target_url }}</code></p>{% endif %}
+<p class="small">Budget ₹{{ c.plan.total_budget }}{% if c.plan.daily_budget %} · ₹{{ c.plan.daily_budget }}/day{% endif %}{% if c.plan.max_views %} · max {{ c.plan.max_views }} views{% endif %} · starts {{ c.start_date|date:"d M Y" }}{% if c.end_date %} · ends {{ c.end_date|date:"d M Y" }}{% endif %}</p>
+<ul class="mp-list">{% for p in ad.placements.all %}<li>{{ p.asset.name }} <span class="text-muted">· {% if p.terms.free_own_spot %}own location, free{% else %}₹{{ p.terms.rate_per_view }}/user{% endif %}</span></li>{% endfor %}</ul>
+<form method="post" class="mp-actions">{% csrf_token %}<input type="hidden" name="campaign_id" value="{{ c.pk }}"><input class="form-control" name="remarks" placeholder="Reason (required to reject)" aria-label="Reason"><button class="btn btn-brand" name="action" value="approve" type="submit">Approve</button><button class="btn btn-outline-brand" name="action" value="reject" type="submit">Reject</button></form></div></section>
+{% endwith %}{% empty %}<section class="panel"><div class="empty-state compact"><i aria-hidden="true" class="bi bi-check2-circle"></i><p>No ads are waiting for review.</p></div></section>{% endfor %}
+{% if recent %}<section class="panel"><h2>Recently reviewed</h2><div class="table-responsive"><table class="table workspace-table"><thead><tr><th>CAMPAIGN</th><th>ADVERTISER</th><th>RESULT</th><th>WHEN</th></tr></thead><tbody>{% for c in recent %}<tr><td>{{ c.name }}</td><td>{{ c.owner.username }}</td><td><span class="status-badge status-{{ c.review_status|lower }}">{{ c.get_review_status_display }}</span></td><td>{{ c.reviewed_at|date:"d M Y H:i" }}</td></tr>{% endfor %}</tbody></table></div></section>{% endif %}
+{% endblock %}

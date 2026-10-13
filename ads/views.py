@@ -1,3 +1,5 @@
+from urllib.parse import urlsplit
+
 from config.decorators import manager_required
 import logging
 
@@ -815,6 +817,9 @@ def ad_click_redirect(request, session_id):
             },
         )
         target_url = result.get("target_url") or "/"
+        # Only ever send visitors to web links; never javascript:, data: and the like.
+        if urlsplit(target_url).scheme not in ("http", "https"):
+            target_url = "/"
         return redirect(target_url)
     except Exception:
         logger.exception("ad_click_redirect failed", extra={"session_id": str(session_id)})

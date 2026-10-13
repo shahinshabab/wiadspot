@@ -184,6 +184,10 @@ class PlatformPortalTests(TestCase):
             self.client.force_login(user)
             for name in ("portal_campaigns", "portal_locations", "portal_billing", "portal_profile"):
                 response = self.client.get(reverse(name, args=[role]))
+                if (role, name) == ("customer", "portal_locations"):
+                    # Advertisers pick locations when submitting ads; they can't manage them.
+                    self.assertEqual(response.status_code, 403)
+                    continue
                 self.assertEqual(response.status_code, 200, (role, name))
                 self.assertContains(response, reverse("portal_profile", args=[role]))
                 self.assertContains(response, "Log out")
@@ -237,61 +241,6 @@ class PlatformPortalTests(TestCase):
         self.assertEqual(self.client.get(reverse("account_logout")).status_code, 405)
         self.client.post(reverse("account_logout"))
         self.assertNotIn("_auth_user_id", self.client.session)
-
-    def test_customer_submission_creates_pending_entities_and_image(self):
-        self.client.force_login(self.users["customer"])
-        response = self.client.post(
-            reverse("portal_campaign_create", args=["customer"]),
-            self.submission(self.hosted),
-        )
-        self.assertRedirects(response, reverse("portal_dashboard", args=["customer"]))
-        campaign = Campaign.objects.get(name="New campaign")
-        self.assertEqual(campaign.review_status, "PENDING")
-        self.assertEqual(campaign.status, "DRAFT")
-        self.assertEqual(campaign.start_date, timezone.localdate())
-        ad = campaign.ads.get()
-        self.assertEqual(ad.status, "PENDING")
-        self.assertTrue(ad.media_file.storage.exists(ad.media_file.name))
-        placement = ad.placements.get()
-        self.assertEqual(placement.status, "PENDING")
-        self.assertFalse(placement.serving_enabled)
-
-    def test_owner_cannot_submit_to_someone_elses_location(self):
-        self.client.force_login(self.users["owner"])
-        response = self.client.post(
-            reverse("portal_campaign_create", args=["owner"]),
-            self.submission(self.foreign),
-        )
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("location", response.context["form"].errors)
-        self.assertFalse(Campaign.objects.filter(name="New campaign").exists())
-
-    def test_closed_location_and_duplicate_campaign_are_rejected(self):
-        self.client.force_login(self.users["customer"])
-        url = reverse("portal_campaign_create", args=["customer"])
-        self.hosted.is_available_for_booking = False
-        self.hosted.save()
-        response = self.client.post(url, self.submission(self.hosted))
-        self.assertIn("location", response.context["form"].errors)
-        self.hosted.is_available_for_booking = True
-        self.hosted.save()
-        response = self.client.post(
-            url, self.submission(self.hosted, name="My campaign")
-        )
-        self.assertIn("name", response.context["form"].errors)
-        self.assertEqual(self.mine.ads.count(), 1)
-
-    def test_invalid_image_is_rejected_without_database_writes(self):
-        self.client.force_login(self.users["customer"])
-        data = self.submission(self.hosted)
-        data["poster"] = SimpleUploadedFile(
-            "poster.png", b"not-an-image", content_type="image/png"
-        )
-        response = self.client.post(
-            reverse("portal_campaign_create", args=["customer"]), data
-        )
-        self.assertIn("poster", response.context["form"].errors)
-        self.assertFalse(Campaign.objects.filter(name="New campaign").exists())
 
     def test_unknown_role_returns_404_and_management_accounts_cannot_upload(self):
         self.assertEqual(self.client.get("/portal/unknown/").status_code, 404)
