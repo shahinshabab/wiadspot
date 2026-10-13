@@ -26,18 +26,17 @@
                            href="{% url 'landing_contact' %}">Contact</a>
                     </div>
                 {% endwith %}
-                <div class="dropdown py-2">
+                <div class="dropdown py-2 signin-menu">
                     <button class="btn btn-brand dropdown-toggle"
                             type="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false">Sign in</button>
                     <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item"
-   href="{{ client_login_url }}"><i class="bi bi-image me-2"
-   aria-hidden="true"></i>Client · Advertiser</a></li>
-                        <li><a class="dropdown-item"
-   href="{{ owner_login_url }}"><i class="bi bi-geo-alt me-2"
-   aria-hidden="true"></i>Location owner</a></li>
+                        <li class="signin-title">Choose your workspace</li>
+                        <li><a class="dropdown-item signin-option"
+   href="{{ client_login_url }}"><span class="signin-icon"><i class="bi bi-image" aria-hidden="true"></i></span><span class="signin-text"><strong>Client · Advertiser</strong><small>Submit posters and track campaigns</small></span><i class="bi bi-arrow-right signin-arrow" aria-hidden="true"></i></a></li>
+                        <li><a class="dropdown-item signin-option"
+   href="{{ owner_login_url }}"><span class="signin-icon"><i class="bi bi-geo-alt" aria-hidden="true"></i></span><span class="signin-text"><strong>Location owner</strong><small>Manage your places and visitors</small></span><i class="bi bi-arrow-right signin-arrow" aria-hidden="true"></i></a></li>
                     </ul>
                 </div>
             </div>
